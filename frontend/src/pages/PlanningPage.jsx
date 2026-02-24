@@ -556,22 +556,23 @@ export default function PlanningPage() {
                             <div
                               key={apt.id}
                               data-testid={`planning-apt-${apt.id}`}
-                              className={`absolute left-1 right-1 rounded-lg p-2 text-white text-xs overflow-hidden shadow-md cursor-pointer hover:opacity-90 transition-all ${
+                              onClick={() => openEditDialog(apt)}
+                              className={`absolute left-1 right-1 rounded-lg p-2 text-white text-xs overflow-hidden shadow-lg cursor-pointer hover:scale-[1.02] transition-all ${
                                 isHighlighted ? 'ring-4 ring-yellow-400 ring-offset-2 z-20' : ''
                               }`}
                               style={{
                                 ...style,
                                 backgroundColor: apt.operator_color || col.color,
                               }}
-                              title={`${apt.client_name} - ${apt.services.map(s => s.name).join(', ')}`}
+                              title={`Clicca per modificare - ${apt.client_name}`}
                             >
                               <div className="flex justify-between items-start">
                                 <div className="flex-1 min-w-0">
-                                  <p className="font-semibold truncate">{apt.client_name}</p>
-                                  <p className="text-white/80 truncate text-[10px]">
+                                  <p className="font-bold truncate text-sm drop-shadow-sm">{apt.client_name}</p>
+                                  <p className="text-white font-medium truncate text-[11px] drop-shadow-sm">
                                     {apt.time} - {apt.end_time}
                                   </p>
-                                  <p className="text-white/70 truncate text-[10px]">
+                                  <p className="text-white/90 truncate text-[10px]">
                                     {apt.services.map(s => s.name).join(', ')}
                                   </p>
                                 </div>
