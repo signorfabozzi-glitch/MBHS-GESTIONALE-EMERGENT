@@ -1,91 +1,98 @@
-# PRD - Salone Parrucchiera Manager
+# PRD - Salone Bella Donna
 
 ## Problema Originale
-App gestionale completa per salone da parrucchiera per signora con:
-- Autenticazione JWT (email/password)
-- Dashboard, Agenda appuntamenti, viste settimanali/mensili
-- Gestione Clienti, Servizi, Statistiche, Storico, Impostazioni
-- Promemoria SMS, Export PDF, Gestione Operatori
+Applicazione gestionale completa per un salone di parrucchiera con autenticazione, gestione appuntamenti, clienti, servizi, operatori, statistiche e funzionalità avanzate.
 
-## User Personas
-- **Titolare salone**: gestisce appuntamenti, clienti, statistiche incassi
-- **Collaboratrici**: visualizzano propri appuntamenti assegnati
-- **Target**: parrucchiere 30-55 anni, gestione rapida e intuitiva
+## Stato Attuale: COMPLETATO ✅
 
-## Requisiti Core (Statici)
-1. Autenticazione sicura JWT
-2. CRUD Clienti con anagrafica e storico visite
-3. CRUD Servizi con categorie, durata, prezzi
-4. CRUD Appuntamenti con selezione multipla servizi
-5. Viste calendario (giornaliera, settimanale, mensile)
-6. Statistiche incassi e servizi popolari
-7. Gestione orari apertura/chiusura
+### Funzionalità Implementate
 
-## Funzionalità Implementate ✅
+#### Core Application
+- ✅ Autenticazione JWT (email/password)
+- ✅ Dashboard principale
+- ✅ Planning giornaliero con griglia 15 minuti
+- ✅ Vista settimanale e mensile
+- ✅ Gestione Clienti (CRUD)
+- ✅ Gestione Servizi (CRUD)
+- ✅ Gestione Operatori (CRUD)
+- ✅ Statistiche con export PDF
+- ✅ Storico appuntamenti
 
-### MVP (Sessione 1) - 24/02/2026
-- [x] Backend FastAPI con MongoDB
-- [x] Autenticazione JWT (register/login)
-- [x] Dashboard con statistiche real-time
-- [x] Gestione Clienti (CRUD completo)
-- [x] Gestione Servizi con categorie
-- [x] Agenda appuntamenti giornaliera
-- [x] Vista settimanale calendario
-- [x] Vista mensile calendario
-- [x] Statistiche con grafici (Recharts)
-- [x] Storico appuntamenti con filtri
-- [x] Impostazioni profilo/salone
+#### Fase 2 - Funzionalità Avanzate
+- ✅ Promemoria SMS (Twilio)
+- ✅ Export PDF statistiche
+- ✅ Gestione Operatori
 
-### Fase 2 (Sessione 2) - 24/02/2026
-- [x] Gestione Operatori/Collaboratrici
-- [x] Assegnazione operatore ad appuntamenti
-- [x] Promemoria SMS via Twilio (pronto per configurazione)
-- [x] Export Report statistiche (TXT)
-- [x] Statistiche per operatore
-- [x] Preferenze SMS per cliente
+#### Fase 3 - Import Dati
+- ✅ Import clienti da Excel (161 clienti)
+- ✅ UI per import Excel nella pagina Clienti
 
-## Stack Tecnologico
-- **Frontend**: React 18, Tailwind CSS, Shadcn/UI, Recharts
-- **Backend**: FastAPI, Motor (async MongoDB)
-- **Database**: MongoDB
-- **Auth**: JWT (bcrypt + PyJWT)
-- **SMS**: Twilio (opzionale)
-- **Design**: "Rose & Stone" theme
+#### Fase 4 - UX Improvements
+- ✅ Landing page = Planning giornaliero
+- ✅ Vista per operatore con colonne
 
-## Backlog (P0/P1/P2)
+#### Fase 5 - Nuove Funzionalità (24 Feb 2026)
+- ✅ **Card Prepagate / Abbonamenti**: Pagina completa per gestire card prepagate e abbonamenti clienti
+- ✅ **Ricerca Rapida Cliente**: Barra di ricerca nel Planning con highlight appuntamenti
+- ✅ **Appuntamenti Ricorrenti**: Pulsante "Ripeti" su ogni appuntamento per creare serie ricorrenti
 
-### P0 - Critici
-- [ ] Configurazione Twilio per SMS produzione
+#### Import Dati Aggiuntivi (24 Feb 2026)
+- ✅ **18 Trattamenti** importati da Trattamenti.xml
+- ✅ **61 Note Clienti** aggiornate da Memo.xlsx
 
-### P1 - Importanti
-- [ ] Promemoria automatici 24h prima appuntamento
-- [ ] Export PDF professionale con logo
-- [ ] Notifiche push browser
+## Architettura Tecnica
 
-### P2 - Nice to Have
-- [ ] Calendario multi-operatore (vista parallela)
-- [ ] Gestione ferie/assenze operatori
-- [ ] Report mensili automatici via email
-- [ ] Integrazione Google Calendar
-- [ ] App mobile (React Native)
-- [ ] Sistema prenotazioni online per clienti
+### Frontend
+- React 18 con React Router
+- Tailwind CSS + Shadcn/UI
+- Axios per API calls
+- date-fns per gestione date
 
-## API Endpoints
-- `POST /api/auth/register` - Registrazione
-- `POST /api/auth/login` - Login
-- `GET /api/auth/me` - Profilo utente
-- `GET/POST/PUT/DELETE /api/clients` - Clienti
-- `GET/POST/PUT/DELETE /api/services` - Servizi
-- `GET/POST/PUT/DELETE /api/operators` - Operatori
-- `GET/POST/PUT/DELETE /api/appointments` - Appuntamenti
-- `GET /api/stats/dashboard` - Stats dashboard
-- `GET /api/stats/revenue` - Stats incassi
-- `GET /api/stats/export-pdf` - Export report
-- `POST /api/sms/send-reminder` - Invia SMS
-- `GET /api/sms/status` - Stato Twilio
-- `GET/PUT /api/settings` - Impostazioni
+### Backend
+- FastAPI (Python)
+- MongoDB
+- JWT Authentication
+- Twilio SMS
 
-## Next Tasks
-1. Configurare Twilio con credenziali produzione
-2. Implementare scheduler per promemoria automatici
-3. Creare export PDF con formattazione professionale
+### Struttura File
+```
+/app/
+├── backend/
+│   ├── server.py          # API FastAPI
+│   ├── requirements.txt
+│   └── .env
+├── frontend/
+│   └── src/
+│       ├── pages/
+│       │   ├── PlanningPage.jsx    # Home + Search + Recurring
+│       │   ├── PrepaidCardsPage.jsx # Card Prepagate
+│       │   └── ...
+│       └── components/
+│           └── Layout.jsx          # Sidebar con Cards
+└── scripts/
+    ├── import_clients_api.py
+    ├── import_services.py
+    └── import_memo.py
+```
+
+## API Endpoints Principali
+- `/api/auth/login`, `/api/auth/register`
+- `/api/clients`, `/api/clients/search/appointments`
+- `/api/services`
+- `/api/appointments`, `/api/appointments/recurring`
+- `/api/operators`
+- `/api/cards` (CRUD + use/recharge)
+
+## Credenziali Test
+- Email: salone@example.com
+- Password: password123
+
+## Integrazioni 3rd Party
+- **Twilio**: SMS reminders (richiede credenziali in .env)
+
+## Backlog Futuro (P2)
+- Blocco fasce orarie (pause, ferie)
+- Sconti e promozioni
+- Pulsante WhatsApp diretto
+- Analisi clienti (fedeltà, ore punta)
+- Refactoring server.py in moduli separati
