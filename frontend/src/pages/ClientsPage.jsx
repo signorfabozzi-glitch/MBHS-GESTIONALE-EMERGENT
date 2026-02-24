@@ -616,7 +616,7 @@ export default function ClientsPage() {
             ) : clientHistory ? (
               <div className="space-y-4">
                 {/* Stats */}
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <div className="p-4 bg-[#0EA5E9]/10 rounded-lg text-center">
                     <p className="text-2xl font-black text-[#0EA5E9]">{clientHistory.total_visits}</p>
                     <p className="text-xs text-[#334155] font-semibold">Visite</p>
@@ -625,11 +625,29 @@ export default function ClientsPage() {
                     <p className="text-2xl font-black text-green-600">€{clientHistory.total_spent.toFixed(0)}</p>
                     <p className="text-xs text-[#334155] font-semibold">Totale Speso</p>
                   </div>
+                  <div className="p-4 bg-amber-100 rounded-lg text-center">
+                    <p className="text-2xl font-black text-amber-600">{clientHistory.loyalty_points ?? 0}</p>
+                    <p className="text-xs text-[#334155] font-semibold">Punti Fedeltà</p>
+                  </div>
                   <div className="p-4 bg-purple-100 rounded-lg text-center">
                     <p className="text-sm font-black text-purple-600">{clientHistory.last_visit || '-'}</p>
                     <p className="text-xs text-[#334155] font-semibold">Ultima Visita</p>
                   </div>
                 </div>
+
+                {/* Active Rewards */}
+                {clientHistory.active_rewards?.length > 0 && (
+                  <div className="p-3 bg-green-50 rounded-lg border border-green-200">
+                    <p className="text-sm font-bold text-green-800 mb-1">Premi Disponibili</p>
+                    <div className="flex flex-wrap gap-2">
+                      {clientHistory.active_rewards.map((r, idx) => (
+                        <span key={idx} className="text-xs bg-green-200 text-green-800 px-2 py-1 rounded-full font-semibold">
+                          {r.reward_name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Appointments */}
                 <div>
