@@ -1412,6 +1412,203 @@ async def get_settings(current_user: dict = Depends(get_current_user)):
         "twilio_configured": twilio_client is not None
     }
 
+# ============== PAYMENTS API ==============
+
+@api_router.get("/payments")
+async def get_payments(start: str = None, end: str = None, current_user: dict = Depends(get_current_user)):
+    """Get payments within date range"""
+    query = {"user_id": current_user["id"]}
+    if start and end:
+        query["date"] = {"$gte": start[:10], "$lte": end[:10]}
+    
+    payments = await db.payments.find(query, {"_id": 0}).sort("date", -1).to_list(1000)
+    return payments
+
+# ============== CLIENT HISTORY ==============
+
+@api_router.get("/clients/{client_id}/history")
+async def get_client_history(client_id: str, current_user: dict = Depends(get_current_user)):
+    """Get complete history for a client"""
+    client = await db.clients.find_one(
+        {"id": client_id, "user_id": current_user["id"]},
+        {"_id": 0}
+    )
+    if not client:
+        raise HTTPException(status_code=404, detail="Cliente non trovato")
+    
+    # Get all appointments
+    appointments = await db.appointments.find(
+        {"client_id": client_id, "user_id": current_user["id"]},
+        {"_id": 0}
+    ).sort("date", -1).to_list(500)
+    
+    # Get all payments
+    payments = await db.payments.find(
+        {"client_id": client_id, "user_id": current_user["id"]},
+        {"_id": 0}
+    ).sort("date", -1).to_list(500)
+    
+    # Calculate totals
+    total_spent = sum(p.get("total_paid", 0) for p in payments)
+    total_visits = len([a for a in appointments if a.get("status") == "completed"])
+    
+    return {
+        "client": client,
+        "appointments": appointments,
+        "payments": payments,
+        "total_spent": total_spent,
+        "total_visits": total_visits,
+        "last_visit": appointments[0]["date"] if appointments else None
+    }
+
+# ============== PUBLIC BOOKING API (no auth required) ==============
+
+@api_router.get("/public/services")
+async def get_public_services():
+    """Get services for public booking page"""
+    # Get first user's services (for single-salon setup)
+    user = await db.users.find_one({}, {"_id": 0, "id": 1})
+    if not user:
+        return []
+    services = await db.services.find(
+        {"user_id": user["id"]},
+        {"_id": 0, "user_id": 0}
+    ).to_list(100)
+    return services
+
+@api_router.get("/public/operators")
+async def get_public_operators():
+    """Get operators for public booking page"""
+    user = await db.users.find_one({}, {"_id": 0, "id": 1})
+    if not user:
+        return []
+    operators = await db.operators.find(
+        {"user_id": user["id"], "active": True},
+        {"_id": 0, "user_id": 0}
+    ).to_list(50)
+    return operators
+
+class PublicBookingRequest(BaseModel):
+    client_name: str
+    client_phone: str
+    service_ids: List[str]
+    operator_id: Optional[str] = None
+    date: str
+    time: str
+    notes: Optional[str] = ""
+
+@api_router.post("/public/booking")
+async def create_public_booking(data: PublicBookingRequest):
+    """Create booking from public page"""
+    # Get first user (salon owner)
+    user = await db.users.find_one({}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=400, detail="Salone non configurato")
+    
+    user_id = user["id"]
+    
+    # Get or create client
+    client = await db.clients.find_one(
+        {"phone": data.client_phone, "user_id": user_id},
+        {"_id": 0}
+    )
+    
+    if not client:
+        client_id = str(uuid.uuid4())
+        client = {
+            "id": client_id,
+            "user_id": user_id,
+            "name": data.client_name,
+            "phone": data.client_phone,
+            "notes": f"[Online] {data.notes}" if data.notes else "[Prenotazione Online]",
+            "send_sms_reminders": True,
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.clients.insert_one(client)
+    else:
+        client_id = client["id"]
+    
+    # Get services
+    services = await db.services.find(
+        {"id": {"$in": data.service_ids}, "user_id": user_id},
+        {"_id": 0, "user_id": 0}
+    ).to_list(20)
+    
+    if not services:
+        raise HTTPException(status_code=400, detail="Servizi non validi")
+    
+    total_duration = sum(s["duration"] for s in services)
+    total_price = sum(s["price"] for s in services)
+    
+    # Calculate end time
+    start_hour, start_min = map(int, data.time.split(":"))
+    end_minutes = start_hour * 60 + start_min + total_duration
+    end_time = f"{end_minutes // 60:02d}:{end_minutes % 60:02d}"
+    
+    # Get operator info
+    operator_name = None
+    operator_color = None
+    if data.operator_id:
+        operator = await db.operators.find_one({"id": data.operator_id, "user_id": user_id}, {"_id": 0})
+        if operator:
+            operator_name = operator["name"]
+            operator_color = operator.get("color")
+    
+    # Create appointment
+    appointment_id = str(uuid.uuid4())
+    appointment = {
+        "id": appointment_id,
+        "user_id": user_id,
+        "client_id": client_id,
+        "client_name": data.client_name,
+        "service_ids": data.service_ids,
+        "services": services,
+        "operator_id": data.operator_id,
+        "operator_name": operator_name,
+        "operator_color": operator_color,
+        "date": data.date,
+        "time": data.time,
+        "end_time": end_time,
+        "total_duration": total_duration,
+        "total_price": total_price,
+        "status": "scheduled",
+        "notes": f"[Online] {data.notes}" if data.notes else "[Prenotazione Online]",
+        "source": "online",
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.appointments.insert_one(appointment)
+    
+    return {"success": True, "appointment_id": appointment_id}
+
+# ============== WHATSAPP MESSAGE ==============
+
+@api_router.get("/clients/{client_id}/whatsapp")
+async def get_whatsapp_link(client_id: str, message: str = None, current_user: dict = Depends(get_current_user)):
+    """Generate WhatsApp link for client"""
+    client = await db.clients.find_one(
+        {"id": client_id, "user_id": current_user["id"]},
+        {"_id": 0}
+    )
+    if not client:
+        raise HTTPException(status_code=404, detail="Cliente non trovato")
+    
+    phone = client.get("phone", "")
+    if not phone:
+        raise HTTPException(status_code=400, detail="Cliente senza numero di telefono")
+    
+    # Clean phone number
+    phone = phone.replace(" ", "").replace("-", "").replace("+", "")
+    if not phone.startswith("39"):
+        phone = "39" + phone
+    
+    default_msg = f"Ciao {client['name']}! Ti ricordiamo il tuo appuntamento presso MBHS SALON."
+    msg = message or default_msg
+    
+    whatsapp_url = f"https://wa.me/{phone}?text={msg}"
+    
+    return {"url": whatsapp_url, "phone": phone}
+
 # ============== HEALTH CHECK ==============
 
 @api_router.get("/")
