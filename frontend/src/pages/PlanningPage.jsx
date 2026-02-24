@@ -534,7 +534,7 @@ export default function PlanningPage() {
                   value={formData.client_id}
                   onValueChange={(val) => setFormData({ ...formData, client_id: val })}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger data-testid="select-client-appointment">
                     <SelectValue placeholder="Seleziona cliente" />
                   </SelectTrigger>
                   <SelectContent className="max-h-[200px]">
@@ -633,11 +633,108 @@ export default function PlanningPage() {
                   type="submit"
                   disabled={saving}
                   className="bg-[#C58970] hover:bg-[#B07860] text-white"
+                  data-testid="save-appointment-btn"
                 >
                   {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Salva Appuntamento'}
                 </Button>
               </DialogFooter>
             </form>
+          </DialogContent>
+        </Dialog>
+
+        {/* Recurring Appointment Dialog */}
+        <Dialog open={recurringDialogOpen} onOpenChange={setRecurringDialogOpen}>
+          <DialogContent className="sm:max-w-[400px]">
+            <DialogHeader>
+              <DialogTitle className="font-playfair text-2xl text-[#44403C]">
+                Ripeti Appuntamento
+              </DialogTitle>
+              <DialogDescription>
+                {selectedAppointment && (
+                  <span>
+                    {selectedAppointment.client_name} - {selectedAppointment.date} alle {selectedAppointment.time}
+                  </span>
+                )}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 mt-4">
+              {selectedAppointment && (
+                <div className="p-4 bg-[#FAFAF9] rounded-lg">
+                  <p className="text-sm font-medium text-[#44403C]">
+                    Servizi: {selectedAppointment.services.map(s => s.name).join(', ')}
+                  </p>
+                  <p className="text-xs text-[#78716C] mt-1">
+                    {selectedAppointment.operator_name || 'Non assegnato'}
+                  </p>
+                </div>
+              )}
+
+              <div className="space-y-2">
+                <Label>Ripeti ogni</Label>
+                <Select
+                  value={recurringData.repeat_weeks.toString()}
+                  onValueChange={(val) => setRecurringData({ ...recurringData, repeat_weeks: parseInt(val) })}
+                >
+                  <SelectTrigger data-testid="select-repeat-weeks">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">1 settimana</SelectItem>
+                    <SelectItem value="2">2 settimane</SelectItem>
+                    <SelectItem value="3">3 settimane</SelectItem>
+                    <SelectItem value="4">4 settimane</SelectItem>
+                    <SelectItem value="6">6 settimane</SelectItem>
+                    <SelectItem value="8">8 settimane</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Numero di ripetizioni</Label>
+                <Select
+                  value={recurringData.repeat_count.toString()}
+                  onValueChange={(val) => setRecurringData({ ...recurringData, repeat_count: parseInt(val) })}
+                >
+                  <SelectTrigger data-testid="select-repeat-count">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[2, 3, 4, 5, 6, 8, 10, 12].map((n) => (
+                      <SelectItem key={n} value={n.toString()}>
+                        {n} volte
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="p-3 bg-[#C58970]/10 rounded-lg">
+                <p className="text-sm text-[#44403C]">
+                  <Check className="w-4 h-4 inline mr-1 text-[#C58970]" />
+                  Verranno creati <strong>{recurringData.repeat_count}</strong> nuovi appuntamenti, 
+                  uno ogni <strong>{recurringData.repeat_weeks}</strong> settimane
+                </p>
+              </div>
+
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setRecurringDialogOpen(false)}
+                  className="border-[#E6CCB2]"
+                >
+                  Annulla
+                </Button>
+                <Button
+                  onClick={handleCreateRecurring}
+                  disabled={creatingRecurring}
+                  className="bg-[#C58970] hover:bg-[#B07860] text-white"
+                  data-testid="create-recurring-btn"
+                >
+                  {creatingRecurring ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Crea Appuntamenti'}
+                </Button>
+              </DialogFooter>
+            </div>
           </DialogContent>
         </Dialog>
       </div>
