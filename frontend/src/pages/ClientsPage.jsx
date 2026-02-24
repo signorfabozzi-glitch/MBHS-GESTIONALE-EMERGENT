@@ -128,6 +128,92 @@ export default function ClientsPage() {
     setDialogOpen(true);
   };
 
+  // Excel Import Functions
+  const handleFileSelect = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        
+        // Parse rows (skip header if present)
+        const clients = [];
+        for (let i = 0; i < jsonData.length; i++) {
+          const row = jsonData[i];
+          if (!row || row.length === 0) continue;
+          
+          // Try to find name in first non-empty column
+          const name = String(row[0] || '').trim();
+          if (!name || name.toLowerCase() === 'nome' || name.toLowerCase() === 'cliente') continue;
+          
+          // Look for phone, email, notes in other columns
+          let phone = '';
+          let email = '';
+          let notes = '';
+          
+          for (let j = 1; j < row.length; j++) {
+            const val = String(row[j] || '').trim();
+            if (!val) continue;
+            
+            if (val.includes('@')) {
+              email = val;
+            } else if (/^[\d\s\+\-\.]+$/.test(val) && val.length >= 8) {
+              phone = val;
+            } else {
+              notes = notes ? `${notes}, ${val}` : val;
+            }
+          }
+          
+          clients.push({ name, phone, email, notes });
+        }
+        
+        setImportPreview(clients);
+        setImportDialogOpen(true);
+      } catch (err) {
+        console.error('Error parsing Excel:', err);
+        toast.error('Errore nella lettura del file Excel');
+      }
+    };
+    reader.readAsArrayBuffer(file);
+    
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleImport = async () => {
+    if (importPreview.length === 0) return;
+    
+    setImporting(true);
+    try {
+      const res = await axios.post(`${API}/clients/import`, {
+        clients: importPreview.map(c => ({
+          name: c.name,
+          phone: c.phone || '',
+          email: c.email || '',
+          notes: c.notes || '',
+          sms_reminder: true
+        }))
+      });
+      
+      toast.success(`Importati ${res.data.imported} clienti! (${res.data.skipped} già esistenti)`);
+      setImportDialogOpen(false);
+      setImportPreview([]);
+      fetchClients();
+    } catch (err) {
+      toast.error(err.response?.data?.detail || 'Errore nell\'importazione');
+    } finally {
+      setImporting(false);
+    }
+  };
+
   const filteredClients = clients.filter(client =>
     client.name.toLowerCase().includes(search.toLowerCase()) ||
     client.phone.includes(search) ||
@@ -137,6 +223,15 @@ export default function ClientsPage() {
   return (
     <Layout>
       <div className="space-y-6" data-testid="clients-page">
+        {/* Hidden file input */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileSelect}
+          accept=".xlsx,.xls,.csv"
+          className="hidden"
+        />
+
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
