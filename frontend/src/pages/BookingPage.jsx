@@ -112,9 +112,70 @@ export default function BookingPage() {
             <p className="text-[#334155] mb-4">
               Ti aspettiamo il <strong>{format(new Date(formData.date), 'd MMMM yyyy', { locale: it })}</strong> alle <strong>{formData.time}</strong>
             </p>
-            <p className="text-sm text-[#334155]">Riceverai un promemoria prima dell'appuntamento.</p>
+            <p className="text-sm text-[#334155] mb-6">Riceverai un promemoria prima dell'appuntamento.</p>
+            <Button
+              onClick={() => { setSuccess(false); setShowWelcome(true); setStep(1); setFormData({ client_name: '', client_phone: '', service_ids: [], operator_id: '', date: format(addDays(new Date(), 1), 'yyyy-MM-dd'), time: '09:00', notes: '' }); }}
+              variant="outline"
+              className="border-[#0EA5E9] text-[#0EA5E9]"
+            >
+              Torna alla Home
+            </Button>
           </CardContent>
         </Card>
+      </div>
+    );
+  }
+
+  // Welcome / Landing page
+  if (showWelcome) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-[#0EA5E9] to-[#0369A1] flex flex-col items-center justify-center p-4" data-testid="booking-welcome">
+        <Toaster position="top-center" />
+        <div className="max-w-md w-full text-center space-y-6">
+          {/* Logo */}
+          <div className="flex justify-center">
+            <img
+              src="/logo.png?v=3"
+              alt="MBHS Salon"
+              className="w-40 h-40 rounded-2xl shadow-2xl border-4 border-white/20"
+            />
+          </div>
+
+          {/* Salon Name */}
+          <div>
+            <h1 className="text-4xl font-black text-white tracking-tight">MBHS SALON</h1>
+          </div>
+
+          {/* Address */}
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-5 space-y-3 border border-white/20">
+            <div className="flex items-start gap-3 text-white">
+              <MapPin className="w-5 h-5 mt-0.5 shrink-0" />
+              <p className="text-left text-sm leading-relaxed">
+                Via Vito Nicola Melorio 101<br />
+                Santa Maria Capua Vetere (CE)
+              </p>
+            </div>
+            <div className="flex items-center gap-3 text-white">
+              <Phone className="w-5 h-5 shrink-0" />
+              <div className="text-left text-sm space-y-1">
+                <a href="tel:08231878320" className="block hover:underline">0823 1878320</a>
+                <a href="tel:3397833526" className="block hover:underline">339 783 3526</a>
+              </div>
+            </div>
+          </div>
+
+          {/* CTA Button */}
+          <Button
+            onClick={() => setShowWelcome(false)}
+            className="w-full bg-white text-[#0EA5E9] hover:bg-blue-50 font-black text-lg py-7 rounded-xl shadow-xl transition-all active:scale-95"
+            data-testid="booking-start-btn"
+          >
+            <Scissors className="w-5 h-5 mr-2" />
+            PRENOTA APPUNTAMENTO
+          </Button>
+
+          <p className="text-blue-200 text-xs">Prenota online 24 ore su 24</p>
+        </div>
       </div>
     );
   }
