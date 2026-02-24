@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Calendar, Clock, User, Scissors, CheckCircle, ArrowLeft } from 'lucide-react';
+import { Calendar, Clock, User, Scissors, CheckCircle, ArrowLeft, MapPin, Phone } from 'lucide-react';
 import { format, addDays } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { toast, Toaster } from 'sonner';
