@@ -1043,37 +1043,183 @@ export default function PlanningPage() {
                 />
               </div>
 
-              <DialogFooter className="flex gap-2">
-                <Button
-                  type="button"
-                  variant="destructive"
-                  onClick={handleDeleteAppointment}
-                  disabled={deleting}
-                  className="mr-auto"
-                  data-testid="delete-appointment-btn"
-                >
-                  {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Trash2 className="w-4 h-4 mr-1" /> Elimina</>}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    setEditDialogOpen(false);
-                    setEditingAppointment(null);
-                  }}
-                  className="border-[#E2E8F0]"
-                >
-                  Annulla
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={saving}
-                  className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white font-semibold"
-                  data-testid="update-appointment-btn"
-                >
-                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Edit3 className="w-4 h-4 mr-1" /> Salva</>}
-                </Button>
-              </DialogFooter>
+              {/* Checkout Section */}
+              {!checkoutMode ? (
+                <div className="pt-4 border-t-2 border-[#E2E8F0]">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-semibold text-[#0F172A]">Totale servizi</p>
+                      <p className="text-2xl font-black text-[#0EA5E9]">€{calculateTotal().toFixed(2)}</p>
+                    </div>
+                    <Button
+                      type="button"
+                      onClick={() => setCheckoutMode(true)}
+                      className="bg-green-600 hover:bg-green-700 text-white font-bold px-6"
+                      data-testid="open-checkout-btn"
+                    >
+                      <Euro className="w-4 h-4 mr-2" />
+                      INCASSA
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="pt-4 border-t-2 border-green-500 bg-green-50 -mx-6 px-6 pb-4 rounded-b-lg">
+                  <h3 className="text-lg font-black text-green-800 mb-4 flex items-center gap-2">
+                    <Euro className="w-5 h-5" />
+                    INCASSO
+                  </h3>
+                  
+                  {/* Payment Method */}
+                  <div className="space-y-2 mb-4">
+                    <Label className="text-[#0F172A] font-bold">Metodo di pagamento</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button
+                        type="button"
+                        variant={paymentMethod === 'cash' ? 'default' : 'outline'}
+                        className={paymentMethod === 'cash' ? 'bg-green-600 text-white' : 'border-2'}
+                        onClick={() => setPaymentMethod('cash')}
+                      >
+                        <Banknote className="w-4 h-4 mr-2" />
+                        Contanti
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={paymentMethod === 'card' ? 'default' : 'outline'}
+                        className={paymentMethod === 'card' ? 'bg-green-600 text-white' : 'border-2'}
+                        onClick={() => setPaymentMethod('card')}
+                      >
+                        <CreditCard className="w-4 h-4 mr-2" />
+                        Carta
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={paymentMethod === 'transfer' ? 'default' : 'outline'}
+                        className={paymentMethod === 'transfer' ? 'bg-green-600 text-white' : 'border-2'}
+                        onClick={() => setPaymentMethod('transfer')}
+                      >
+                        <Euro className="w-4 h-4 mr-2" />
+                        Bonifico
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={paymentMethod === 'prepaid' ? 'default' : 'outline'}
+                        className={paymentMethod === 'prepaid' ? 'bg-green-600 text-white' : 'border-2'}
+                        onClick={() => setPaymentMethod('prepaid')}
+                      >
+                        <CreditCard className="w-4 h-4 mr-2" />
+                        Prepagata
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Discount */}
+                  <div className="space-y-2 mb-4">
+                    <Label className="text-[#0F172A] font-bold">Sconto</Label>
+                    <div className="flex gap-2">
+                      <Select value={discountType} onValueChange={setDiscountType}>
+                        <SelectTrigger className="w-40 border-2">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">Nessuno</SelectItem>
+                          <SelectItem value="percent">Percentuale %</SelectItem>
+                          <SelectItem value="fixed">Importo fisso €</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {discountType !== 'none' && (
+                        <Input
+                          type="number"
+                          placeholder={discountType === 'percent' ? 'es. 10%' : 'es. 5€'}
+                          value={discountValue}
+                          onChange={(e) => setDiscountValue(e.target.value)}
+                          className="flex-1 border-2"
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Summary */}
+                  <div className="bg-white rounded-lg p-4 border-2 border-green-200 space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="font-semibold">Subtotale:</span>
+                      <span>€{calculateTotal().toFixed(2)}</span>
+                    </div>
+                    {discountType !== 'none' && calculateDiscount() > 0 && (
+                      <div className="flex justify-between text-sm text-red-600">
+                        <span className="font-semibold">Sconto:</span>
+                        <span>-€{calculateDiscount().toFixed(2)}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between text-xl font-black pt-2 border-t border-green-200">
+                      <span>TOTALE:</span>
+                      <span className="text-green-600">€{calculateFinalAmount().toFixed(2)}</span>
+                    </div>
+                  </div>
+
+                  {/* Checkout Actions */}
+                  <div className="flex gap-2 mt-4">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={resetCheckout}
+                      className="flex-1 border-2"
+                    >
+                      Annulla
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={handleCheckout}
+                      disabled={processing}
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold"
+                      data-testid="confirm-checkout-btn"
+                    >
+                      {processing ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <>
+                          <CheckCircle className="w-4 h-4 mr-2" />
+                          CONFERMA PAGAMENTO
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {!checkoutMode && (
+                <DialogFooter className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    onClick={handleDeleteAppointment}
+                    disabled={deleting}
+                    className="mr-auto"
+                    data-testid="delete-appointment-btn"
+                  >
+                    {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Trash2 className="w-4 h-4 mr-1" /> Elimina</>}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setEditDialogOpen(false);
+                      setEditingAppointment(null);
+                      resetCheckout();
+                    }}
+                    className="border-[#E2E8F0]"
+                  >
+                    Annulla
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={saving}
+                    className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white font-semibold"
+                    data-testid="update-appointment-btn"
+                  >
+                    {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Edit3 className="w-4 h-4 mr-1" /> Salva</>}
+                  </Button>
+                </DialogFooter>
+              )}
             </form>
           </DialogContent>
         </Dialog>
