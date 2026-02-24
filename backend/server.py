@@ -888,13 +888,30 @@ async def checkout_appointment(appointment_id: str, data: CheckoutData, current_
                 }
             )
     
+    # Award loyalty points and check thresholds
+    loyalty_before = await get_or_create_loyalty(appointment["client_id"], current_user["id"])
+    points_before = loyalty_before["points"]
+    points_earned = await award_loyalty_points(
+        appointment["client_id"], current_user["id"], data.total_paid, appointment_id
+    )
+    points_after = points_before + points_earned
+    
+    # Check if crossed 5 or 10 point threshold
+    threshold_reached = None
+    if points_before < 10 and points_after >= 10:
+        threshold_reached = 10
+    elif points_before < 5 and points_after >= 5:
+        threshold_reached = 5
+    
     return {
         "success": True,
         "payment_id": payment_id,
         "message": "Pagamento registrato con successo",
-        "loyalty_points_earned": await award_loyalty_points(
-            appointment["client_id"], current_user["id"], data.total_paid, appointment_id
-        )
+        "loyalty_points_earned": points_earned,
+        "loyalty_total_points": points_after,
+        "loyalty_threshold_reached": threshold_reached,
+        "client_phone": appointment.get("client_phone", ""),
+        "client_name": appointment.get("client_name", "")
     }
 
 # ============== RECURRING APPOINTMENTS ==============
