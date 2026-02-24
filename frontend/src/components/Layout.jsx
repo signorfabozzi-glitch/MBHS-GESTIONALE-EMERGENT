@@ -55,10 +55,10 @@ export default function Layout({ children }) {
         to={item.path}
         onClick={() => mobile && setMobileOpen(false)}
         data-testid={`nav-${item.path.replace('/', '') || 'home'}`}
-        className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+        className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 font-semibold ${
           isActive
-            ? 'bg-[#FAF5F2] text-[#C58970] font-medium border-r-2 border-[#C58970]'
-            : 'text-[#78716C] hover:text-[#44403C] hover:bg-[#FAFAF9]'
+            ? 'bg-[#E0F2FE] text-[#0EA5E9] border-r-2 border-[#0EA5E9]'
+            : 'text-[#334155] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
         }`}
       >
         <Icon className="w-5 h-5" strokeWidth={1.5} />
