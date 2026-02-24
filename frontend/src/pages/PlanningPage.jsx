@@ -1264,6 +1264,49 @@ export default function PlanningPage() {
             </form>
           </DialogContent>
         </Dialog>
+
+        {/* Loyalty WhatsApp Alert */}
+        <Dialog open={loyaltyAlertOpen} onOpenChange={setLoyaltyAlertOpen}>
+          <DialogContent className="sm:max-w-[420px]">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-xl font-black text-amber-600">
+                <Star className="w-6 h-6 text-amber-500" />
+                Traguardo Fedeltà Raggiunto!
+              </DialogTitle>
+              <DialogDescription>
+                <span className="font-bold text-[#0F172A]">{loyaltyAlertData?.clientName}</span> ha raggiunto{' '}
+                <span className="font-black text-amber-600">{loyaltyAlertData?.totalPoints} punti</span> fedeltà!
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-2">
+              <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 text-sm text-amber-800">
+                {loyaltyAlertData?.totalPoints >= 10 ? (
+                  <p>Ha diritto ad un <strong>taglio gratis</strong> o uno <strong>sconto di €10,00</strong> sui servizi di colpi di sole e schiariture.</p>
+                ) : (
+                  <p>Ha diritto ad uno <strong>sconto di €10,00</strong> sui servizi di colpi di sole e schiariture.</p>
+                )}
+              </div>
+              <p className="text-sm text-[#334155]">Vuoi avvisare il cliente su WhatsApp?</p>
+            </div>
+            <DialogFooter className="flex gap-2 sm:gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setLoyaltyAlertOpen(false)}
+                className="flex-1 border-[#E2E8F0]"
+              >
+                Chiudi
+              </Button>
+              <Button
+                onClick={openLoyaltyWhatsApp}
+                className="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold"
+                data-testid="loyalty-whatsapp-btn"
+              >
+                <MessageSquare className="w-4 h-4 mr-2" />
+                Invia WhatsApp
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </Layout>
   );
