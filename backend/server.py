@@ -1506,8 +1506,10 @@ class PublicBookingRequest(BaseModel):
 @api_router.post("/public/booking")
 async def create_public_booking(data: PublicBookingRequest):
     """Create booking from public page"""
-    # Get first user (salon owner)
-    user = await db.users.find_one({}, {"_id": 0})
+    # Get melitobruno (main user)
+    user = await db.users.find_one({"email": "melitobruno@gmail.com"}, {"_id": 0})
+    if not user:
+        user = await db.users.find_one({}, {"_id": 0})
     if not user:
         raise HTTPException(status_code=400, detail="Salone non configurato")
     
