@@ -410,6 +410,41 @@ async def delete_operator(operator_id: str, current_user: dict = Depends(get_cur
 
 # ============== CLIENT ROUTES ==============
 
+class ClientBulkImport(BaseModel):
+    clients: List[ClientCreate]
+
+@api_router.post("/clients/import")
+async def import_clients_bulk(data: ClientBulkImport, current_user: dict = Depends(get_current_user)):
+    """Import multiple clients at once"""
+    imported = 0
+    skipped = 0
+    
+    for client_data in data.clients:
+        # Check if client already exists
+        exists = await db.clients.find_one({
+            "user_id": current_user["id"], 
+            "name": client_data.name
+        })
+        if exists:
+            skipped += 1
+            continue
+        
+        client_doc = {
+            "id": str(uuid.uuid4()),
+            "user_id": current_user["id"],
+            "name": client_data.name,
+            "phone": client_data.phone or "",
+            "email": client_data.email or "",
+            "notes": client_data.notes or "",
+            "sms_reminder": client_data.sms_reminder if client_data.sms_reminder is not None else True,
+            "total_visits": 0,
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.clients.insert_one(client_doc)
+        imported += 1
+    
+    return {"imported": imported, "skipped": skipped, "total": imported + skipped}
+
 @api_router.post("/clients", response_model=ClientResponse)
 async def create_client(data: ClientCreate, current_user: dict = Depends(get_current_user)):
     client_id = str(uuid.uuid4())
