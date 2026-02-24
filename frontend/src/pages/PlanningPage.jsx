@@ -88,6 +88,13 @@ export default function PlanningPage() {
   // Selected client info
   const [selectedClientInfo, setSelectedClientInfo] = useState(null);
 
+  // Payment/Checkout state
+  const [checkoutMode, setCheckoutMode] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('cash');
+  const [discountType, setDiscountType] = useState('none');
+  const [discountValue, setDiscountValue] = useState('');
+  const [processing, setProcessing] = useState(false);
+
   useEffect(() => {
     fetchData();
   }, [selectedDate]);
