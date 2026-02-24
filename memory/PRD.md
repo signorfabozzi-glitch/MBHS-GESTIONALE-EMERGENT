@@ -3,7 +3,7 @@
 ## Problema Originale
 Applicazione gestionale completa per un salone di parrucchiera con autenticazione, gestione appuntamenti, clienti, servizi, operatori, statistiche e funzionalità avanzate.
 
-## Stato Attuale: IN SVILUPPO
+## Stato Attuale: COMPLETO
 
 ### Funzionalità Implementate
 
@@ -36,7 +36,8 @@ Applicazione gestionale completa per un salone di parrucchiera con autenticazion
 - Service Worker per funzionalità offline
 
 #### Prenotazione Online
-- Pagina pubblica /prenota con logo
+- Pagina di benvenuto con logo, indirizzo e numeri di telefono
+- Pagina pubblica /prenota con flusso a 3 step
 - Controllo sovrapposizione orari
 
 #### Report & Backup
@@ -47,20 +48,13 @@ Applicazione gestionale completa per un salone di parrucchiera con autenticazion
 - 1 punto ogni €10 spesi (assegnazione automatica al checkout)
 - Premio: Sconto 20% Colorazione (5 punti)
 - Premio: Taglio Gratuito (10 punti)
-- Pagina dedicata /loyalty con statistiche, lista clienti, progress bars
-- Punti visibili nello storico cliente
-- Anteprima punti nel checkout
-- Riscatto e utilizzo premi
-- Aggiunta manuale punti
-- **Notifica WhatsApp automatica** quando il cliente raggiunge 5 o 10 punti (popup dopo checkout con messaggio personalizzato)
+- Pagina dedicata /loyalty
+- Punti visibili nello storico cliente e checkout
+- Notifica WhatsApp automatica al raggiungimento soglia 5/10 punti
 
 #### Branding
 - Logo MBHS SALON su login, booking, sidebar
-
-## Architettura Tecnica
-- Frontend: React 18, React Router, Tailwind CSS, Shadcn/UI, Axios, date-fns
-- Backend: FastAPI (Python), MongoDB, JWT
-- PWA: Service Workers, Web App Manifest
+- Indirizzo e contatti su pagina prenotazione
 
 ## Credenziali Test
 - Email: melitobruno@gmail.com
