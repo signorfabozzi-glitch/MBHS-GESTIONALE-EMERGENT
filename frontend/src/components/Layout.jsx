@@ -14,7 +14,8 @@ import {
   Settings,
   LogOut,
   Menu,
-  X
+  X,
+  CreditCard
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -26,6 +27,7 @@ const navItems = [
   { path: '/week', label: 'Settimana', icon: CalendarRange },
   { path: '/month', label: 'Mese', icon: CalendarRange },
   { path: '/clients', label: 'Clienti', icon: Users },
+  { path: '/cards', label: 'Card / Abbonamenti', icon: CreditCard },
   { path: '/services', label: 'Servizi', icon: Scissors },
   { path: '/operators', label: 'Operatori', icon: UserCircle },
   { path: '/stats', label: 'Statistiche', icon: BarChart3 },

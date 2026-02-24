@@ -17,6 +17,7 @@ import WeeklyView from "./pages/WeeklyView";
 import AppointmentsPage from "./pages/AppointmentsPage";
 import OperatorsPage from "./pages/OperatorsPage";
 import PlanningPage from "./pages/PlanningPage";
+import PrepaidCardsPage from "./pages/PrepaidCardsPage";
 import LoginPage from "./pages/LoginPage";
 
 export default function App() {
@@ -113,6 +114,16 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <OperatorsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* CARD / ABBONAMENTI */}
+          <Route
+            path="/cards"
+            element={
+              <ProtectedRoute>
+                <PrepaidCardsPage />
               </ProtectedRoute>
             }
           />
