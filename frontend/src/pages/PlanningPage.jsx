@@ -63,6 +63,10 @@ export default function PlanningPage() {
     notes: ''
   });
 
+  // Client search in dialog
+  const [clientSearch, setClientSearch] = useState('');
+  const [showClientDropdown, setShowClientDropdown] = useState(false);
+
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState({ clients: [], appointments: [] });
