@@ -40,6 +40,12 @@ Applicazione gestionale completa per un salone di parrucchiera con autenticazion
 - ✅ **18 Trattamenti** importati da Trattamenti.xml
 - ✅ **61 Note Clienti** aggiornate da Memo.xlsx
 
+#### PWA & Offline (24 Feb 2026)
+- ✅ **Progressive Web App (PWA)**: Installabile su desktop e mobile
+- ✅ **Icona personalizzata**: Forbici stilizzate per l'app
+- ✅ **Funzionalità Offline**: Service Worker per consultare appuntamenti senza connessione
+- ✅ **Indicatore Offline**: Banner giallo quando si è senza connessione
+
 ## Architettura Tecnica
 
 ### Frontend
