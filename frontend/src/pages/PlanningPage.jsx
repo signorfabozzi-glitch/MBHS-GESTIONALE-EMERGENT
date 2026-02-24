@@ -348,8 +348,8 @@ export default function PlanningPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="font-playfair text-4xl font-bold text-[#0F172A]">Planning</h1>
-            <p className="text-[#0EA5E9] mt-1 font-semibold text-lg">
+            <h1 className="text-4xl font-black text-black">Planning</h1>
+            <p className="text-[#0EA5E9] mt-1 font-bold text-lg">
               {format(selectedDate, "EEEE d MMMM yyyy", { locale: it })}
             </p>
           </div>
