@@ -27,9 +27,19 @@ export default function App() {
           {/* LOGIN (non protetto) */}
           <Route path="/login" element={<LoginPage />} />
 
-          {/* HOME = DASHBOARD */}
+          {/* HOME = PLANNING */}
           <Route
             path="/"
+            element={
+              <ProtectedRoute>
+                <PlanningPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* DASHBOARD */}
+          <Route
+            path="/dashboard"
             element={
               <ProtectedRoute>
                 <Dashboard />
