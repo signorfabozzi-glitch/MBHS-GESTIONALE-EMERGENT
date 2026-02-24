@@ -1649,6 +1649,225 @@ async def get_whatsapp_link(client_id: str, message: str = None, current_user: d
     
     return {"url": whatsapp_url, "phone": phone}
 
+# ============== LOYALTY PROGRAM ==============
+
+async def get_or_create_loyalty(client_id: str, user_id: str):
+    """Get or create a loyalty record for a client"""
+    loyalty = await db.loyalty.find_one(
+        {"client_id": client_id, "user_id": user_id},
+        {"_id": 0}
+    )
+    if not loyalty:
+        loyalty = {
+            "id": str(uuid.uuid4()),
+            "client_id": client_id,
+            "user_id": user_id,
+            "points": 0,
+            "total_points_earned": 0,
+            "total_points_redeemed": 0,
+            "history": [],
+            "active_rewards": [],
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.loyalty.insert_one(loyalty)
+        loyalty.pop("_id", None)
+    return loyalty
+
+async def award_loyalty_points(client_id: str, user_id: str, amount_paid: float, appointment_id: str):
+    """Award loyalty points based on amount paid. 1 point per LOYALTY_POINTS_PER_EURO €"""
+    points_earned = int(amount_paid // LOYALTY_POINTS_PER_EURO)
+    if points_earned <= 0:
+        return 0
+    
+    loyalty = await get_or_create_loyalty(client_id, user_id)
+    
+    history_entry = {
+        "id": str(uuid.uuid4()),
+        "type": "earned",
+        "points": points_earned,
+        "description": f"+{points_earned} punti per pagamento di €{amount_paid:.2f}",
+        "appointment_id": appointment_id,
+        "date": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.loyalty.update_one(
+        {"id": loyalty["id"]},
+        {
+            "$inc": {
+                "points": points_earned,
+                "total_points_earned": points_earned
+            },
+            "$push": {"history": history_entry}
+        }
+    )
+    return points_earned
+
+@api_router.get("/loyalty")
+async def get_all_loyalty(current_user: dict = Depends(get_current_user)):
+    """Get loyalty info for all clients"""
+    loyalties = await db.loyalty.find(
+        {"user_id": current_user["id"]},
+        {"_id": 0}
+    ).to_list(1000)
+    
+    # Enrich with client names
+    for loy in loyalties:
+        client = await db.clients.find_one(
+            {"id": loy["client_id"], "user_id": current_user["id"]},
+            {"_id": 0, "name": 1, "phone": 1}
+        )
+        loy["client_name"] = client["name"] if client else "Sconosciuto"
+        loy["client_phone"] = client.get("phone", "") if client else ""
+    
+    return loyalties
+
+@api_router.get("/loyalty/config")
+async def get_loyalty_config(current_user: dict = Depends(get_current_user)):
+    """Get loyalty program configuration"""
+    return {
+        "points_per_euro": LOYALTY_POINTS_PER_EURO,
+        "rewards": LOYALTY_REWARDS
+    }
+
+@api_router.get("/loyalty/{client_id}")
+async def get_client_loyalty(client_id: str, current_user: dict = Depends(get_current_user)):
+    """Get loyalty info for a specific client"""
+    client = await db.clients.find_one(
+        {"id": client_id, "user_id": current_user["id"]},
+        {"_id": 0}
+    )
+    if not client:
+        raise HTTPException(status_code=404, detail="Cliente non trovato")
+    
+    loyalty = await get_or_create_loyalty(client_id, current_user["id"])
+    loyalty["client_name"] = client["name"]
+    loyalty["rewards_config"] = LOYALTY_REWARDS
+    return loyalty
+
+@api_router.post("/loyalty/{client_id}/redeem")
+async def redeem_loyalty_reward(client_id: str, data: LoyaltyRedeemRequest, current_user: dict = Depends(get_current_user)):
+    """Redeem a loyalty reward"""
+    client = await db.clients.find_one(
+        {"id": client_id, "user_id": current_user["id"]},
+        {"_id": 0}
+    )
+    if not client:
+        raise HTTPException(status_code=404, detail="Cliente non trovato")
+    
+    reward = LOYALTY_REWARDS.get(data.reward_type)
+    if not reward:
+        raise HTTPException(status_code=400, detail="Tipo di premio non valido")
+    
+    loyalty = await get_or_create_loyalty(client_id, current_user["id"])
+    
+    if loyalty["points"] < reward["points_required"]:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Punti insufficienti. Necessari: {reward['points_required']}, Disponibili: {loyalty['points']}"
+        )
+    
+    # Create reward record
+    reward_record = {
+        "id": str(uuid.uuid4()),
+        "reward_type": data.reward_type,
+        "reward_name": reward["name"],
+        "points_spent": reward["points_required"],
+        "redeemed": False,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    history_entry = {
+        "id": str(uuid.uuid4()),
+        "type": "redeemed",
+        "points": -reward["points_required"],
+        "description": f"Riscattato: {reward['name']}",
+        "date": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.loyalty.update_one(
+        {"id": loyalty["id"]},
+        {
+            "$inc": {
+                "points": -reward["points_required"],
+                "total_points_redeemed": reward["points_required"]
+            },
+            "$push": {
+                "history": history_entry,
+                "active_rewards": reward_record
+            }
+        }
+    )
+    
+    return {
+        "success": True,
+        "message": f"Premio '{reward['name']}' riscattato con successo!",
+        "reward": reward_record,
+        "remaining_points": loyalty["points"] - reward["points_required"]
+    }
+
+@api_router.post("/loyalty/{client_id}/use-reward/{reward_id}")
+async def use_loyalty_reward(client_id: str, reward_id: str, current_user: dict = Depends(get_current_user)):
+    """Mark a reward as used"""
+    loyalty = await db.loyalty.find_one(
+        {"client_id": client_id, "user_id": current_user["id"]},
+        {"_id": 0}
+    )
+    if not loyalty:
+        raise HTTPException(status_code=404, detail="Record fedeltà non trovato")
+    
+    # Find and mark the reward as redeemed
+    updated = False
+    active_rewards = loyalty.get("active_rewards", [])
+    for r in active_rewards:
+        if r["id"] == reward_id and not r["redeemed"]:
+            r["redeemed"] = True
+            r["used_at"] = datetime.now(timezone.utc).isoformat()
+            updated = True
+            break
+    
+    if not updated:
+        raise HTTPException(status_code=404, detail="Premio non trovato o già utilizzato")
+    
+    await db.loyalty.update_one(
+        {"id": loyalty["id"]},
+        {"$set": {"active_rewards": active_rewards}}
+    )
+    
+    return {"success": True, "message": "Premio utilizzato con successo!"}
+
+@api_router.post("/loyalty/{client_id}/add-points")
+async def add_manual_points(client_id: str, points: int, description: str = "Punti aggiunti manualmente", current_user: dict = Depends(get_current_user)):
+    """Manually add loyalty points to a client"""
+    client = await db.clients.find_one(
+        {"id": client_id, "user_id": current_user["id"]},
+        {"_id": 0}
+    )
+    if not client:
+        raise HTTPException(status_code=404, detail="Cliente non trovato")
+    
+    loyalty = await get_or_create_loyalty(client_id, current_user["id"])
+    
+    history_entry = {
+        "id": str(uuid.uuid4()),
+        "type": "manual",
+        "points": points,
+        "description": description,
+        "date": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.loyalty.update_one(
+        {"id": loyalty["id"]},
+        {
+            "$inc": {
+                "points": points,
+                "total_points_earned": max(0, points)
+            },
+            "$push": {"history": history_entry}
+        }
+    )
+    
+    return {"success": True, "message": f"{points} punti aggiunti a {client['name']}"}
+
 # ============== HEALTH CHECK ==============
 
 @api_router.get("/")
