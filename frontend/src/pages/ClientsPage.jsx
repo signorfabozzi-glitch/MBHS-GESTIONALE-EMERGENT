@@ -82,7 +82,7 @@ export default function ClientsPage() {
       }
       setDialogOpen(false);
       setEditingClient(null);
-      setFormData({ name: '', phone: '', email: '', notes: '' });
+      setFormData({ name: '', phone: '', email: '', notes: '', sms_reminder: true });
       fetchClients();
     } catch (err) {
       toast.error(err.response?.data?.detail || 'Errore nel salvataggio');
@@ -97,7 +97,8 @@ export default function ClientsPage() {
       name: client.name,
       phone: client.phone,
       email: client.email,
-      notes: client.notes
+      notes: client.notes,
+      sms_reminder: client.sms_reminder !== false
     });
     setDialogOpen(true);
   };
