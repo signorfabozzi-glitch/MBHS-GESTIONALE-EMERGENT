@@ -192,6 +192,53 @@ class SettingsUpdate(BaseModel):
     closing_time: Optional[str] = None
     working_days: Optional[List[str]] = None
 
+# Prepaid Card / Subscription Models
+class PrepaidCardCreate(BaseModel):
+    client_id: str
+    card_type: str  # "prepaid" or "subscription"
+    name: str  # e.g., "Card 10 Pieghe", "Abbonamento Mensile"
+    total_value: float  # Total amount paid
+    total_services: Optional[int] = None  # For service-based cards (e.g., 10 pieghe)
+    valid_until: Optional[str] = None  # Expiry date for subscriptions
+    notes: Optional[str] = ""
+
+class PrepaidCardResponse(BaseModel):
+    id: str
+    client_id: str
+    client_name: str
+    card_type: str
+    name: str
+    total_value: float
+    remaining_value: float
+    total_services: Optional[int]
+    used_services: int
+    valid_until: Optional[str]
+    notes: str
+    active: bool
+    created_at: str
+    transactions: List[dict]
+
+class PrepaidCardUpdate(BaseModel):
+    name: Optional[str] = None
+    total_value: Optional[float] = None
+    remaining_value: Optional[float] = None
+    total_services: Optional[int] = None
+    valid_until: Optional[str] = None
+    notes: Optional[str] = None
+    active: Optional[bool] = None
+
+class CardTransaction(BaseModel):
+    card_id: str
+    amount: float
+    appointment_id: Optional[str] = None
+    description: Optional[str] = ""
+
+# Recurring Appointment Model
+class RecurringAppointmentCreate(BaseModel):
+    appointment_id: str
+    repeat_weeks: int  # Every X weeks
+    repeat_count: int  # How many times to repeat
+
 # ============== HELPER FUNCTIONS ==============
 
 def hash_password(password: str) -> str:
