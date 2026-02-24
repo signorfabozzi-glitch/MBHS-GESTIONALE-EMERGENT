@@ -867,6 +867,152 @@ export default function PlanningPage() {
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Edit/Delete Appointment Dialog */}
+        <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+          <DialogContent className="sm:max-w-[550px]">
+            <DialogHeader>
+              <DialogTitle className="font-playfair text-2xl text-[#44403C]">
+                Modifica Appuntamento
+              </DialogTitle>
+              <DialogDescription>
+                {editingAppointment && `${editingAppointment.date} alle ${editingAppointment.time}`}
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleUpdateAppointment} className="space-y-4 mt-4">
+              {/* Client Info */}
+              {selectedClientInfo && (
+                <div className="p-3 bg-[#FEF3C7] border-2 border-[#F59E0B] rounded-lg">
+                  <div className="flex items-start gap-2">
+                    <User className="w-5 h-5 text-[#F59E0B] flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <p className="font-bold text-[#92400E]">{selectedClientInfo.name}</p>
+                      {selectedClientInfo.phone && (
+                        <p className="text-sm text-[#92400E]">Tel: {selectedClientInfo.phone}</p>
+                      )}
+                      {selectedClientInfo.notes && (
+                        <p className="text-sm text-[#92400E] mt-1 whitespace-pre-wrap">{selectedClientInfo.notes}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-[#44403C] font-semibold">Orario</Label>
+                  <Select
+                    value={formData.time}
+                    onValueChange={(val) => setFormData({ ...formData, time: val })}
+                  >
+                    <SelectTrigger className="border-2 border-[#E6CCB2]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-[200px]">
+                      {TIME_SLOTS.map((time) => (
+                        <SelectItem key={time} value={time}>
+                          {time}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-[#44403C] font-semibold">Operatore</Label>
+                  <Select
+                    value={formData.operator_id || "none"}
+                    onValueChange={(val) => setFormData({ ...formData, operator_id: val === "none" ? "" : val })}
+                  >
+                    <SelectTrigger className="border-2 border-[#E6CCB2]">
+                      <SelectValue placeholder="Seleziona..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Non assegnato</SelectItem>
+                      {operators.map((op) => (
+                        <SelectItem key={op.id} value={op.id}>
+                          <div className="flex items-center gap-2">
+                            <div
+                              className="w-3 h-3 rounded-full"
+                              style={{ backgroundColor: op.color }}
+                            />
+                            {op.name}
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-[#44403C] font-semibold">Servizi</Label>
+                <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto">
+                  {services.map((service) => (
+                    <Button
+                      key={service.id}
+                      type="button"
+                      variant="outline"
+                      className={`justify-start h-auto py-2 px-3 ${
+                        formData.service_ids.includes(service.id)
+                          ? 'bg-[#C58970]/20 border-2 border-[#C58970] text-[#C58970] font-semibold'
+                          : 'border-2 border-[#E6CCB2] text-[#44403C]'
+                      }`}
+                      onClick={() => toggleService(service.id)}
+                    >
+                      <div className="text-left">
+                        <p className="font-medium text-sm">{service.name}</p>
+                        <p className="text-xs opacity-70">{service.duration} min - €{service.price}</p>
+                      </div>
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-[#44403C] font-semibold">Note appuntamento</Label>
+                <Input
+                  value={formData.notes}
+                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                  placeholder="Note aggiuntive..."
+                  className="bg-white border-2 border-[#E6CCB2]"
+                />
+              </div>
+
+              <DialogFooter className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={handleDeleteAppointment}
+                  disabled={deleting}
+                  className="mr-auto"
+                  data-testid="delete-appointment-btn"
+                >
+                  {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Trash2 className="w-4 h-4 mr-1" /> Elimina</>}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setEditDialogOpen(false);
+                    setEditingAppointment(null);
+                  }}
+                  className="border-[#E6CCB2]"
+                >
+                  Annulla
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={saving}
+                  className="bg-[#C58970] hover:bg-[#B07860] text-white font-semibold"
+                  data-testid="update-appointment-btn"
+                >
+                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Edit3 className="w-4 h-4 mr-1" /> Salva</>}
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
     </Layout>
   );
