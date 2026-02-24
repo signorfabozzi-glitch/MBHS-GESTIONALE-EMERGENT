@@ -125,6 +125,7 @@ export default function BookingPage() {
       {/* Header */}
       <div className="bg-[#0EA5E9] text-white py-6 px-4">
         <div className="max-w-lg mx-auto text-center">
+          <img src="/logo.png?v=2" alt="MBHS Salon" className="w-16 h-16 mx-auto mb-3 rounded-xl shadow-lg" />
           <h1 className="text-2xl font-black">MBHS SALON</h1>
           <p className="text-blue-100">Prenota il tuo appuntamento</p>
         </div>
