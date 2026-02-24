@@ -1518,6 +1518,16 @@ async def create_public_booking(data: PublicBookingRequest):
     
     user_id = user["id"]
     
+    # Check if time slot is available
+    existing = await db.appointments.find_one({
+        "user_id": user_id,
+        "date": data.date,
+        "time": data.time,
+        "operator_id": data.operator_id if data.operator_id else {"$exists": True}
+    })
+    if existing:
+        raise HTTPException(status_code=400, detail="Orario già occupato. Scegli un altro orario.")
+    
     # Get or create client
     client = await db.clients.find_one(
         {"phone": data.client_phone, "user_id": user_id},
