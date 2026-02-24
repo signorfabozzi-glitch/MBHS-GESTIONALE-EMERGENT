@@ -23,6 +23,7 @@ import ReportIncassiPage from "./pages/ReportIncassiPage";
 import BackupPage from "./pages/BackupPage";
 import BookingPage from "./pages/BookingPage";
 import LoyaltyPage from "./pages/LoyaltyPage";
+import RemindersPage from "./pages/RemindersPage";
 import LoginPage from "./pages/LoginPage";
 
 // Offline indicator component
@@ -195,6 +196,16 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <LoyaltyPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* PROMEMORIA & RICHIAMI */}
+          <Route
+            path="/reminders"
+            element={
+              <ProtectedRoute>
+                <RemindersPage />
               </ProtectedRoute>
             }
           />
