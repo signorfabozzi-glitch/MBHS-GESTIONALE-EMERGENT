@@ -371,8 +371,31 @@ export default function ClientsPage() {
                     )}
                     {client.notes && (
                       <p className="text-[#334155] text-xs mt-3 pt-3 border-t border-[#E2E8F0]/30 italic">
-                        "{client.notes}"
+                        "{client.notes.substring(0, 80)}{client.notes.length > 80 ? '...' : ''}"
                       </p>
+                    )}
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-2 mt-4 pt-3 border-t border-[#E2E8F0]/30">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => openClientHistory(client)}
+                      className="flex-1 text-xs border-[#0EA5E9] text-[#0EA5E9] hover:bg-[#0EA5E9]/10"
+                    >
+                      <History className="w-3 h-3 mr-1" />
+                      Storico
+                    </Button>
+                    {client.phone && (
+                      <Button
+                        size="sm"
+                        onClick={() => openWhatsApp(client)}
+                        className="flex-1 text-xs bg-green-500 hover:bg-green-600 text-white"
+                      >
+                        <MessageSquare className="w-3 h-3 mr-1" />
+                        WhatsApp
+                      </Button>
                     )}
                   </div>
                 </CardContent>
