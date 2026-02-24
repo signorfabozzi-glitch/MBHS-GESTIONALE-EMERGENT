@@ -118,7 +118,7 @@ export default function ClientsPage() {
 
   const openNewDialog = () => {
     setEditingClient(null);
-    setFormData({ name: '', phone: '', email: '', notes: '' });
+    setFormData({ name: '', phone: '', email: '', notes: '', sms_reminder: true });
     setDialogOpen(true);
   };
 
