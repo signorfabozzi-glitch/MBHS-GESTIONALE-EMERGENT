@@ -88,12 +88,12 @@ export default function Layout({ children }) {
       </nav>
 
       {/* Logout */}
-      <div className="p-4 border-t border-[#E6CCB2]/30">
+      <div className="p-4 border-t border-[#E2E8F0]">
         <Button
           variant="ghost"
           onClick={handleLogout}
           data-testid="logout-btn"
-          className="w-full justify-start text-[#78716C] hover:text-[#E76F51] hover:bg-red-50"
+          className="w-full justify-start text-[#334155] font-semibold hover:text-[#EF4444] hover:bg-red-50"
         >
           <LogOut className="w-5 h-5 mr-3" strokeWidth={1.5} />
           Esci
