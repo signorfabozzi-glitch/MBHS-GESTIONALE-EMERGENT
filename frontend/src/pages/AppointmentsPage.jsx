@@ -294,14 +294,14 @@ export default function AppointmentsPage() {
                     <div className="space-y-2">
                       <Label>Operatore</Label>
                       <Select
-                        value={formData.operator_id}
-                        onValueChange={(val) => setFormData({ ...formData, operator_id: val })}
+                        value={formData.operator_id || "none"}
+                        onValueChange={(val) => setFormData({ ...formData, operator_id: val === "none" ? "" : val })}
                       >
                         <SelectTrigger data-testid="select-operator">
                           <SelectValue placeholder="Seleziona..." />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">Non assegnato</SelectItem>
+                          <SelectItem value="none">Non assegnato</SelectItem>
                           {operators.map((op) => (
                             <SelectItem key={op.id} value={op.id}>
                               <div className="flex items-center gap-2">
