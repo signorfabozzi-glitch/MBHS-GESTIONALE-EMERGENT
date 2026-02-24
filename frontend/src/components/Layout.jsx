@@ -1,0 +1,129 @@
+import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import {
+  LayoutDashboard,
+  Calendar,
+  CalendarDays,
+  CalendarRange,
+  Users,
+  Scissors,
+  BarChart3,
+  History,
+  Settings,
+  LogOut,
+  Menu,
+  X
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+
+const navItems = [
+  { path: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { path: '/appointments', label: 'Agenda', icon: Calendar },
+  { path: '/week', label: 'Settimana', icon: CalendarDays },
+  { path: '/month', label: 'Mese', icon: CalendarRange },
+  { path: '/clients', label: 'Clienti', icon: Users },
+  { path: '/services', label: 'Servizi', icon: Scissors },
+  { path: '/stats', label: 'Statistiche', icon: BarChart3 },
+  { path: '/history', label: 'Storico', icon: History },
+  { path: '/settings', label: 'Impostazioni', icon: Settings },
+];
+
+export default function Layout({ children }) {
+  const { user, logout } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  const NavLink = ({ item, mobile = false }) => {
+    const isActive = location.pathname === item.path;
+    const Icon = item.icon;
+    
+    return (
+      <Link
+        to={item.path}
+        onClick={() => mobile && setMobileOpen(false)}
+        data-testid={`nav-${item.path.replace('/', '') || 'home'}`}
+        className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+          isActive
+            ? 'bg-[#FAF5F2] text-[#C58970] font-medium border-r-2 border-[#C58970]'
+            : 'text-[#78716C] hover:text-[#44403C] hover:bg-[#FAFAF9]'
+        }`}
+      >
+        <Icon className="w-5 h-5" strokeWidth={1.5} />
+        <span className="font-manrope">{item.label}</span>
+      </Link>
+    );
+  };
+
+  const SidebarContent = ({ mobile = false }) => (
+    <div className="flex flex-col h-full">
+      {/* Logo */}
+      <div className="p-6 border-b border-[#E6CCB2]/30">
+        <h1 className="font-playfair text-2xl font-medium text-[#44403C]">
+          {user?.salon_name || 'Il Mio Salone'}
+        </h1>
+        <p className="text-sm text-[#78716C] mt-1 font-manrope">{user?.name}</p>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+        {navItems.map((item) => (
+          <NavLink key={item.path} item={item} mobile={mobile} />
+        ))}
+      </nav>
+
+      {/* Logout */}
+      <div className="p-4 border-t border-[#E6CCB2]/30">
+        <Button
+          variant="ghost"
+          onClick={handleLogout}
+          data-testid="logout-btn"
+          className="w-full justify-start text-[#78716C] hover:text-[#E76F51] hover:bg-red-50"
+        >
+          <LogOut className="w-5 h-5 mr-3" strokeWidth={1.5} />
+          Esci
+        </Button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-[#FAFAF9]">
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex flex-col w-64 h-screen fixed left-0 top-0 bg-white border-r border-[#E6CCB2]/30">
+        <SidebarContent />
+      </aside>
+
+      {/* Mobile Header */}
+      <header className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white border-b border-[#E6CCB2]/30 px-4 py-3 flex items-center justify-between">
+        <h1 className="font-playfair text-xl font-medium text-[#44403C]">
+          {user?.salon_name || 'Salone'}
+        </h1>
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" data-testid="mobile-menu-btn">
+              <Menu className="w-6 h-6 text-[#44403C]" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="p-0 w-64">
+            <SidebarContent mobile />
+          </SheetContent>
+        </Sheet>
+      </header>
+
+      {/* Main Content */}
+      <main className="md:ml-64 min-h-screen pt-16 md:pt-0">
+        <div className="p-6 md:p-8 lg:p-12">
+          {children}
+        </div>
+      </main>
+    </div>
+  );
+}
