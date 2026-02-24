@@ -1,104 +1,87 @@
-# PRD - Salone Bella Donna
+# PRD - MBHS SALON
 
 ## Problema Originale
 Applicazione gestionale completa per un salone di parrucchiera con autenticazione, gestione appuntamenti, clienti, servizi, operatori, statistiche e funzionalità avanzate.
 
-## Stato Attuale: COMPLETATO ✅
+## Stato Attuale: IN SVILUPPO
 
 ### Funzionalità Implementate
 
 #### Core Application
-- ✅ Autenticazione JWT (email/password)
-- ✅ Dashboard principale
-- ✅ Planning giornaliero con griglia 15 minuti
-- ✅ Vista settimanale e mensile
-- ✅ Gestione Clienti (CRUD)
-- ✅ Gestione Servizi (CRUD)
-- ✅ Gestione Operatori (CRUD)
-- ✅ Statistiche con export PDF
-- ✅ Storico appuntamenti
+- Autenticazione JWT (email/password)
+- Dashboard principale
+- Planning giornaliero con griglia 15 minuti
+- Vista settimanale e mensile
+- Gestione Clienti (CRUD)
+- Gestione Servizi (CRUD)
+- Gestione Operatori (CRUD)
+- Statistiche con export PDF
+- Storico appuntamenti
 
-#### Fase 2 - Funzionalità Avanzate
-- ✅ Promemoria SMS (Twilio)
-- ✅ Export PDF statistiche
-- ✅ Gestione Operatori
+#### Funzionalità Avanzate
+- Promemoria SMS (Twilio - richiede credenziali)
+- Export PDF statistiche
+- Card Prepagate / Abbonamenti
+- Ricerca Rapida Cliente nel Planning
+- Appuntamenti Ricorrenti
+- Checkout in-appointment con metodi pagamento (Contanti, Carta, Bonifico, Prepagata) e sconti
 
-#### Fase 3 - Import Dati
-- ✅ Import clienti da Excel (161 clienti)
-- ✅ UI per import Excel nella pagina Clienti
+#### Import Dati
+- Import clienti da Excel (161 clienti)
+- 18 Trattamenti importati da XML
+- 61 Note Clienti aggiornate da Excel
 
-#### Fase 4 - UX Improvements
-- ✅ Landing page = Planning giornaliero
-- ✅ Vista per operatore con colonne
+#### PWA & Offline
+- Progressive Web App installabile
+- Icona personalizzata
+- Service Worker per funzionalità offline
+- Indicatore offline
 
-#### Fase 5 - Nuove Funzionalità (24 Feb 2026)
-- ✅ **Card Prepagate / Abbonamenti**: Pagina completa per gestire card prepagate e abbonamenti clienti
-- ✅ **Ricerca Rapida Cliente**: Barra di ricerca nel Planning con highlight appuntamenti
-- ✅ **Appuntamenti Ricorrenti**: Pulsante "Ripeti" su ogni appuntamento per creare serie ricorrenti
+#### Prenotazione Online
+- Pagina pubblica /prenota per prenotazioni clienti
+- Controllo sovrapposizione orari
 
-#### Import Dati Aggiuntivi (24 Feb 2026)
-- ✅ **18 Trattamenti** importati da Trattamenti.xml
-- ✅ **61 Note Clienti** aggiornate da Memo.xlsx
+#### Report & Backup
+- Report Incassi
+- Backup Dati con export Excel
 
-#### PWA & Offline (24 Feb 2026)
-- ✅ **Progressive Web App (PWA)**: Installabile su desktop e mobile
-- ✅ **Icona personalizzata**: Forbici stilizzate per l'app
-- ✅ **Funzionalità Offline**: Service Worker per consultare appuntamenti senza connessione
-- ✅ **Indicatore Offline**: Banner giallo quando si è senza connessione
+#### Programma Fedeltà (24 Feb 2026)
+- 1 punto ogni €10 spesi (assegnazione automatica al checkout)
+- Premio: Sconto 20% Colorazione (5 punti)
+- Premio: Taglio Gratuito (10 punti)
+- Pagina dedicata /loyalty con statistiche, lista clienti, progress bars
+- Punti visibili nello storico cliente
+- Anteprima punti nel checkout
+- Riscatto e utilizzo premi
+- Aggiunta manuale punti
+
+#### Branding
+- Logo MBHS SALON su login, booking, sidebar
+- Schema colori blue palette
 
 ## Architettura Tecnica
 
-### Frontend
-- React 18 con React Router
-- Tailwind CSS + Shadcn/UI
-- Axios per API calls
-- date-fns per gestione date
-
-### Backend
-- FastAPI (Python)
-- MongoDB
-- JWT Authentication
-- Twilio SMS
-
-### Struttura File
-```
-/app/
-├── backend/
-│   ├── server.py          # API FastAPI
-│   ├── requirements.txt
-│   └── .env
-├── frontend/
-│   └── src/
-│       ├── pages/
-│       │   ├── PlanningPage.jsx    # Home + Search + Recurring
-│       │   ├── PrepaidCardsPage.jsx # Card Prepagate
-│       │   └── ...
-│       └── components/
-│           └── Layout.jsx          # Sidebar con Cards
-└── scripts/
-    ├── import_clients_api.py
-    ├── import_services.py
-    └── import_memo.py
-```
-
-## API Endpoints Principali
-- `/api/auth/login`, `/api/auth/register`
-- `/api/clients`, `/api/clients/search/appointments`
-- `/api/services`
-- `/api/appointments`, `/api/appointments/recurring`
-- `/api/operators`
-- `/api/cards` (CRUD + use/recharge)
+### Frontend: React 18, React Router, Tailwind CSS, Shadcn/UI, Axios, date-fns
+### Backend: FastAPI (Python), MongoDB, JWT, Twilio
+### PWA: Service Workers, Web App Manifest
 
 ## Credenziali Test
-- Email: salone@example.com
+- Email: melitobruno@gmail.com
 - Password: password123
 
-## Integrazioni 3rd Party
-- **Twilio**: SMS reminders (richiede credenziali in .env)
+## API Endpoints Principali
+- Auth: /api/auth/login, /api/auth/register, /api/auth/me
+- Clients: /api/clients, /api/clients/{id}/history
+- Services: /api/services
+- Appointments: /api/appointments, /api/appointments/{id}/checkout
+- Operators: /api/operators
+- Cards: /api/cards
+- Loyalty: /api/loyalty, /api/loyalty/config, /api/loyalty/{client_id}, /api/loyalty/{client_id}/redeem, /api/loyalty/{client_id}/use-reward/{reward_id}, /api/loyalty/{client_id}/add-points
+- Public: /api/public/services, /api/public/operators, /api/public/booking
+- Reports: /api/payments, /api/stats/*
 
-## Backlog Futuro (P2)
-- Blocco fasce orarie (pause, ferie)
-- Sconti e promozioni
-- Pulsante WhatsApp diretto
-- Analisi clienti (fedeltà, ore punta)
-- Refactoring server.py in moduli separati
+## Backlog Futuro
+- (P1) Promemoria automatici SMS/WhatsApp (logica schedulata)
+- (P2) Stampa ricevuta dopo pagamento
+- (P2) Blocco fasce orarie (pause/ferie)
+- (P2) Refactoring server.py in moduli separati (>1800 righe)
