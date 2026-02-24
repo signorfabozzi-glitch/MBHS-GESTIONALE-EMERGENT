@@ -1,11 +1,11 @@
 {
-  "name": "Salone Bella Donna",
-  "short_name": "Salone",
-  "description": "Gestionale per il tuo salone di parrucchiera",
+  "name": "MBHS SALON",
+  "short_name": "MBHS",
+  "description": "Gestionale per il tuo salone",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FAFAF9",
-  "theme_color": "#C58970",
+  "theme_color": "#0EA5E9",
   "orientation": "any",
   "icons": [
     {
