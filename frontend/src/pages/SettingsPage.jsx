@@ -90,16 +90,16 @@ export default function SettingsPage() {
       <div className="space-y-6" data-testid="settings-page">
         {/* Header */}
         <div>
-          <h1 className="font-playfair text-3xl font-medium text-[#44403C]">Impostazioni</h1>
-          <p className="text-[#78716C] mt-1 font-manrope">Gestisci le impostazioni del tuo salone</p>
+          <h1 className="font-playfair text-3xl font-medium text-[#0F172A]">Impostazioni</h1>
+          <p className="text-[#334155] mt-1 font-manrope">Gestisci le impostazioni del tuo salone</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Profile Settings */}
-          <Card className="bg-white border-[#E6CCB2]/30 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)]">
+          <Card className="bg-white border-[#E2E8F0]/30 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)]">
             <CardHeader>
-              <CardTitle className="font-playfair text-xl text-[#44403C] flex items-center gap-2">
-                <User className="w-5 h-5 text-[#C58970]" />
+              <CardTitle className="font-playfair text-xl text-[#0F172A] flex items-center gap-2">
+                <User className="w-5 h-5 text-[#0EA5E9]" />
                 Profilo
               </CardTitle>
             </CardHeader>
@@ -111,7 +111,7 @@ export default function SettingsPage() {
                     value={settings.name || ''}
                     onChange={(e) => setSettings({ ...settings, name: e.target.value })}
                     data-testid="settings-name-input"
-                    className="bg-[#FAFAF9] border-transparent focus:border-[#C58970]"
+                    className="bg-[#F8FAFC] border-transparent focus:border-[#0EA5E9]"
                   />
                 </div>
                 <div className="space-y-2">
@@ -119,7 +119,7 @@ export default function SettingsPage() {
                   <Input
                     value={settings.email || ''}
                     disabled
-                    className="bg-[#FAFAF9] border-transparent opacity-60"
+                    className="bg-[#F8FAFC] border-transparent opacity-60"
                   />
                 </div>
               </div>
@@ -127,10 +127,10 @@ export default function SettingsPage() {
           </Card>
 
           {/* Salon Settings */}
-          <Card className="bg-white border-[#E6CCB2]/30 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)]">
+          <Card className="bg-white border-[#E2E8F0]/30 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)]">
             <CardHeader>
-              <CardTitle className="font-playfair text-xl text-[#44403C] flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-[#C58970]" />
+              <CardTitle className="font-playfair text-xl text-[#0F172A] flex items-center gap-2">
+                <Building2 className="w-5 h-5 text-[#0EA5E9]" />
                 Salone
               </CardTitle>
             </CardHeader>
@@ -141,17 +141,17 @@ export default function SettingsPage() {
                   value={settings.salon_name || ''}
                   onChange={(e) => setSettings({ ...settings, salon_name: e.target.value })}
                   data-testid="settings-salon-name-input"
-                  className="bg-[#FAFAF9] border-transparent focus:border-[#C58970]"
+                  className="bg-[#F8FAFC] border-transparent focus:border-[#0EA5E9]"
                 />
               </div>
             </CardContent>
           </Card>
 
           {/* Working Hours */}
-          <Card className="bg-white border-[#E6CCB2]/30 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)]">
+          <Card className="bg-white border-[#E2E8F0]/30 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)]">
             <CardHeader>
-              <CardTitle className="font-playfair text-xl text-[#44403C] flex items-center gap-2">
-                <Clock className="w-5 h-5 text-[#C58970]" />
+              <CardTitle className="font-playfair text-xl text-[#0F172A] flex items-center gap-2">
+                <Clock className="w-5 h-5 text-[#0EA5E9]" />
                 Orari di Apertura
               </CardTitle>
             </CardHeader>
@@ -164,7 +164,7 @@ export default function SettingsPage() {
                     value={settings.opening_time || '09:00'}
                     onChange={(e) => setSettings({ ...settings, opening_time: e.target.value })}
                     data-testid="settings-opening-time-input"
-                    className="bg-[#FAFAF9] border-transparent focus:border-[#C58970]"
+                    className="bg-[#F8FAFC] border-transparent focus:border-[#0EA5E9]"
                   />
                 </div>
                 <div className="space-y-2">
@@ -174,7 +174,7 @@ export default function SettingsPage() {
                     value={settings.closing_time || '19:00'}
                     onChange={(e) => setSettings({ ...settings, closing_time: e.target.value })}
                     data-testid="settings-closing-time-input"
-                    className="bg-[#FAFAF9] border-transparent focus:border-[#C58970]"
+                    className="bg-[#F8FAFC] border-transparent focus:border-[#0EA5E9]"
                   />
                 </div>
               </div>
@@ -187,17 +187,17 @@ export default function SettingsPage() {
                       key={day.value}
                       className={`flex items-center space-x-2 p-3 rounded-lg border cursor-pointer transition-colors ${
                         settings.working_days?.includes(day.value)
-                          ? 'bg-[#C58970]/10 border-[#C58970]'
-                          : 'bg-[#FAFAF9] border-transparent hover:border-[#E6CCB2]'
+                          ? 'bg-[#0EA5E9]/10 border-[#0EA5E9]'
+                          : 'bg-[#F8FAFC] border-transparent hover:border-[#E2E8F0]'
                       }`}
                       onClick={() => toggleDay(day.value)}
                     >
                       <Checkbox
                         checked={settings.working_days?.includes(day.value)}
-                        className="data-[state=checked]:bg-[#C58970] data-[state=checked]:border-[#C58970]"
+                        className="data-[state=checked]:bg-[#0EA5E9] data-[state=checked]:border-[#0EA5E9]"
                       />
                       <span className={`text-sm ${
-                        settings.working_days?.includes(day.value) ? 'text-[#C58970] font-medium' : 'text-[#44403C]'
+                        settings.working_days?.includes(day.value) ? 'text-[#0EA5E9] font-medium' : 'text-[#0F172A]'
                       }`}>
                         {day.label}
                       </span>
@@ -214,7 +214,7 @@ export default function SettingsPage() {
               type="submit"
               disabled={saving}
               data-testid="save-settings-btn"
-              className="bg-[#C58970] hover:bg-[#B07860] text-white shadow-lg shadow-[#C58970]/20 px-8"
+              className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white shadow-lg shadow-[#0EA5E9]/20 px-8"
             >
               {saving ? (
                 <Loader2 className="w-5 h-5 animate-spin" />

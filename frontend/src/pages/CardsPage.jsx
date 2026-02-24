@@ -188,8 +188,8 @@ export default function CardsPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="font-playfair text-3xl font-medium text-[#44403C]">Card & Abbonamenti</h1>
-            <p className="text-[#78716C] mt-1 font-manrope">
+            <h1 className="font-playfair text-3xl font-medium text-[#0F172A]">Card & Abbonamenti</h1>
+            <p className="text-[#334155] mt-1 font-manrope">
               {cards.length} card {showInactive ? 'totali' : 'attive'}
             </p>
           </div>
@@ -197,14 +197,14 @@ export default function CardsPage() {
             <Button
               variant="outline"
               onClick={() => setShowInactive(!showInactive)}
-              className={`border-[#E6CCB2] ${showInactive ? 'bg-[#FAF5F2]' : ''}`}
+              className={`border-[#E2E8F0] ${showInactive ? 'bg-[#FAF5F2]' : ''}`}
             >
               {showInactive ? 'Solo attive' : 'Mostra tutte'}
             </Button>
             <Button
               onClick={() => setDialogOpen(true)}
               data-testid="new-card-btn"
-              className="bg-[#C58970] hover:bg-[#B07860] text-white shadow-lg shadow-[#C58970]/20"
+              className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white shadow-lg shadow-[#0EA5E9]/20"
             >
               <Plus className="w-5 h-5 mr-2" />
               Nuova Card
@@ -225,7 +225,7 @@ export default function CardsPage() {
               <Card
                 key={card.id}
                 data-testid={`card-${card.id}`}
-                className={`bg-white border-[#E6CCB2]/30 hover:border-[#C58970]/30 transition-all duration-300 ${
+                className={`bg-white border-[#E2E8F0]/30 hover:border-[#0EA5E9]/30 transition-all duration-300 ${
                   !card.active ? 'opacity-60' : ''
                 }`}
               >
@@ -236,38 +236,38 @@ export default function CardsPage() {
                         <Badge 
                           variant="outline"
                           className={card.card_type === 'prepaid' 
-                            ? 'border-[#C58970] text-[#C58970]' 
+                            ? 'border-[#0EA5E9] text-[#0EA5E9]' 
                             : 'border-[#789F8A] text-[#789F8A]'
                           }
                         >
                           {getCardTypeLabel(card.card_type)}
                         </Badge>
                         {!card.active && (
-                          <Badge variant="outline" className="border-[#78716C] text-[#78716C]">
+                          <Badge variant="outline" className="border-[#334155] text-[#334155]">
                             Esaurita
                           </Badge>
                         )}
                       </div>
-                      <h3 className="font-medium text-[#44403C]">{card.name}</h3>
-                      <p className="text-sm text-[#78716C]">{card.client_name}</p>
+                      <h3 className="font-medium text-[#0F172A]">{card.name}</h3>
+                      <p className="text-sm text-[#334155]">{card.client_name}</p>
                     </div>
-                    <CreditCard className="w-8 h-8 text-[#E6CCB2]" strokeWidth={1.5} />
+                    <CreditCard className="w-8 h-8 text-[#E2E8F0]" strokeWidth={1.5} />
                   </div>
 
                   {/* Progress bar */}
                   <div className="mb-3">
                     <div className="flex justify-between text-sm mb-1">
-                      <span className="text-[#78716C]">Credito residuo</span>
-                      <span className="font-semibold text-[#44403C]">€{card.remaining_value.toFixed(2)}</span>
+                      <span className="text-[#334155]">Credito residuo</span>
+                      <span className="font-semibold text-[#0F172A]">€{card.remaining_value.toFixed(2)}</span>
                     </div>
-                    <div className="h-2 bg-[#E6CCB2]/30 rounded-full overflow-hidden">
+                    <div className="h-2 bg-[#E2E8F0]/30 rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-[#C58970] rounded-full transition-all"
+                        className="h-full bg-[#0EA5E9] rounded-full transition-all"
                         style={{ width: `${100 - getCardProgress(card)}%` }}
                       />
                     </div>
                     {card.total_services && (
-                      <p className="text-xs text-[#78716C] mt-1">
+                      <p className="text-xs text-[#334155] mt-1">
                         {card.used_services}/{card.total_services} servizi utilizzati
                       </p>
                     )}
@@ -275,14 +275,14 @@ export default function CardsPage() {
 
                   {/* Valid until */}
                   {card.valid_until && (
-                    <p className="text-xs text-[#78716C] flex items-center gap-1 mb-3">
+                    <p className="text-xs text-[#334155] flex items-center gap-1 mb-3">
                       <Calendar className="w-3 h-3" />
                       Valida fino al {format(new Date(card.valid_until), 'd MMM yyyy', { locale: it })}
                     </p>
                   )}
 
                   {/* Actions */}
-                  <div className="flex items-center gap-2 pt-3 border-t border-[#E6CCB2]/30">
+                  <div className="flex items-center gap-2 pt-3 border-t border-[#E2E8F0]/30">
                     <Button
                       size="sm"
                       variant="outline"
@@ -290,7 +290,7 @@ export default function CardsPage() {
                         setSelectedCard(card);
                         setRechargeDialogOpen(true);
                       }}
-                      className="flex-1 border-[#E6CCB2] text-[#44403C] hover:bg-[#FAF5F2]"
+                      className="flex-1 border-[#E2E8F0] text-[#0F172A] hover:bg-[#FAF5F2]"
                     >
                       <RefreshCw className="w-4 h-4 mr-1" />
                       Ricarica
@@ -302,7 +302,7 @@ export default function CardsPage() {
                         setSelectedCard(card);
                         setHistoryDialogOpen(true);
                       }}
-                      className="text-[#78716C]"
+                      className="text-[#334155]"
                     >
                       <History className="w-4 h-4" />
                     </Button>
@@ -313,7 +313,7 @@ export default function CardsPage() {
                         setSelectedCard(card);
                         setDeleteDialogOpen(true);
                       }}
-                      className="text-[#78716C] hover:text-[#E76F51]"
+                      className="text-[#334155] hover:text-[#E76F51]"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -323,14 +323,14 @@ export default function CardsPage() {
             ))}
           </div>
         ) : (
-          <Card className="bg-white border-[#E6CCB2]/30">
+          <Card className="bg-white border-[#E2E8F0]/30">
             <CardContent className="py-16 text-center">
-              <CreditCard className="w-16 h-16 mx-auto text-[#E6CCB2] mb-4" strokeWidth={1.5} />
-              <h3 className="font-playfair text-xl text-[#44403C] mb-2">Nessuna card</h3>
-              <p className="text-[#78716C] mb-4">Crea la prima card prepagata o abbonamento</p>
+              <CreditCard className="w-16 h-16 mx-auto text-[#E2E8F0] mb-4" strokeWidth={1.5} />
+              <h3 className="font-playfair text-xl text-[#0F172A] mb-2">Nessuna card</h3>
+              <p className="text-[#334155] mb-4">Crea la prima card prepagata o abbonamento</p>
               <Button
                 onClick={() => setDialogOpen(true)}
-                className="bg-[#C58970] hover:bg-[#B07860] text-white"
+                className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white"
               >
                 <Plus className="w-4 h-4 mr-2" /> Nuova Card
               </Button>
@@ -342,7 +342,7 @@ export default function CardsPage() {
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
-              <DialogTitle className="font-playfair text-2xl text-[#44403C]">
+              <DialogTitle className="font-playfair text-2xl text-[#0F172A]">
                 Nuova Card
               </DialogTitle>
               <DialogDescription>
@@ -359,7 +359,7 @@ export default function CardsPage() {
                   variant="outline"
                   size="sm"
                   onClick={() => applyPreset(preset)}
-                  className="border-[#E6CCB2] text-xs"
+                  className="border-[#E2E8F0] text-xs"
                 >
                   {preset.name}
                 </Button>
@@ -408,7 +408,7 @@ export default function CardsPage() {
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="Es. Card 10 Pieghe"
-                    className="bg-[#FAFAF9]"
+                    className="bg-[#F8FAFC]"
                     required
                   />
                 </div>
@@ -424,7 +424,7 @@ export default function CardsPage() {
                     value={formData.total_value}
                     onChange={(e) => setFormData({ ...formData, total_value: e.target.value })}
                     placeholder="100.00"
-                    className="bg-[#FAFAF9]"
+                    className="bg-[#F8FAFC]"
                     required
                   />
                 </div>
@@ -436,7 +436,7 @@ export default function CardsPage() {
                     value={formData.total_services}
                     onChange={(e) => setFormData({ ...formData, total_services: e.target.value })}
                     placeholder="Es. 10"
-                    className="bg-[#FAFAF9]"
+                    className="bg-[#F8FAFC]"
                   />
                 </div>
               </div>
@@ -447,7 +447,7 @@ export default function CardsPage() {
                   type="date"
                   value={formData.valid_until}
                   onChange={(e) => setFormData({ ...formData, valid_until: e.target.value })}
-                  className="bg-[#FAFAF9]"
+                  className="bg-[#F8FAFC]"
                 />
               </div>
 
@@ -457,7 +457,7 @@ export default function CardsPage() {
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   placeholder="Note aggiuntive..."
-                  className="bg-[#FAFAF9]"
+                  className="bg-[#F8FAFC]"
                 />
               </div>
 
@@ -465,7 +465,7 @@ export default function CardsPage() {
                 <Button
                   type="submit"
                   disabled={saving}
-                  className="bg-[#C58970] hover:bg-[#B07860] text-white"
+                  className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white"
                 >
                   {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Crea Card'}
                 </Button>
@@ -478,7 +478,7 @@ export default function CardsPage() {
         <Dialog open={rechargeDialogOpen} onOpenChange={setRechargeDialogOpen}>
           <DialogContent className="sm:max-w-[400px]">
             <DialogHeader>
-              <DialogTitle className="font-playfair text-2xl text-[#44403C]">
+              <DialogTitle className="font-playfair text-2xl text-[#0F172A]">
                 Ricarica Card
               </DialogTitle>
               <DialogDescription>
@@ -486,9 +486,9 @@ export default function CardsPage() {
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 mt-4">
-              <div className="p-4 bg-[#FAFAF9] rounded-lg">
-                <p className="text-sm text-[#78716C]">Credito attuale</p>
-                <p className="text-2xl font-playfair text-[#44403C]">
+              <div className="p-4 bg-[#F8FAFC] rounded-lg">
+                <p className="text-sm text-[#334155]">Credito attuale</p>
+                <p className="text-2xl font-playfair text-[#0F172A]">
                   €{selectedCard?.remaining_value.toFixed(2)}
                 </p>
               </div>
@@ -501,14 +501,14 @@ export default function CardsPage() {
                   value={rechargeAmount}
                   onChange={(e) => setRechargeAmount(e.target.value)}
                   placeholder="50.00"
-                  className="bg-[#FAFAF9]"
+                  className="bg-[#F8FAFC]"
                 />
               </div>
               <DialogFooter>
                 <Button
                   onClick={handleRecharge}
                   disabled={saving || !rechargeAmount}
-                  className="bg-[#C58970] hover:bg-[#B07860] text-white"
+                  className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white"
                 >
                   {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Ricarica'}
                 </Button>
@@ -521,7 +521,7 @@ export default function CardsPage() {
         <Dialog open={historyDialogOpen} onOpenChange={setHistoryDialogOpen}>
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
-              <DialogTitle className="font-playfair text-2xl text-[#44403C]">
+              <DialogTitle className="font-playfair text-2xl text-[#0F172A]">
                 Storico Transazioni
               </DialogTitle>
               <DialogDescription>
@@ -534,11 +534,11 @@ export default function CardsPage() {
                   {selectedCard.transactions.slice().reverse().map((tx) => (
                     <div
                       key={tx.id}
-                      className="flex items-center justify-between p-3 bg-[#FAFAF9] rounded-lg"
+                      className="flex items-center justify-between p-3 bg-[#F8FAFC] rounded-lg"
                     >
                       <div>
-                        <p className="text-sm text-[#44403C]">{tx.description}</p>
-                        <p className="text-xs text-[#78716C]">
+                        <p className="text-sm text-[#0F172A]">{tx.description}</p>
+                        <p className="text-xs text-[#334155]">
                           {format(new Date(tx.date), 'd MMM yyyy HH:mm', { locale: it })}
                         </p>
                       </div>
@@ -549,7 +549,7 @@ export default function CardsPage() {
                   ))}
                 </div>
               ) : (
-                <p className="text-center text-[#78716C] py-8">Nessuna transazione</p>
+                <p className="text-center text-[#334155] py-8">Nessuna transazione</p>
               )}
             </div>
           </DialogContent>

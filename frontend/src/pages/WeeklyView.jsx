@@ -44,7 +44,7 @@ export default function WeeklyView() {
     switch (status) {
       case 'completed': return 'bg-[#789F8A]';
       case 'cancelled': return 'bg-[#E76F51]/50';
-      default: return 'bg-[#C58970]';
+      default: return 'bg-[#0EA5E9]';
     }
   };
 
@@ -54,8 +54,8 @@ export default function WeeklyView() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="font-playfair text-3xl font-medium text-[#44403C]">Vista Settimanale</h1>
-            <p className="text-[#78716C] mt-1 font-manrope">
+            <h1 className="font-playfair text-3xl font-medium text-[#0F172A]">Vista Settimanale</h1>
+            <p className="text-[#334155] mt-1 font-manrope">
               {format(weekStart, "d MMMM", { locale: it })} - {format(addDays(weekStart, 6), "d MMMM yyyy", { locale: it })}
             </p>
           </div>
@@ -64,14 +64,14 @@ export default function WeeklyView() {
               variant="outline"
               size="icon"
               onClick={() => setWeekStart(subWeeks(weekStart, 1))}
-              className="border-[#E6CCB2]"
+              className="border-[#E2E8F0]"
             >
               <ChevronLeft className="w-4 h-4" />
             </Button>
             <Button
               variant="outline"
               onClick={() => setWeekStart(startOfWeek(new Date(), { weekStartsOn: 1 }))}
-              className="border-[#E6CCB2] text-[#44403C]"
+              className="border-[#E2E8F0] text-[#0F172A]"
             >
               Oggi
             </Button>
@@ -79,7 +79,7 @@ export default function WeeklyView() {
               variant="outline"
               size="icon"
               onClick={() => setWeekStart(addWeeks(weekStart, 1))}
-              className="border-[#E6CCB2]"
+              className="border-[#E2E8F0]"
             >
               <ChevronRight className="w-4 h-4" />
             </Button>
@@ -103,20 +103,20 @@ export default function WeeklyView() {
                 <Card
                   key={day.toString()}
                   data-testid={`day-${format(day, 'yyyy-MM-dd')}`}
-                  className={`bg-white border-[#E6CCB2]/30 min-h-[300px] ${
-                    isToday ? 'ring-2 ring-[#C58970] border-[#C58970]' : ''
+                  className={`bg-white border-[#E2E8F0]/30 min-h-[300px] ${
+                    isToday ? 'ring-2 ring-[#0EA5E9] border-[#0EA5E9]' : ''
                   }`}
                 >
                   <CardContent className="p-3">
                     {/* Day Header */}
-                    <div className={`text-center pb-3 mb-3 border-b border-[#E6CCB2]/30 ${
-                      isToday ? 'text-[#C58970]' : 'text-[#44403C]'
+                    <div className={`text-center pb-3 mb-3 border-b border-[#E2E8F0]/30 ${
+                      isToday ? 'text-[#0EA5E9]' : 'text-[#0F172A]'
                     }`}>
                       <p className="text-xs uppercase tracking-wide font-manrope">
                         {format(day, 'EEE', { locale: it })}
                       </p>
                       <p className={`text-2xl font-playfair font-medium ${
-                        isToday ? 'bg-[#C58970] text-white w-10 h-10 rounded-full mx-auto flex items-center justify-center' : ''
+                        isToday ? 'bg-[#0EA5E9] text-white w-10 h-10 rounded-full mx-auto flex items-center justify-center' : ''
                       }`}>
                         {format(day, 'd')}
                       </p>
@@ -138,7 +138,7 @@ export default function WeeklyView() {
                           </div>
                         ))
                       ) : (
-                        <p className="text-xs text-[#78716C] text-center py-4">-</p>
+                        <p className="text-xs text-[#334155] text-center py-4">-</p>
                       )}
                     </div>
                   </CardContent>
@@ -149,22 +149,22 @@ export default function WeeklyView() {
         )}
 
         {/* Summary */}
-        <Card className="bg-white border-[#E6CCB2]/30">
+        <Card className="bg-white border-[#E2E8F0]/30">
           <CardContent className="p-4">
             <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-[#C58970]" />
-                <span className="text-[#78716C]">Programmati</span>
+                <div className="w-3 h-3 rounded-full bg-[#0EA5E9]" />
+                <span className="text-[#334155]">Programmati</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-[#789F8A]" />
-                <span className="text-[#78716C]">Completati</span>
+                <span className="text-[#334155]">Completati</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-[#E76F51]/50" />
-                <span className="text-[#78716C]">Annullati</span>
+                <span className="text-[#334155]">Annullati</span>
               </div>
-              <div className="text-[#44403C] font-medium">
+              <div className="text-[#0F172A] font-medium">
                 Totale: {appointments.length} appuntamenti
               </div>
             </div>

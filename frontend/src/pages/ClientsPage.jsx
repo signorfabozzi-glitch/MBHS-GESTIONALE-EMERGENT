@@ -235,15 +235,15 @@ export default function ClientsPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="font-playfair text-3xl font-medium text-[#44403C]">Clienti</h1>
-            <p className="text-[#78716C] mt-1 font-manrope">{clients.length} clienti totali</p>
+            <h1 className="font-playfair text-3xl font-medium text-[#0F172A]">Clienti</h1>
+            <p className="text-[#334155] mt-1 font-manrope">{clients.length} clienti totali</p>
           </div>
           <div className="flex items-center gap-2">
             <Button 
               onClick={() => fileInputRef.current?.click()}
               variant="outline"
               data-testid="import-excel-btn"
-              className="border-[#E6CCB2] text-[#44403C] hover:bg-[#FAF5F2]"
+              className="border-[#E2E8F0] text-[#0F172A] hover:bg-[#FAF5F2]"
             >
               <Upload className="w-5 h-5 mr-2" />
               Importa Excel
@@ -251,7 +251,7 @@ export default function ClientsPage() {
             <Button 
               onClick={openNewDialog}
               data-testid="new-client-btn"
-              className="bg-[#C58970] hover:bg-[#B07860] text-white shadow-lg shadow-[#C58970]/20"
+              className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white shadow-lg shadow-[#0EA5E9]/20"
             >
               <Plus className="w-5 h-5 mr-2" />
               Nuovo Cliente
@@ -261,14 +261,14 @@ export default function ClientsPage() {
 
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#78716C]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#334155]" />
           <Input
             type="search"
             placeholder="Cerca cliente per nome, telefono o email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             data-testid="search-clients-input"
-            className="pl-10 bg-white border-[#E6CCB2]/50 focus:border-[#C58970] h-12"
+            className="pl-10 bg-white border-[#E2E8F0]/50 focus:border-[#0EA5E9] h-12"
           />
         </div>
 
@@ -285,19 +285,19 @@ export default function ClientsPage() {
               <Card
                 key={client.id}
                 data-testid={`client-card-${client.id}`}
-                className="bg-white border-[#E6CCB2]/30 hover:border-[#C58970]/30 transition-all duration-300 hover:-translate-y-1 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)]"
+                className="bg-white border-[#E2E8F0]/30 hover:border-[#0EA5E9]/30 transition-all duration-300 hover:-translate-y-1 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)]"
               >
                 <CardContent className="p-5">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-full bg-[#C58970]/10 flex items-center justify-center">
-                        <span className="text-lg font-playfair text-[#C58970]">
+                      <div className="w-12 h-12 rounded-full bg-[#0EA5E9]/10 flex items-center justify-center">
+                        <span className="text-lg font-playfair text-[#0EA5E9]">
                           {client.name.charAt(0).toUpperCase()}
                         </span>
                       </div>
                       <div>
-                        <h3 className="font-medium text-[#44403C]">{client.name}</h3>
-                        <div className="flex items-center gap-1 text-xs text-[#78716C]">
+                        <h3 className="font-medium text-[#0F172A]">{client.name}</h3>
+                        <div className="flex items-center gap-1 text-xs text-[#334155]">
                           <History className="w-3 h-3" />
                           {client.total_visits} visite
                         </div>
@@ -308,7 +308,7 @@ export default function ClientsPage() {
                         size="icon"
                         variant="ghost"
                         onClick={() => handleEdit(client)}
-                        className="text-[#78716C] hover:text-[#C58970]"
+                        className="text-[#334155] hover:text-[#0EA5E9]"
                       >
                         <Edit2 className="w-4 h-4" />
                       </Button>
@@ -319,7 +319,7 @@ export default function ClientsPage() {
                           setClientToDelete(client.id);
                           setDeleteDialogOpen(true);
                         }}
-                        className="text-[#78716C] hover:text-[#E76F51]"
+                        className="text-[#334155] hover:text-[#E76F51]"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -328,7 +328,7 @@ export default function ClientsPage() {
 
                   <div className="space-y-2 text-sm">
                     {client.phone && (
-                      <div className="flex items-center gap-2 text-[#78716C]">
+                      <div className="flex items-center gap-2 text-[#334155]">
                         <Phone className="w-4 h-4" />
                         <span>{client.phone}</span>
                         {client.sms_reminder && (
@@ -337,13 +337,13 @@ export default function ClientsPage() {
                       </div>
                     )}
                     {client.email && (
-                      <div className="flex items-center gap-2 text-[#78716C]">
+                      <div className="flex items-center gap-2 text-[#334155]">
                         <Mail className="w-4 h-4" />
                         <span className="truncate">{client.email}</span>
                       </div>
                     )}
                     {client.notes && (
-                      <p className="text-[#78716C] text-xs mt-3 pt-3 border-t border-[#E6CCB2]/30 italic">
+                      <p className="text-[#334155] text-xs mt-3 pt-3 border-t border-[#E2E8F0]/30 italic">
                         "{client.notes}"
                       </p>
                     )}
@@ -353,19 +353,19 @@ export default function ClientsPage() {
             ))}
           </div>
         ) : (
-          <Card className="bg-white border-[#E6CCB2]/30">
+          <Card className="bg-white border-[#E2E8F0]/30">
             <CardContent className="py-16 text-center">
-              <Users className="w-16 h-16 mx-auto text-[#E6CCB2] mb-4" strokeWidth={1.5} />
-              <h3 className="font-playfair text-xl text-[#44403C] mb-2">
+              <Users className="w-16 h-16 mx-auto text-[#E2E8F0] mb-4" strokeWidth={1.5} />
+              <h3 className="font-playfair text-xl text-[#0F172A] mb-2">
                 {search ? 'Nessun cliente trovato' : 'Nessun cliente'}
               </h3>
-              <p className="text-[#78716C] mb-4">
+              <p className="text-[#334155] mb-4">
                 {search ? 'Prova con un termine diverso' : 'Aggiungi il tuo primo cliente'}
               </p>
               {!search && (
                 <Button
                   onClick={openNewDialog}
-                  className="bg-[#C58970] hover:bg-[#B07860] text-white"
+                  className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white"
                 >
                   <Plus className="w-4 h-4 mr-2" /> Aggiungi Cliente
                 </Button>
@@ -378,7 +378,7 @@ export default function ClientsPage() {
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle className="font-playfair text-2xl text-[#44403C]">
+              <DialogTitle className="font-playfair text-2xl text-[#0F172A]">
                 {editingClient ? 'Modifica Cliente' : 'Nuovo Cliente'}
               </DialogTitle>
             </DialogHeader>
@@ -390,7 +390,7 @@ export default function ClientsPage() {
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="Nome cliente"
                   data-testid="client-name-input"
-                  className="bg-[#FAFAF9] border-transparent focus:border-[#C58970]"
+                  className="bg-[#F8FAFC] border-transparent focus:border-[#0EA5E9]"
                   required
                 />
               </div>
@@ -401,7 +401,7 @@ export default function ClientsPage() {
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   placeholder="+39 ..."
                   data-testid="client-phone-input"
-                  className="bg-[#FAFAF9] border-transparent focus:border-[#C58970]"
+                  className="bg-[#F8FAFC] border-transparent focus:border-[#0EA5E9]"
                 />
               </div>
               <div className="space-y-2">
@@ -412,7 +412,7 @@ export default function ClientsPage() {
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="email@esempio.it"
                   data-testid="client-email-input"
-                  className="bg-[#FAFAF9] border-transparent focus:border-[#C58970]"
+                  className="bg-[#F8FAFC] border-transparent focus:border-[#0EA5E9]"
                 />
               </div>
               <div className="space-y-2">
@@ -422,12 +422,12 @@ export default function ClientsPage() {
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   placeholder="Note aggiuntive..."
                   data-testid="client-notes-input"
-                  className="bg-[#FAFAF9] border-transparent focus:border-[#C58970] min-h-[80px]"
+                  className="bg-[#F8FAFC] border-transparent focus:border-[#0EA5E9] min-h-[80px]"
                 />
               </div>
-              <div className="flex items-center justify-between p-3 rounded-lg bg-[#FAFAF9]">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-[#F8FAFC]">
                 <div className="flex items-center gap-2">
-                  <MessageSquare className="w-4 h-4 text-[#78716C]" />
+                  <MessageSquare className="w-4 h-4 text-[#334155]" />
                   <Label className="font-normal">Promemoria SMS</Label>
                 </div>
                 <Switch
@@ -441,7 +441,7 @@ export default function ClientsPage() {
                   type="submit"
                   disabled={saving}
                   data-testid="save-client-btn"
-                  className="bg-[#C58970] hover:bg-[#B07860] text-white"
+                  className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white"
                 >
                   {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : editingClient ? 'Salva Modifiche' : 'Aggiungi Cliente'}
                 </Button>
@@ -475,8 +475,8 @@ export default function ClientsPage() {
         <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
           <DialogContent className="sm:max-w-[600px]">
             <DialogHeader>
-              <DialogTitle className="font-playfair text-2xl text-[#44403C] flex items-center gap-2">
-                <FileSpreadsheet className="w-6 h-6 text-[#C58970]" />
+              <DialogTitle className="font-playfair text-2xl text-[#0F172A] flex items-center gap-2">
+                <FileSpreadsheet className="w-6 h-6 text-[#0EA5E9]" />
                 Importa Clienti da Excel
               </DialogTitle>
               <DialogDescription>
@@ -486,46 +486,46 @@ export default function ClientsPage() {
             <div className="mt-4">
               {importPreview.length > 0 ? (
                 <>
-                  <div className="max-h-[300px] overflow-y-auto border border-[#E6CCB2]/30 rounded-lg">
+                  <div className="max-h-[300px] overflow-y-auto border border-[#E2E8F0]/30 rounded-lg">
                     <table className="w-full text-sm">
-                      <thead className="bg-[#FAFAF9] sticky top-0">
+                      <thead className="bg-[#F8FAFC] sticky top-0">
                         <tr>
-                          <th className="text-left p-3 font-medium text-[#44403C]">Nome</th>
-                          <th className="text-left p-3 font-medium text-[#44403C]">Telefono</th>
-                          <th className="text-left p-3 font-medium text-[#44403C]">Note</th>
+                          <th className="text-left p-3 font-medium text-[#0F172A]">Nome</th>
+                          <th className="text-left p-3 font-medium text-[#0F172A]">Telefono</th>
+                          <th className="text-left p-3 font-medium text-[#0F172A]">Note</th>
                         </tr>
                       </thead>
                       <tbody>
                         {importPreview.map((client, idx) => (
-                          <tr key={idx} className="border-t border-[#E6CCB2]/20 hover:bg-[#FAF5F2]">
-                            <td className="p-3 text-[#44403C]">{client.name}</td>
-                            <td className="p-3 text-[#78716C]">{client.phone || '-'}</td>
-                            <td className="p-3 text-[#78716C] text-xs max-w-[200px] truncate">{client.notes || '-'}</td>
+                          <tr key={idx} className="border-t border-[#E2E8F0]/20 hover:bg-[#FAF5F2]">
+                            <td className="p-3 text-[#0F172A]">{client.name}</td>
+                            <td className="p-3 text-[#334155]">{client.phone || '-'}</td>
+                            <td className="p-3 text-[#334155] text-xs max-w-[200px] truncate">{client.notes || '-'}</td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
                   </div>
-                  <p className="text-sm text-[#78716C] mt-3">
-                    Totale: <span className="font-medium text-[#44403C]">{importPreview.length}</span> clienti da importare
+                  <p className="text-sm text-[#334155] mt-3">
+                    Totale: <span className="font-medium text-[#0F172A]">{importPreview.length}</span> clienti da importare
                   </p>
                 </>
               ) : (
-                <p className="text-center text-[#78716C] py-8">Nessun cliente trovato nel file</p>
+                <p className="text-center text-[#334155] py-8">Nessun cliente trovato nel file</p>
               )}
             </div>
             <DialogFooter className="mt-4">
               <Button
                 variant="outline"
                 onClick={() => setImportDialogOpen(false)}
-                className="border-[#E6CCB2]"
+                className="border-[#E2E8F0]"
               >
                 Annulla
               </Button>
               <Button
                 onClick={handleImport}
                 disabled={importing || importPreview.length === 0}
-                className="bg-[#C58970] hover:bg-[#B07860] text-white"
+                className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white"
               >
                 {importing ? (
                   <>

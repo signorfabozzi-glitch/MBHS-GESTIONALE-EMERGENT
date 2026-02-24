@@ -103,21 +103,21 @@ export default function Layout({ children }) {
   );
 
   return (
-    <div className="min-h-screen bg-[#FAFAF9]">
+    <div className="min-h-screen bg-[#F8FAFC]">
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col w-64 h-screen fixed left-0 top-0 bg-white border-r border-[#E6CCB2]/30">
+      <aside className="hidden md:flex flex-col w-64 h-screen fixed left-0 top-0 bg-white border-r border-[#E2E8F0]/30">
         <SidebarContent />
       </aside>
 
       {/* Mobile Header */}
-      <header className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white border-b border-[#E6CCB2]/30 px-4 py-3 flex items-center justify-between">
-        <h1 className="font-playfair text-xl font-medium text-[#44403C]">
+      <header className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white border-b border-[#E2E8F0]/30 px-4 py-3 flex items-center justify-between">
+        <h1 className="font-playfair text-xl font-medium text-[#0F172A]">
           {user?.salon_name || 'Salone'}
         </h1>
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" data-testid="mobile-menu-btn">
-              <Menu className="w-6 h-6 text-[#44403C]" />
+              <Menu className="w-6 h-6 text-[#0F172A]" />
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="p-0 w-64">
