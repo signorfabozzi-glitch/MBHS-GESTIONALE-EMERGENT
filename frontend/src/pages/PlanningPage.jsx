@@ -206,6 +206,74 @@ export default function PlanningPage() {
     setHighlightedClientId(null);
   };
 
+  // Get client info when selected
+  const handleClientSelect = (clientId, clientName) => {
+    setFormData({ ...formData, client_id: clientId });
+    setClientSearch(clientName);
+    setShowClientDropdown(false);
+    
+    // Find client info
+    const client = clients.find(c => c.id === clientId);
+    setSelectedClientInfo(client);
+  };
+
+  // Open edit dialog for appointment
+  const openEditDialog = (apt) => {
+    setEditingAppointment(apt);
+    setFormData({
+      client_id: apt.client_id,
+      service_ids: apt.services.map(s => s.id),
+      operator_id: apt.operator_id || '',
+      time: apt.time,
+      notes: apt.notes || ''
+    });
+    setClientSearch(apt.client_name);
+    const client = clients.find(c => c.id === apt.client_id);
+    setSelectedClientInfo(client);
+    setEditDialogOpen(true);
+  };
+
+  // Update appointment
+  const handleUpdateAppointment = async (e) => {
+    e.preventDefault();
+    if (!editingAppointment) return;
+    
+    setSaving(true);
+    try {
+      await axios.put(`${API}/appointments/${editingAppointment.id}`, {
+        ...formData,
+        date: format(selectedDate, 'yyyy-MM-dd')
+      });
+      toast.success('Appuntamento aggiornato!');
+      setEditDialogOpen(false);
+      setEditingAppointment(null);
+      fetchData();
+    } catch (err) {
+      toast.error(err.response?.data?.detail || 'Errore nell\'aggiornamento');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Delete appointment
+  const handleDeleteAppointment = async () => {
+    if (!editingAppointment) return;
+    if (!window.confirm('Sei sicuro di voler eliminare questo appuntamento?')) return;
+    
+    setDeleting(true);
+    try {
+      await axios.delete(`${API}/appointments/${editingAppointment.id}`);
+      toast.success('Appuntamento eliminato!');
+      setEditDialogOpen(false);
+      setEditingAppointment(null);
+      fetchData();
+    } catch (err) {
+      toast.error(err.response?.data?.detail || 'Errore nell\'eliminazione');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   // Recurring appointments handler
   const openRecurringDialog = (apt) => {
     setSelectedAppointment(apt);
