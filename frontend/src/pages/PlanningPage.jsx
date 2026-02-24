@@ -460,6 +460,27 @@ export default function PlanningPage() {
   return (
     <Layout>
       <div className="space-y-4" data-testid="planning-page">
+        {/* Reminder Banner */}
+        {(pendingRemindersCount > 0 || inactiveClientsCount > 0) && (
+          <a
+            href="/reminders"
+            className="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl hover:shadow-md transition-shadow"
+            data-testid="reminder-banner"
+          >
+            <Bell className="w-5 h-5 text-amber-500 shrink-0" />
+            <div className="flex-1 text-sm">
+              {pendingRemindersCount > 0 && (
+                <span className="font-bold text-[#0F172A]">{pendingRemindersCount} promemoria domani</span>
+              )}
+              {pendingRemindersCount > 0 && inactiveClientsCount > 0 && <span className="text-[#334155]"> · </span>}
+              {inactiveClientsCount > 0 && (
+                <span className="font-bold text-orange-600">{inactiveClientsCount} clienti inattivi</span>
+              )}
+            </div>
+            <span className="text-xs text-[#0EA5E9] font-bold shrink-0">Gestisci →</span>
+          </a>
+        )}
+
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
