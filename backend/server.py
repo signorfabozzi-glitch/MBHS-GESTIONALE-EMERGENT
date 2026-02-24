@@ -1894,6 +1894,136 @@ async def add_manual_points(client_id: str, points: int, description: str = "Pun
     
     return {"success": True, "message": f"{points} punti aggiunti a {client['name']}"}
 
+# ============== REMINDERS / RICHIAMI ==============
+
+@api_router.get("/reminders/tomorrow")
+async def get_tomorrow_reminders(current_user: dict = Depends(get_current_user)):
+    """Get appointments for tomorrow that need a reminder"""
+    tomorrow = (datetime.now(timezone.utc) + timedelta(days=1)).strftime("%Y-%m-%d")
+    
+    appointments = await db.appointments.find(
+        {"user_id": current_user["id"], "date": tomorrow, "status": {"$ne": "cancelled"}},
+        {"_id": 0}
+    ).to_list(100)
+    
+    # Check which have already been reminded
+    reminded_ids = set()
+    reminders_sent = await db.reminders_sent.find(
+        {"user_id": current_user["id"], "type": "appointment", "date": tomorrow},
+        {"_id": 0}
+    ).to_list(500)
+    for r in reminders_sent:
+        reminded_ids.add(r.get("appointment_id"))
+    
+    results = []
+    for apt in appointments:
+        results.append({
+            "id": apt["id"],
+            "client_name": apt.get("client_name", ""),
+            "client_phone": apt.get("client_phone", ""),
+            "client_id": apt.get("client_id", ""),
+            "date": apt["date"],
+            "time": apt["time"],
+            "services": apt.get("services", []),
+            "reminded": apt["id"] in reminded_ids
+        })
+    
+    return results
+
+@api_router.post("/reminders/appointment/{appointment_id}/mark-sent")
+async def mark_reminder_sent(appointment_id: str, current_user: dict = Depends(get_current_user)):
+    """Mark an appointment reminder as sent"""
+    apt = await db.appointments.find_one(
+        {"id": appointment_id, "user_id": current_user["id"]},
+        {"_id": 0}
+    )
+    if not apt:
+        raise HTTPException(status_code=404, detail="Appuntamento non trovato")
+    
+    await db.reminders_sent.insert_one({
+        "id": str(uuid.uuid4()),
+        "user_id": current_user["id"],
+        "type": "appointment",
+        "appointment_id": appointment_id,
+        "client_id": apt.get("client_id"),
+        "date": apt["date"],
+        "sent_at": datetime.now(timezone.utc).isoformat()
+    })
+    
+    return {"success": True}
+
+@api_router.get("/reminders/inactive-clients")
+async def get_inactive_clients(current_user: dict = Depends(get_current_user)):
+    """Get clients who haven't visited in 60+ days"""
+    cutoff_date = (datetime.now(timezone.utc) - timedelta(days=60)).strftime("%Y-%m-%d")
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    
+    # Get all clients
+    clients = await db.clients.find(
+        {"user_id": current_user["id"]},
+        {"_id": 0}
+    ).to_list(1000)
+    
+    # Check which have already been recalled recently (within 30 days)
+    recent_recalls = await db.reminders_sent.find(
+        {
+            "user_id": current_user["id"],
+            "type": "inactive_recall",
+            "sent_at": {"$gte": (datetime.now(timezone.utc) - timedelta(days=30)).isoformat()}
+        },
+        {"_id": 0}
+    ).to_list(500)
+    recently_recalled_ids = {r.get("client_id") for r in recent_recalls}
+    
+    inactive = []
+    for client in clients:
+        # Find their most recent completed appointment
+        last_apt = await db.appointments.find_one(
+            {
+                "client_id": client["id"],
+                "user_id": current_user["id"],
+                "status": "completed"
+            },
+            {"_id": 0},
+            sort=[("date", -1)]
+        )
+        
+        if last_apt and last_apt["date"] <= cutoff_date:
+            days_ago = (datetime.now(timezone.utc) - datetime.strptime(last_apt["date"], "%Y-%m-%d").replace(tzinfo=timezone.utc)).days
+            inactive.append({
+                "client_id": client["id"],
+                "client_name": client["name"],
+                "client_phone": client.get("phone", ""),
+                "last_visit": last_apt["date"],
+                "days_ago": days_ago,
+                "last_services": [s.get("name", "") for s in last_apt.get("services", [])],
+                "already_recalled": client["id"] in recently_recalled_ids
+            })
+    
+    # Sort by days_ago descending
+    inactive.sort(key=lambda x: x["days_ago"], reverse=True)
+    return inactive
+
+@api_router.post("/reminders/inactive/{client_id}/mark-sent")
+async def mark_inactive_recall_sent(client_id: str, current_user: dict = Depends(get_current_user)):
+    """Mark an inactive client recall as sent"""
+    client = await db.clients.find_one(
+        {"id": client_id, "user_id": current_user["id"]},
+        {"_id": 0}
+    )
+    if not client:
+        raise HTTPException(status_code=404, detail="Cliente non trovato")
+    
+    await db.reminders_sent.insert_one({
+        "id": str(uuid.uuid4()),
+        "user_id": current_user["id"],
+        "type": "inactive_recall",
+        "client_id": client_id,
+        "sent_at": datetime.now(timezone.utc).isoformat()
+    })
+    
+    return {"success": True}
+
 # ============== HEALTH CHECK ==============
 
 @api_router.get("/")
