@@ -238,14 +238,25 @@ export default function ClientsPage() {
             <h1 className="font-playfair text-3xl font-medium text-[#44403C]">Clienti</h1>
             <p className="text-[#78716C] mt-1 font-manrope">{clients.length} clienti totali</p>
           </div>
-          <Button 
-            onClick={openNewDialog}
-            data-testid="new-client-btn"
-            className="bg-[#C58970] hover:bg-[#B07860] text-white shadow-lg shadow-[#C58970]/20"
-          >
-            <Plus className="w-5 h-5 mr-2" />
-            Nuovo Cliente
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button 
+              onClick={() => fileInputRef.current?.click()}
+              variant="outline"
+              data-testid="import-excel-btn"
+              className="border-[#E6CCB2] text-[#44403C] hover:bg-[#FAF5F2]"
+            >
+              <Upload className="w-5 h-5 mr-2" />
+              Importa Excel
+            </Button>
+            <Button 
+              onClick={openNewDialog}
+              data-testid="new-client-btn"
+              className="bg-[#C58970] hover:bg-[#B07860] text-white shadow-lg shadow-[#C58970]/20"
+            >
+              <Plus className="w-5 h-5 mr-2" />
+              Nuovo Cliente
+            </Button>
+          </div>
         </div>
 
         {/* Search */}
