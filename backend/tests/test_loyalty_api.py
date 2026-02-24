@@ -431,8 +431,9 @@ class TestCheckoutLoyaltyPoints:
         expected_points = int(TestCheckoutLoyaltyPoints.service_price // 10)
         assert data["points"] == expected_points, f"Expected {expected_points} points, got {data['points']}"
         
-        # Verify history contains the earned points entry
-        assert len(data["history"]) > 0, "Expected at least one history entry"
+        # Verify history contains the earned points entry only if points > 0
+        if expected_points > 0:
+            assert len(data["history"]) > 0, "Expected at least one history entry when points were earned"
         print(f"Updated loyalty points: {data['points']}, history entries: {len(data['history'])}")
     
     def test_07_cleanup(self):
