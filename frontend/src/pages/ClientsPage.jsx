@@ -131,6 +131,30 @@ export default function ClientsPage() {
     setDialogOpen(true);
   };
 
+  // Client History
+  const openClientHistory = async (client) => {
+    setHistoryDialogOpen(true);
+    setLoadingHistory(true);
+    try {
+      const res = await axios.get(`${API}/clients/${client.id}/history`);
+      setClientHistory(res.data);
+    } catch (err) {
+      toast.error('Errore nel caricamento storico');
+    } finally {
+      setLoadingHistory(false);
+    }
+  };
+
+  // WhatsApp
+  const openWhatsApp = async (client) => {
+    try {
+      const res = await axios.get(`${API}/clients/${client.id}/whatsapp`);
+      window.open(res.data.url, '_blank');
+    } catch (err) {
+      toast.error(err.response?.data?.detail || 'Errore WhatsApp');
+    }
+  };
+
   // Excel Import Functions
   const handleFileSelect = (e) => {
     const file = e.target.files?.[0];
