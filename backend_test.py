@@ -13,6 +13,7 @@ class HairSalonAPITester:
         self.client_id = None
         self.service_id = None
         self.appointment_id = None
+        self.operator_id = None
 
     def run_test(self, name, method, endpoint, expected_status, data=None, auth=True):
         """Run a single API test"""
