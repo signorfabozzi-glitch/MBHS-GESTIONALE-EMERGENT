@@ -141,6 +141,19 @@ export default function PlanningPage() {
     }
   };
 
+  const fetchReminderCounts = async () => {
+    try {
+      const [remRes, inactRes] = await Promise.all([
+        axios.get(`${API}/reminders/tomorrow`),
+        axios.get(`${API}/reminders/inactive-clients`)
+      ]);
+      setPendingRemindersCount(remRes.data.filter(r => !r.reminded).length);
+      setInactiveClientsCount(inactRes.data.filter(c => !c.already_recalled).length);
+    } catch (err) {
+      // silent fail - not critical
+    }
+  };
+
   const handleSlotClick = (time, operatorId) => {
     setSelectedSlot(time);
     setSelectedOperator(operatorId);
