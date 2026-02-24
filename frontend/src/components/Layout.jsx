@@ -17,7 +17,8 @@ import {
   X,
   CreditCard,
   Euro,
-  Database
+  Database,
+  Star
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -30,6 +31,7 @@ const navItems = [
   { path: '/month', label: 'Mese', icon: CalendarRange },
   { path: '/clients', label: 'Clienti', icon: Users },
   { path: '/cards', label: 'Card / Abbonamenti', icon: CreditCard },
+  { path: '/loyalty', label: 'Programma Fedeltà', icon: Star },
   { path: '/incassi', label: 'Report Incassi', icon: Euro },
   { path: '/services', label: 'Servizi', icon: Scissors },
   { path: '/operators', label: 'Operatori', icon: UserCircle },
