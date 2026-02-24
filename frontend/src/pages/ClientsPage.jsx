@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Switch } from '@/components/ui/switch';
 import {
   Dialog,
   DialogContent,
@@ -24,7 +25,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Textarea } from '@/components/ui/textarea';
-import { Users, Plus, Search, Phone, Mail, Edit2, Trash2, Loader2, History } from 'lucide-react';
+import { Users, Plus, Search, Phone, Mail, Edit2, Trash2, Loader2, History, MessageSquare } from 'lucide-react';
 import { toast } from 'sonner';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -43,7 +44,8 @@ export default function ClientsPage() {
     name: '',
     phone: '',
     email: '',
-    notes: ''
+    notes: '',
+    sms_reminder: true
   });
 
   useEffect(() => {
