@@ -120,7 +120,8 @@ class HairSalonAPITester:
             "name": "Maria Rossi",
             "phone": "+39 123 456 7890",
             "email": "maria.rossi@test.com",
-            "notes": "Cliente VIP - preferisce appuntamenti mattutini"
+            "notes": "Cliente VIP - preferisce appuntamenti mattutini",
+            "sms_reminder": True
         }
         
         success, response = self.run_test(
