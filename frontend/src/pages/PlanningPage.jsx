@@ -481,21 +481,21 @@ export default function PlanningPage() {
           <Card className="bg-white border-[#E6CCB2]/30 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] overflow-hidden">
             <CardContent className="p-0">
               {/* Header with operator names */}
-              <div className="flex border-b border-[#E6CCB2]/30 bg-[#FAFAF9] sticky top-0 z-10">
-                <div className="w-16 flex-shrink-0 p-2 border-r border-[#E6CCB2]/30">
-                  <Clock className="w-5 h-5 text-[#78716C] mx-auto" />
+              <div className="flex border-b-2 border-[#C58970]/40 bg-gradient-to-r from-[#C58970]/10 to-[#E6CCB2]/20 sticky top-0 z-10">
+                <div className="w-16 flex-shrink-0 p-2 border-r-2 border-[#C58970]/30">
+                  <Clock className="w-5 h-5 text-[#C58970] mx-auto" />
                 </div>
                 {columns.map((col) => (
                   <div
                     key={col.id || 'unassigned'}
-                    className="flex-1 min-w-[150px] p-3 border-r border-[#E6CCB2]/30 last:border-r-0"
+                    className="flex-1 min-w-[150px] p-3 border-r-2 border-[#C58970]/30 last:border-r-0"
                   >
                     <div className="flex items-center gap-2">
                       <div
-                        className="w-3 h-3 rounded-full flex-shrink-0"
+                        className="w-4 h-4 rounded-full flex-shrink-0 shadow-sm"
                         style={{ backgroundColor: col.color }}
                       />
-                      <span className="font-medium text-[#44403C] text-sm truncate">
+                      <span className="font-bold text-[#44403C] text-sm truncate">
                         {col.name}
                       </span>
                     </div>
@@ -511,12 +511,12 @@ export default function PlanningPage() {
               >
                 <div className="flex relative">
                   {/* Time column */}
-                  <div className="w-16 flex-shrink-0 bg-[#FAFAF9]">
+                  <div className="w-16 flex-shrink-0 bg-gradient-to-b from-[#FAFAF9] to-white">
                     {TIME_SLOTS.map((time, idx) => (
                       <div
                         key={time}
-                        className={`h-12 flex items-center justify-center text-xs text-[#78716C] border-b border-[#E6CCB2]/20 ${
-                          time.endsWith(':00') ? 'font-medium' : 'text-[10px]'
+                        className={`h-12 flex items-center justify-center border-b border-[#E6CCB2]/30 ${
+                          time.endsWith(':00') ? 'font-bold text-sm text-[#44403C] bg-[#E6CCB2]/20' : 'text-xs text-[#78716C]'
                         }`}
                       >
                         {time.endsWith(':00') || time.endsWith(':30') ? time : ''}
