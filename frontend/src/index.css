@@ -5,15 +5,16 @@
 @tailwind utilities;
 
 :root {
-  --rose: #C58970;
-  --rose-dark: #B07860;
-  --sand: #E6CCB2;
-  --stone-50: #FAFAF9;
-  --text-primary: #44403C;
-  --text-secondary: #78716C;
-  --success: #789F8A;
-  --warning: #E9C46A;
-  --error: #E76F51;
+  --primary-blue: #0EA5E9;
+  --primary-blue-dark: #0284C7;
+  --primary-blue-light: #38BDF8;
+  --sand: #E0F2FE;
+  --stone-50: #F8FAFC;
+  --text-primary: #0F172A;
+  --text-secondary: #334155;
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --error: #EF4444;
 }
 
 * {
@@ -26,8 +27,9 @@ body {
   font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #FAFAF9;
-  color: #44403C;
+  background-color: #F8FAFC;
+  color: #0F172A;
+  font-weight: 500;
 }
 
 .font-playfair {
@@ -45,27 +47,27 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #FAFAF9;
+  background: #F1F5F9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #E6CCB2;
+  background: #94A3B8;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #C58970;
+  background: #0EA5E9;
 }
 
 /* Focus styles */
 *:focus-visible {
-  outline: 2px solid #C58970;
+  outline: 2px solid #0EA5E9;
   outline-offset: 2px;
 }
 
 /* Selection */
 ::selection {
-  background-color: #C58970;
+  background-color: #0EA5E9;
   color: white;
 }
 
@@ -76,25 +78,25 @@ a, button {
 
 @layer base {
   :root {
-    --background: 30 20% 98%;
-    --foreground: 25 8% 25%;
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 25 8% 25%;
+    --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 25 8% 25%;
-    --primary: 17 39% 61%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 199 89% 48%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 30 20% 98%;
-    --secondary-foreground: 25 8% 25%;
-    --muted: 30 20% 96%;
-    --muted-foreground: 25 5% 47%;
-    --accent: 30 40% 80%;
-    --accent-foreground: 25 8% 25%;
-    --destructive: 15 73% 55%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 199 89% 90%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 30 40% 85%;
-    --input: 30 40% 85%;
-    --ring: 17 39% 61%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 199 89% 48%;
     --radius: 0.75rem;
   }
 }
