@@ -331,11 +331,36 @@ export default function PlanningPage() {
       setCheckoutMode(false);
       resetCheckout();
       fetchData();
+
+      // Check if loyalty threshold reached → show WhatsApp popup
+      if (res.data.loyalty_threshold_reached) {
+        setLoyaltyAlertData({
+          clientName: res.data.client_name,
+          clientPhone: res.data.client_phone,
+          threshold: res.data.loyalty_threshold_reached,
+          totalPoints: res.data.loyalty_total_points
+        });
+        setLoyaltyAlertOpen(true);
+      }
     } catch (err) {
       toast.error(err.response?.data?.detail || 'Errore nel pagamento');
     } finally {
       setProcessing(false);
     }
+  };
+
+  const openLoyaltyWhatsApp = () => {
+    if (!loyaltyAlertData?.clientPhone) {
+      toast.error('Numero di telefono non disponibile');
+      return;
+    }
+    let phone = loyaltyAlertData.clientPhone.replace(/[\s\-\+]/g, '');
+    if (!phone.startsWith('39')) phone = '39' + phone;
+    const message = encodeURIComponent(
+      `Ciao, hai raggiunto ${loyaltyAlertData.totalPoints} punti fedeltà presso MBHS SALON! Hai diritto ad un taglio gratis o uno sconto di 10,00 euro sui servizi di colpi di sole e schiariture. Prenota il tuo prossimo appuntamento!`
+    );
+    window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+    setLoyaltyAlertOpen(false);
   };
 
   // Reset checkout state
