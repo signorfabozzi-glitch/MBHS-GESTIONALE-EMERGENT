@@ -414,6 +414,13 @@ class HairSalonAPITester:
         return False
 
     # Cleanup tests
+    def test_delete_operator(self):
+        """Test deleting an operator"""
+        if not self.operator_id:
+            print("❌ No operator ID available")
+            return False
+        return self.run_test("Delete Operator", "DELETE", f"operators/{self.operator_id}", 200)
+
     def test_delete_appointment(self):
         """Test deleting an appointment"""
         if not self.appointment_id:
