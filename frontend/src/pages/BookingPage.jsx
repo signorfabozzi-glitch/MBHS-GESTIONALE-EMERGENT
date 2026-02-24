@@ -185,11 +185,24 @@ export default function BookingPage() {
       <Toaster position="top-center" />
       
       {/* Header */}
-      <div className="bg-[#0EA5E9] text-white py-6 px-4">
-        <div className="max-w-lg mx-auto text-center">
-          <img src="/logo.png?v=2" alt="MBHS Salon" className="w-16 h-16 mx-auto mb-3 rounded-xl shadow-lg" />
-          <h1 className="text-2xl font-black">MBHS SALON</h1>
-          <p className="text-blue-100">Prenota il tuo appuntamento</p>
+      <div className="bg-[#0EA5E9] text-white py-4 px-4">
+        <div className="max-w-lg mx-auto flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setShowWelcome(true)}
+            className="text-white hover:bg-white/20 shrink-0"
+            data-testid="booking-back-btn"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </Button>
+          <div className="flex items-center gap-3">
+            <img src="/logo.png?v=3" alt="MBHS Salon" className="w-10 h-10 rounded-lg" />
+            <div>
+              <h1 className="text-lg font-black leading-tight">MBHS SALON</h1>
+              <p className="text-blue-100 text-xs">Prenota il tuo appuntamento</p>
+            </div>
+          </div>
         </div>
       </div>
 
