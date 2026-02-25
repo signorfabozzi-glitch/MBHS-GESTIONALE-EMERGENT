@@ -60,6 +60,14 @@ function OfflineIndicator() {
   );
 }
 
+// Homepage: landing page for visitors, planning for logged-in users
+function HomePage() {
+  const { user, loading } = useAuth();
+  if (loading) return <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center"><div className="w-8 h-8 border-4 border-[#0EA5E9] border-t-transparent rounded-full animate-spin" /></div>;
+  if (user) return <PlanningPage />;
+  return <BookingPage />;
+}
+
 export default function App() {
   return (
     <AuthProvider>
@@ -69,9 +77,12 @@ export default function App() {
           {/* LOGIN (non protetto) */}
           <Route path="/login" element={<LoginPage />} />
 
-          {/* HOME = PLANNING */}
+          {/* HOME = Landing page per visitatori, Planning per loggati */}
+          <Route path="/" element={<HomePage />} />
+
+          {/* PLANNING dedicato */}
           <Route
-            path="/"
+            path="/planning"
             element={
               <ProtectedRoute>
                 <PlanningPage />
