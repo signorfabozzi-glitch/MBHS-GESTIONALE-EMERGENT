@@ -141,7 +141,7 @@ export default function BookingPage() {
     return (
       <div className="min-h-screen bg-[#1a1a2e]">
         <Toaster position="top-center" />
-        <div className="bg-[#111] border-b border-gray-800 py-4 px-4 sticky top-0 z-50">
+        <div className="bg-[#242445] border-b border-gray-800 py-4 px-4 sticky top-0 z-50">
           <div className="max-w-lg mx-auto flex items-center gap-3">
             <Button variant="ghost" size="icon" onClick={() => setShowBooking(false)} className="text-gray-400 hover:text-white hover:bg-white/10 shrink-0" data-testid="booking-back-btn">
               <ArrowLeft className="w-5 h-5" />
@@ -173,7 +173,7 @@ export default function BookingPage() {
                 <div className="space-y-2">
                   {services.map(service => (
                     <div key={service.id} onClick={() => toggleService(service.id)}
-                      className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${formData.service_ids.includes(service.id) ? 'border-white bg-white/10' : 'border-gray-800 bg-[#111] hover:border-gray-600'}`}
+                      className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${formData.service_ids.includes(service.id) ? 'border-white bg-white/10' : 'border-gray-800 bg-[#242445] hover:border-gray-600'}`}
                       data-testid={`service-item-${service.id}`}>
                       <div className="flex justify-between items-center">
                         <div><p className="font-bold text-white">{service.name}</p><p className="text-sm text-gray-500">{service.duration} min</p></div>
@@ -184,7 +184,7 @@ export default function BookingPage() {
                 </div>
               )}
               {formData.service_ids.length > 0 && (
-                <div className="bg-[#111] p-4 rounded-xl border border-gray-800">
+                <div className="bg-[#242445] p-4 rounded-xl border border-gray-800">
                   <p className="font-bold text-white">Riepilogo: {totalDuration} min - {'\u20AC'}{totalPrice}</p>
                 </div>
               )}
@@ -196,14 +196,14 @@ export default function BookingPage() {
               <h2 className="text-xl font-black text-white">Data e Ora</h2>
               <div className="space-y-3">
                 <div><label className="text-sm text-gray-400 font-semibold mb-1 block">Data</label>
-                  <Input type="date" value={formData.date} min={format(new Date(), 'yyyy-MM-dd')} onChange={(e) => setFormData({...formData, date: e.target.value})} className="bg-[#111] border-gray-800 text-white" /></div>
+                  <Input type="date" value={formData.date} min={format(new Date(), 'yyyy-MM-dd')} onChange={(e) => setFormData({...formData, date: e.target.value})} className="bg-[#242445] border-gray-800 text-white" /></div>
                 <div><label className="text-sm text-gray-400 font-semibold mb-1 block">Ora</label>
-                  <select value={formData.time} onChange={(e) => setFormData({...formData, time: e.target.value})} className="w-full p-3 bg-[#111] border border-gray-800 rounded-lg text-white">
+                  <select value={formData.time} onChange={(e) => setFormData({...formData, time: e.target.value})} className="w-full p-3 bg-[#242445] border border-gray-800 rounded-lg text-white">
                     {TIME_SLOTS.map(t => <option key={t} value={t}>{t}</option>)}
                   </select></div>
                 {operators.length > 0 && (
                   <div><label className="text-sm text-gray-400 font-semibold mb-1 block">Operatore (opzionale)</label>
-                    <select value={formData.operator_id} onChange={(e) => setFormData({...formData, operator_id: e.target.value})} className="w-full p-3 bg-[#111] border border-gray-800 rounded-lg text-white">
+                    <select value={formData.operator_id} onChange={(e) => setFormData({...formData, operator_id: e.target.value})} className="w-full p-3 bg-[#242445] border border-gray-800 rounded-lg text-white">
                       <option value="">Nessuna preferenza</option>
                       {operators.map(op => <option key={op.id} value={op.id}>{op.name}</option>)}
                     </select></div>
@@ -220,13 +220,13 @@ export default function BookingPage() {
               <h2 className="text-xl font-black text-white">I Tuoi Dati</h2>
               <div className="space-y-3">
                 <div><label className="text-sm text-gray-400 font-semibold mb-1 block">Nome e Cognome *</label>
-                  <Input value={formData.client_name} onChange={(e) => setFormData({...formData, client_name: e.target.value})} placeholder="Es. Maria Rossi" className="bg-[#111] border-gray-800 text-white placeholder:text-gray-600" data-testid="booking-name-input" /></div>
+                  <Input value={formData.client_name} onChange={(e) => setFormData({...formData, client_name: e.target.value})} placeholder="Es. Maria Rossi" className="bg-[#242445] border-gray-800 text-white placeholder:text-gray-600" data-testid="booking-name-input" /></div>
                 <div><label className="text-sm text-gray-400 font-semibold mb-1 block">Telefono *</label>
-                  <Input value={formData.client_phone} onChange={(e) => setFormData({...formData, client_phone: e.target.value})} placeholder="Es. 339 123 4567" className="bg-[#111] border-gray-800 text-white placeholder:text-gray-600" data-testid="booking-phone-input" /></div>
+                  <Input value={formData.client_phone} onChange={(e) => setFormData({...formData, client_phone: e.target.value})} placeholder="Es. 339 123 4567" className="bg-[#242445] border-gray-800 text-white placeholder:text-gray-600" data-testid="booking-phone-input" /></div>
                 <div><label className="text-sm text-gray-400 font-semibold mb-1 block">Note (opzionale)</label>
-                  <Textarea value={formData.notes} onChange={(e) => setFormData({...formData, notes: e.target.value})} placeholder="Richieste particolari..." className="bg-[#111] border-gray-800 text-white placeholder:text-gray-600" rows={3} /></div>
+                  <Textarea value={formData.notes} onChange={(e) => setFormData({...formData, notes: e.target.value})} placeholder="Richieste particolari..." className="bg-[#242445] border-gray-800 text-white placeholder:text-gray-600" rows={3} /></div>
               </div>
-              <div className="bg-[#111] p-4 rounded-xl border border-gray-800 space-y-2">
+              <div className="bg-[#242445] p-4 rounded-xl border border-gray-800 space-y-2">
                 <p className="text-sm text-gray-400">Riepilogo:</p>
                 {selectedServices.map(s => (<div key={s.id} className="flex justify-between text-sm"><span className="text-gray-300">{s.name}</span><span className="text-white font-bold">{'\u20AC'}{s.price}</span></div>))}
                 <div className="border-t border-gray-800 pt-2 flex justify-between"><span className="text-white font-bold">Totale</span><span className="text-white font-black text-lg">{'\u20AC'}{totalPrice}</span></div>
@@ -331,7 +331,7 @@ export default function BookingPage() {
           {showServices && (
             <div className="space-y-6 mt-8 animate-in fade-in duration-300">
               {SERVICE_CATEGORIES.map((cat, idx) => (
-                <div key={idx} className="bg-[#111] border border-gray-800/50 rounded-2xl p-6">
+                <div key={idx} className="bg-[#242445] border border-gray-800/50 rounded-2xl p-6">
                   <h3 className="text-xl font-black text-white mb-1">{cat.title}</h3>
                   {cat.desc && <p className="text-sm text-gray-500 mb-4">{cat.desc}</p>}
                   <div className="space-y-3">
@@ -356,7 +356,7 @@ export default function BookingPage() {
       </section>
 
       {/* SALON GALLERY */}
-      <section className="py-20 sm:py-28 bg-[#111]">
+      <section className="py-20 sm:py-28 bg-[#242445]">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
             <p className="text-amber-400 font-bold text-sm tracking-widest uppercase mb-3">Il Nostro Salone</p>
@@ -417,7 +417,7 @@ export default function BookingPage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {REVIEWS.map((review, idx) => (
-              <div key={idx} className="bg-[#111] border border-gray-800/50 rounded-2xl p-5">
+              <div key={idx} className="bg-[#242445] border border-gray-800/50 rounded-2xl p-5">
                 <div className="flex gap-0.5 mb-3">
                   {[...Array(review.rating)].map((_, i) => (<Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />))}
                 </div>
@@ -435,7 +435,7 @@ export default function BookingPage() {
       </section>
 
       {/* HAIRSTYLE GALLERY */}
-      <section className="py-20 sm:py-28 bg-[#111]">
+      <section className="py-20 sm:py-28 bg-[#242445]">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
             <p className="text-amber-400 font-bold text-sm tracking-widest uppercase mb-3">Tendenze P/E 2026</p>
@@ -474,23 +474,23 @@ export default function BookingPage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
             <a href="https://maps.google.com/?q=Via+Vito+Nicola+Melorio+101+Santa+Maria+Capua+Vetere" target="_blank" rel="noopener noreferrer"
-              className="bg-[#111] border border-gray-800/50 rounded-2xl p-5 hover:border-gray-700 transition-colors text-center" data-testid="contact-address">
+              className="bg-[#242445] border border-gray-800/50 rounded-2xl p-5 hover:border-gray-700 transition-colors text-center" data-testid="contact-address">
               <MapPin className="w-6 h-6 text-amber-400 mx-auto mb-3" />
               <h3 className="font-bold text-white text-sm mb-1">Indirizzo</h3>
               <p className="text-gray-500 text-xs leading-relaxed">Via Vito Nicola Melorio 101<br />Santa Maria Capua Vetere (CE)</p>
             </a>
-            <div className="bg-[#111] border border-gray-800/50 rounded-2xl p-5 text-center">
+            <div className="bg-[#242445] border border-gray-800/50 rounded-2xl p-5 text-center">
               <Phone className="w-6 h-6 text-amber-400 mx-auto mb-3" />
               <h3 className="font-bold text-white text-sm mb-1">Telefono</h3>
               <a href="tel:08231878320" className="text-gray-400 text-xs hover:text-white transition-colors block">0823 18 78 320</a>
               <a href="tel:3397833526" className="text-gray-400 text-xs hover:text-white transition-colors block mt-1">339 78 33 526</a>
             </div>
-            <a href="mailto:melitobruno@gmail.com" className="bg-[#111] border border-gray-800/50 rounded-2xl p-5 hover:border-gray-700 transition-colors text-center">
+            <a href="mailto:melitobruno@gmail.com" className="bg-[#242445] border border-gray-800/50 rounded-2xl p-5 hover:border-gray-700 transition-colors text-center">
               <Mail className="w-6 h-6 text-amber-400 mx-auto mb-3" />
               <h3 className="font-bold text-white text-sm mb-1">Email</h3>
               <p className="text-gray-400 text-xs">melitobruno@gmail.com</p>
             </a>
-            <div className="bg-[#111] border border-gray-800/50 rounded-2xl p-5 text-center">
+            <div className="bg-[#242445] border border-gray-800/50 rounded-2xl p-5 text-center">
               <Clock className="w-6 h-6 text-amber-400 mx-auto mb-3" />
               <h3 className="font-bold text-white text-sm mb-1">Orari</h3>
               <p className="text-gray-400 text-xs">Mar - Sab: 08:00 - 19:00</p>
