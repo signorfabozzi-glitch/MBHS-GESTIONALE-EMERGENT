@@ -549,8 +549,42 @@ export default function BookingPage() {
         </div>
       </section>
 
+      {/* HAIRSTYLE GALLERY */}
+      <section className="py-20 sm:py-28 bg-[#111]">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <p className="text-amber-400 font-bold text-sm tracking-widest uppercase mb-3">Tendenze P/E 2026</p>
+            <h2 className="text-3xl sm:text-4xl font-black">I Nostri Lavori</h2>
+            <p className="text-gray-500 mt-3 max-w-xl mx-auto">Lasciati ispirare dalle ultime tendenze Primavera Estate 2026.</p>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+            {GALLERY.map((item, idx) => (
+              <div key={idx} className="relative rounded-2xl overflow-hidden aspect-[3/4] group cursor-pointer">
+                <img src={item.img} alt={item.label} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute top-3 right-3 bg-white/10 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full border border-white/10">
+                  {item.tag}
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                  <p className="text-white font-bold">{item.label}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-8">
+            <Button
+              onClick={() => setShowBooking(true)}
+              className="bg-white text-[#0a0a0a] hover:bg-gray-200 font-bold px-8 py-6 rounded-xl"
+            >
+              <Scissors className="w-4 h-4 mr-2" />
+              PRENOTA ORA
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* CONTACT SECTION */}
-      <section ref={contactRef} className="py-20 sm:py-28 bg-[#111]">
+      <section ref={contactRef} className="py-20 sm:py-28">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
             <p className="text-amber-400 font-bold text-sm tracking-widest uppercase mb-3">Contattaci</p>
