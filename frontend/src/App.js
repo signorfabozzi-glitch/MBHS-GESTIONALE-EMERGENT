@@ -230,6 +230,16 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
+          {/* RIEPILOGO GIORNALIERO */}
+          <Route
+            path="/daily-summary"
+            element={
+              <ProtectedRoute>
+                <DailySummaryPage />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
       <Toaster 
