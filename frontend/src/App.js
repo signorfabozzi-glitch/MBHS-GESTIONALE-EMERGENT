@@ -26,6 +26,7 @@ import LoyaltyPage from "./pages/LoyaltyPage";
 import RemindersPage from "./pages/RemindersPage";
 import DailySummaryPage from "./pages/DailySummaryPage";
 import LoginPage from "./pages/LoginPage";
+import { useAuth } from "./context/AuthContext";
 
 // Offline indicator component
 function OfflineIndicator() {
