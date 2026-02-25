@@ -419,10 +419,6 @@ export default function PlanningPage() {
       setCreatingRecurring(false);
     }
 
-  const getAppointmentStyle = (apt) => {
-  };
-
-  // Calculate appointment position and height
   // Drag & Drop handlers
   const handleDragStart = (e, apt) => {
     setDraggedApt(apt);
