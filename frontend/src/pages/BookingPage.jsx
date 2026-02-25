@@ -330,20 +330,23 @@ export default function BookingPage() {
 
           {showServices && (
             <div className="space-y-6 mt-8 animate-in fade-in duration-300">
-              {SERVICE_CATEGORIES.map((cat, idx) => (
-                <div key={idx} className="bg-[#242445] border border-gray-800/50 rounded-3xl p-6">
+              {SERVICE_CATEGORIES.map((cat, idx) => {
+                const borderColors = ['border-amber-400/30', 'border-rose-400/30', 'border-teal-400/30'];
+                return (
+                <div key={idx} className={`bg-[#242445]/80 border ${borderColors[idx % 3]} rounded-3xl p-6`}>
                   <h3 className="text-xl font-black text-white mb-1">{cat.title}</h3>
-                  {cat.desc && <p className="text-sm text-gray-500 mb-4">{cat.desc}</p>}
+                  {cat.desc && <p className="text-sm text-gray-400 mb-4">{cat.desc}</p>}
                   <div className="space-y-3">
                     {cat.items.map((item, i) => (
-                      <div key={i} className="flex justify-between items-center py-2 border-b border-gray-800 last:border-0">
+                      <div key={i} className="flex justify-between items-center py-2 border-b border-white/5 last:border-0">
                         <span className="font-bold text-gray-300">{item.name}</span>
                         <span className="font-black text-amber-400 text-lg shrink-0 ml-4">{item.price}</span>
                       </div>
                     ))}
                   </div>
                 </div>
-              ))}
+                );
+              })}
               <div className="text-center">
                 <p className="text-gray-600 text-sm mb-6">Tutti i servizi includono consulenza personalizzata e prodotti professionali.</p>
                 <Button onClick={() => setShowBooking(true)} className="bg-white text-[#1a1a2e] hover:bg-gray-200 font-bold px-8 py-6 rounded-xl">
