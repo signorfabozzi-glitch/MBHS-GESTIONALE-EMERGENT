@@ -15,71 +15,55 @@ Applicazione gestionale completa per un salone di parrucchiera con autenticazion
 
 #### Core Application
 - Autenticazione JWT (email/password)
-- Dashboard principale
-- Planning giornaliero con griglia 15 minuti
-- Vista settimanale e mensile
-- Gestione Clienti (CRUD)
-- Gestione Servizi (CRUD)
-- Gestione Operatori (CRUD)
+- Dashboard con moduli cliccabili (15 moduli con navigazione alle sottopagine)
+- Planning giornaliero con griglia 15 minuti + DRAG & DROP per spostare appuntamenti
+- Vista settimanale con slot 15 minuti (Lun-Sab)
+- Vista mensile
+- Gestione Clienti (CRUD) - 183 clienti
+- Gestione Servizi (CRUD) - 20 servizi in 6 categorie
+- Operatore unico BRUNO con possibilità di aggiungerne altri
 - Statistiche con export PDF
 - Storico appuntamenti
 
+#### Servizi (6 categorie, ordinati per numero)
+- **Taglio:** 01 Taglio Donna, 06 Taglio uomo
+- **Colore:** 11-15 (Parziale, Completo, Colpi di sole, Cartine, Balayage)
+- **Piega:** 02-04 (Cap.corti, Cap.lunghi, Fantasy)
+- **Trattamento:** 08-10 (Maschera, Fiala, Laminazione)
+- **Modellanti:** 16-20 (Permanente, Anticrespo, Ondulazione, Stiratura Classica, Stiratura New) - Da €40
+- **Altro:** 05, 07
+
 #### Funzionalità Avanzate
-- Promemoria SMS (Twilio - richiede credenziali)
-- Export PDF statistiche
+- Checkout in-appointment con metodi pagamento e sconti
 - Card Prepagate / Abbonamenti
 - Ricerca Rapida Cliente nel Planning
 - Appuntamenti Ricorrenti
-- Checkout in-appointment con metodi pagamento e sconti
-
-#### Import Dati
-- Import clienti da Excel (161 clienti)
-- 18 Trattamenti importati da XML
-- 61 Note Clienti aggiornate da Excel
+- Report Incassi + Statistiche
+- Backup dati con export Excel
+- Pagina Impostazioni
 
 #### PWA & Offline
-- Progressive Web App installabile
+- Progressive Web App installabile con icona desktop
 - Service Worker per funzionalità offline
 
 #### Prenotazione Online & Landing Page
-- Pagina pubblica /prenota con tema scuro elegante
-- Artwork "Metti la testa a posto!!" centrato nella hero section
-- Servizi collassabili con 3 categorie: Taglio & Piega, Colorazione (Da €30), Modellanti (Da €40)
-- Indirizzo cliccabile che apre Google Maps
-- Gallery con foto reali del salone (4 foto interni + 6 foto lavori)
+- Pagina pubblica /prenota con tema blu scuro chiaro (#1a1a2e)
+- Bordi morbidi arrotondati (rounded-3xl) colorati con effetto glow al hover
+- Artwork "Metti la testa a posto!!" centrato nella hero
+- 6 foto reali nella gallery acconciature
+- Servizi collassabili, indirizzo cliccabile Google Maps
 - Orari: Mar-Sab 08:00-19:00
 - Flusso prenotazione a 3 step
-- Controllo sovrapposizione orari
-- Pulsante WhatsApp diretto
 
-#### Report & Backup
-- Report Incassi
-- Backup Dati con export Excel
-
-#### Programma Fedeltà (24 Feb 2026)
-- 1 punto ogni €10 spesi (assegnazione automatica al checkout)
-- Premio: Sconto 20% Colorazione (5 punti)
-- Premio: Taglio Gratuito (10 punti)
+#### Programma Fedeltà (punti azzerati il 25 Feb 2026)
+- 1 punto ogni €10 spesi
+- Premi configurabili
 - Pagina dedicata /loyalty
-- Notifica WhatsApp automatica al raggiungimento soglia 5/10 punti
 
-#### Promemoria & Richiami (24 Feb 2026)
-- Promemoria appuntamenti del giorno dopo via WhatsApp
-- Richiamo clienti inattivi (60+ giorni) con offerta sconto 10% entro 7 giorni
+#### Promemoria & Richiami
+- Promemoria appuntamenti via WhatsApp
+- Richiamo clienti inattivi
 - Pagina dedicata /reminders
-- Banner notifica sul Planning con conteggio promemoria pendenti
-
-#### Landing Page Redesign (25 Feb 2026)
-- Tema blu scuro chiaro (#1a1a2e) con colori vivaci multicolore
-- Bordi morbidi arrotondati (rounded-3xl) e colorati su tutte le card (amber, rose, teal, violet)
-- Artwork utente come hero image centrale
-- Servizi collassabili (Mostra/Nascondi listino)
-- 6 foto reali nella gallery acconciature
-- Indirizzo cliccabile -> Google Maps
-- Orari aggiornati 08:00-19:00
-- Pulsanti CTA gradient vivace (amber-to-rose)
-- Icone sezioni in colori diversi (amber, rose, teal, violet)
-- Layout responsive mobile con CTA fisso in basso
 
 ## Credenziali Test
 - Email: melitobruno@gmail.com
