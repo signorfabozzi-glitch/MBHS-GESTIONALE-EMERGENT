@@ -16,9 +16,9 @@ import { it } from 'date-fns/locale';
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const MODULES = [
-  { path: '/planning', label: 'Planning', desc: 'Vista giornaliera', icon: Calendar, color: '#0EA5E9' },
-  { path: '/weekly', label: 'Settimanale', desc: 'Vista settimanale', icon: CalendarDays, color: '#789F8A' },
-  { path: '/monthly', label: 'Mensile', desc: 'Vista mensile', icon: CalendarRange, color: '#E9C46A' },
+  { path: '/', label: 'Planning', desc: 'Vista giornaliera', icon: Calendar, color: '#0EA5E9' },
+  { path: '/week', label: 'Settimanale', desc: 'Vista settimanale', icon: CalendarDays, color: '#789F8A' },
+  { path: '/month', label: 'Mensile', desc: 'Vista mensile', icon: CalendarRange, color: '#E9C46A' },
   { path: '/appointments', label: 'Appuntamenti', desc: 'Nuovo appuntamento', icon: Plus, color: '#0284C7' },
   { path: '/clients', label: 'Clienti', desc: 'Gestione clienti', icon: Users, color: '#334155' },
   { path: '/services', label: 'Servizi', desc: 'Listino prezzi', icon: Scissors, color: '#C084FC' },
@@ -26,7 +26,7 @@ const MODULES = [
   { path: '/stats', label: 'Statistiche', desc: 'Report e grafici', icon: BarChart3, color: '#EF4444' },
   { path: '/incassi', label: 'Incassi', desc: 'Report pagamenti', icon: Euro, color: '#10B981' },
   { path: '/daily-summary', label: 'Riepilogo', desc: 'Riepilogo giornaliero', icon: BarChart3, color: '#F43F5E' },
-  { path: '/prepaid', label: 'Card Prepagate', desc: 'Abbonamenti', icon: CreditCard, color: '#6366F1' },
+  { path: '/cards', label: 'Card Prepagate', desc: 'Abbonamenti', icon: CreditCard, color: '#6366F1' },
   { path: '/loyalty', label: 'Fedeltà', desc: 'Programma punti', icon: Gift, color: '#EC4899' },
   { path: '/reminders', label: 'Promemoria', desc: 'Notifiche clienti', icon: Bell, color: '#F97316' },
   { path: '/backup', label: 'Backup', desc: 'Esporta dati', icon: Download, color: '#64748B' },
