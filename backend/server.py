@@ -127,6 +127,8 @@ class ServiceCreate(BaseModel):
     category: str
     duration: int
     price: float
+    color: Optional[str] = None
+    sort_order: Optional[int] = None
 
 class ServiceResponse(BaseModel):
     id: str
@@ -134,6 +136,8 @@ class ServiceResponse(BaseModel):
     category: str
     duration: int
     price: float
+    color: Optional[str] = None
+    sort_order: Optional[int] = None
     created_at: str
 
 class ServiceUpdate(BaseModel):
@@ -141,6 +145,8 @@ class ServiceUpdate(BaseModel):
     category: Optional[str] = None
     duration: Optional[int] = None
     price: Optional[float] = None
+    color: Optional[str] = None
+    sort_order: Optional[int] = None
 
 # Appointment Models
 class AppointmentCreate(BaseModel):
