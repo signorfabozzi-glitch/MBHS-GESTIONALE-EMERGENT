@@ -224,13 +224,14 @@ export default function ServicesPage() {
                               <div className="w-3 h-3 rounded-full mt-2 shrink-0" style={{ backgroundColor: service.color || category.color }} />
                               <div>
                                 <h3 className="font-medium text-[#0F172A] text-lg">{service.name}</h3>
-                              <div className="flex items-center gap-4 mt-3 text-sm text-[#334155]">
-                                <span className="flex items-center gap-1">
-                                  <Clock className="w-4 h-4" /> {service.duration} min
-                                </span>
-                                <span className="flex items-center gap-1 font-semibold text-[#0F172A]">
-                                  <Euro className="w-4 h-4" /> {service.price.toFixed(2)}
-                                </span>
+                                <div className="flex items-center gap-4 mt-3 text-sm text-[#334155]">
+                                  <span className="flex items-center gap-1">
+                                    <Clock className="w-4 h-4" /> {service.duration} min
+                                  </span>
+                                  <span className="flex items-center gap-1 font-semibold text-[#0F172A]">
+                                    <Euro className="w-4 h-4" /> {service.price.toFixed(2)}
+                                  </span>
+                                </div>
                               </div>
                             </div>
                             <div className="flex gap-1">
