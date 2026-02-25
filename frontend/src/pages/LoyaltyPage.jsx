@@ -23,7 +23,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Star, Gift, Search, Trophy, TrendingUp, Award, ChevronRight, Clock, Minus, Plus } from 'lucide-react';
+import { Star, Gift, Search, Trophy, TrendingUp, Award, ChevronRight, Clock, Minus, Plus, Pencil, Save } from 'lucide-react';
 import { toast } from 'sonner';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -40,6 +40,8 @@ export default function LoyaltyPage() {
   const [redeemOpen, setRedeemOpen] = useState(false);
   const [redeemType, setRedeemType] = useState('');
   const [redeeming, setRedeeming] = useState(false);
+  const [editingRewards, setEditingRewards] = useState(false);
+  const [editRewards, setEditRewards] = useState({});
 
   useEffect(() => {
     fetchData();
