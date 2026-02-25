@@ -416,9 +416,10 @@ export default function LoyaltyPage() {
                 {/* Redeem Rewards */}
                 <div className="space-y-3">
                   <h3 className="font-bold text-[#0F172A]">Riscatta Premi</h3>
-                  {Object.entries(LOYALTY_REWARDS_UI).map(([key, reward]) => {
-                    const reqPoints = config?.rewards?.[key]?.points_required || reward.pointsReq;
+                  {config?.rewards && Object.entries(config.rewards).map(([key, reward]) => {
+                    const reqPoints = reward.points_required || 0;
                     const canRedeem = clientLoyalty.points >= reqPoints;
+                    const isSconto = key.includes('sconto');
                     return (
                       <div
                         key={key}
@@ -427,8 +428,8 @@ export default function LoyaltyPage() {
                         }`}
                       >
                         <div className="flex items-center gap-3">
-                          <div className={`p-2 rounded-lg ${reward.bgColor}`}>
-                            {reward.icon}
+                          <div className={`p-2 rounded-lg ${isSconto ? 'bg-purple-100' : 'bg-emerald-100'}`}>
+                            {isSconto ? <Award className="w-5 h-5 text-purple-600" /> : <Trophy className="w-5 h-5 text-emerald-600" />}
                           </div>
                           <div>
                             <p className="font-bold text-[#0F172A]">{reward.name}</p>
