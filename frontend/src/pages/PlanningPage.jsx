@@ -465,7 +465,14 @@ export default function PlanningPage() {
     setDraggedApt(null);
   };
 
-  const getAppointmentStyle = (apt) => {
+  // Sort services by sort_order for consistent category ordering
+  const CATEGORY_ORDER = ['taglio', 'piega', 'trattamento', 'colore', 'modellanti', 'abbonamenti', 'prodotti'];
+  const sortedServices = [...services].sort((a, b) => {
+    const catA = CATEGORY_ORDER.indexOf(a.category);
+    const catB = CATEGORY_ORDER.indexOf(b.category);
+    if (catA !== catB) return (catA === -1 ? 99 : catA) - (catB === -1 ? 99 : catB);
+    return (a.sort_order || 999) - (b.sort_order || 999);
+  });
     const [startHour, startMin] = apt.time.split(':').map(Number);
     const startSlotIndex = (startHour - 8) * 4 + Math.floor(startMin / 15);
     const slotsCount = Math.ceil(apt.total_duration / 15);
