@@ -42,6 +42,7 @@ const navItems = [
   { path: '/operators', label: 'Operatori', icon: UserCircle },
   { path: '/stats', label: 'Statistiche', icon: BarChart3 },
   { path: '/backup', label: 'Backup Dati', icon: Database },
+  { path: '/gestione-sito', label: 'Gestione Sito', icon: Globe },
   { path: '/history', label: 'Storico', icon: History },
   { path: '/settings', label: 'Impostazioni', icon: Settings },
 ];
