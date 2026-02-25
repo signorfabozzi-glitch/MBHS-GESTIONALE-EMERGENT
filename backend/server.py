@@ -246,14 +246,13 @@ class RecurringAppointmentCreate(BaseModel):
 class LoyaltyRedeemRequest(BaseModel):
     reward_type: str  # "sconto_colorazione" or "taglio_gratuito"
 
-# Loyalty config
-LOYALTY_POINTS_PER_EURO = 10  # 1 point every 10€ spent
-LOYALTY_REWARDS = {
+# Loyalty config - defaults, overridden by DB
+DEFAULT_LOYALTY_REWARDS = {
     "sconto_colorazione": {
         "name": "Sconto 10% Colorazione",
         "description": "Sconto del 10% sul prossimo servizio di colorazione",
         "points_required": 5,
-        "discount_percent": 20,
+        "discount_percent": 10,
     },
     "taglio_gratuito": {
         "name": "Taglio Gratuito",
@@ -261,6 +260,12 @@ LOYALTY_REWARDS = {
         "points_required": 10,
     }
 }
+
+async def get_loyalty_rewards(user_id: str):
+    rewards = await db.loyalty_rewards.find({"user_id": user_id}, {"_id": 0}).to_list(50)
+    if rewards:
+        return {r["key"]: r for r in rewards}
+    return DEFAULT_LOYALTY_REWARDS
 
 # ============== HELPER FUNCTIONS ==============
 
