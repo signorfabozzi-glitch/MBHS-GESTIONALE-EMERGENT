@@ -760,7 +760,9 @@ export default function PlanningPage() {
                             >
                               <div className="flex justify-between items-start">
                                 <div className="flex-1 min-w-0">
-                                  <p className="font-bold truncate text-sm drop-shadow-sm">{apt.client_name}</p>
+                                  <p className="font-bold truncate text-sm drop-shadow-sm">
+                                    {apt.status === 'completed' && '\u2713 '}{apt.client_name}
+                                  </p>
                                   <p className="text-white font-medium truncate text-[11px] drop-shadow-sm">
                                     {apt.time} - {apt.end_time}
                                   </p>
