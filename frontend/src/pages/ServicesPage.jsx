@@ -120,7 +120,8 @@ export default function ServicesPage() {
       name: service.name,
       category: service.category,
       duration: service.duration,
-      price: service.price
+      price: service.price,
+      color: service.color || CATEGORIES.find(c => c.value === service.category)?.color || '#0EA5E9',
     });
     setDialogOpen(true);
   };
