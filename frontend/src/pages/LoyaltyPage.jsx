@@ -521,8 +521,8 @@ export default function LoyaltyPage() {
             <AlertDialogHeader>
               <AlertDialogTitle>Riscattare Premio?</AlertDialogTitle>
               <AlertDialogDescription>
-                Vuoi riscattare "{LOYALTY_REWARDS_UI[redeemType]?.name}" per {selectedClient?.client_name}?
-                Verranno scalati {config?.rewards?.[redeemType]?.points_required || LOYALTY_REWARDS_UI[redeemType]?.pointsReq} punti.
+                Vuoi riscattare "{config?.rewards?.[redeemType]?.name}" per {selectedClient?.client_name}?
+                Verranno scalati {config?.rewards?.[redeemType]?.points_required || 0} punti.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
