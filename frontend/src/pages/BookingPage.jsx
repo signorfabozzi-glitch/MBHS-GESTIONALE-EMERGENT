@@ -21,12 +21,12 @@ const SALON_INTERIOR = "https://customer-assets.emergentagent.com/job_a05a9fc6-c
 const SALON_WORKSTATIONS = "https://customer-assets.emergentagent.com/job_a05a9fc6-c017-4f4a-aee2-38e140acfa26/artifacts/t15b4lty_image.png";
 
 const GALLERY = [
-  { img: "https://images.unsplash.com/photo-1672789096234-e0702f040503?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHwzfHx3b21hbiUyMGxvbmclMjBoYWlyJTIwd2F2eSUyMGJsb25kZSUyMHN0eWxpbmclMjBnbGFtb3JvdXN8ZW58MHx8fHwxNzcyMDMzNDEyfDA&ixlib=rb-4.1.0&q=85", label: "Onde Glamour", tag: "Capelli Lunghi" },
-  { img: "https://images.unsplash.com/photo-1695934485051-ddd96b8ade83?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2ODh8MHwxfHNlYXJjaHwyfHx3b21hbiUyMGJvYiUyMGhhaXJjdXQlMjBtb2Rlcm4lMjB0cmVuZHklMjBzaG9ydCUyMGhhaXJ8ZW58MHx8fHwxNzcyMDMzNDAzfDA&ixlib=rb-4.1.0&q=85", label: "Bob Geometrico", tag: "Capelli Corti" },
-  { img: "https://images.unsplash.com/photo-1673545931906-dc923a11a5a4?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NzB8MHwxfHNlYXJjaHwxfHxoYWlyJTIwY29sb3IlMjB0cmFuc2Zvcm1hdGlvbiUyMGJydW5ldHRlJTIwYmxvbmRlJTIwb21icmV8ZW58MHx8fHwxNzcyMDMzNDE0fDA&ixlib=rb-4.1.0&q=85", label: "Biondo Naturale", tag: "Colorazione" },
-  { img: "https://images.unsplash.com/photo-1599042426110-03e7730293cf?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2ODh8MHwxfHNlYXJjaHwxfHx3b21hbiUyMGJvYiUyMGhhaXJjdXQlMjBtb2Rlcm4lMjB0cmVuZHklMjBzaG9ydCUyMGhhaXJ8ZW58MHx8fHwxNzcyMDMzNDAzfDA&ixlib=rb-4.1.0&q=85", label: "Beach Waves", tag: "Capelli Corti" },
-  { img: "https://images.unsplash.com/photo-1760264550811-91b2b668cc58?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHwyfHx3b21hbiUyMGxvbmclMjBoYWlyJTIwd2F2eSUyMGJsb25kZSUyMHN0eWxpbmclMjBnbGFtb3JvdXN8ZW58MHx8fHwxNzcyMDMzNDEyfDA&ixlib=rb-4.1.0&q=85", label: "Coda Elegante", tag: "Capelli Lunghi" },
-  { img: "https://images.unsplash.com/photo-1653241625670-3a1e643464ea?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NzB8MHwxfHNlYXJjaHwyfHxoYWlyJTIwY29sb3IlMjB0cmFuc2Zvcm1hdGlvbiUyMGJydW5ldHRlJTIwYmxvbmRlJTIwb21icmV8ZW58MHx8fHwxNzcyMDMzNDE0fDA&ixlib=rb-4.1.0&q=85", label: "Look Audace", tag: "Colore Fantasy" },
+  { img: "https://customer-assets.emergentagent.com/job_a05a9fc6-c017-4f4a-aee2-38e140acfa26/artifacts/7i4kwza6_image.png", label: "Balayage Dorato", tag: "Capelli Lunghi" },
+  { img: "https://customer-assets.emergentagent.com/job_a05a9fc6-c017-4f4a-aee2-38e140acfa26/artifacts/zjh4hvlw_image.png", label: "Bob Mosso", tag: "Capelli Corti" },
+  { img: "https://customer-assets.emergentagent.com/job_a05a9fc6-c017-4f4a-aee2-38e140acfa26/artifacts/krhax3qv_image.png", label: "Onde Ramate", tag: "Colorazione" },
+  { img: "https://customer-assets.emergentagent.com/job_a05a9fc6-c017-4f4a-aee2-38e140acfa26/artifacts/0w1uwqaq_image.png", label: "Sfumature Calde", tag: "Balayage" },
+  { img: "https://customer-assets.emergentagent.com/job_a05a9fc6-c017-4f4a-aee2-38e140acfa26/artifacts/r41kjm40_image.png", label: "Styling in Salone", tag: "Taglio" },
+  { img: "https://customer-assets.emergentagent.com/job_ac0aaacf-8266-485a-8bab-9e57ed904c7a/artifacts/0inxpacz_517029262_10231563813060391_9151321643853820111_n.jpg", label: "Onde Naturali", tag: "Piega" },
 ];
 
 const SERVICE_CATEGORIES = [
