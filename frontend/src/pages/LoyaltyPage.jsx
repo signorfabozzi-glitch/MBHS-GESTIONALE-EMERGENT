@@ -63,6 +63,32 @@ export default function LoyaltyPage() {
     }
   };
 
+  const startEditRewards = () => {
+    if (config?.rewards) {
+      setEditRewards(JSON.parse(JSON.stringify(config.rewards)));
+    }
+    setEditingRewards(true);
+  };
+
+  const saveRewards = async () => {
+    try {
+      const res = await axios.put(`${API}/loyalty/config`, { rewards: editRewards });
+      setConfig(res.data);
+      setEditingRewards(false);
+      toast.success('Premi aggiornati!');
+    } catch (err) {
+      toast.error('Errore nel salvataggio');
+    }
+  };
+
+  const updateReward = (key, field, value) => {
+    setEditRewards(prev => ({
+      ...prev,
+      [key]: { ...prev[key], [field]: field === 'points_required' || field === 'discount_percent' ? Number(value) : value }
+    }));
+  };
+
+
   const openClientDetail = async (loy) => {
     setSelectedClient(loy);
     setDetailOpen(true);
