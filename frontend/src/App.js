@@ -24,6 +24,7 @@ import BackupPage from "./pages/BackupPage";
 import BookingPage from "./pages/BookingPage";
 import LoyaltyPage from "./pages/LoyaltyPage";
 import RemindersPage from "./pages/RemindersPage";
+import DailySummaryPage from "./pages/DailySummaryPage";
 import LoginPage from "./pages/LoginPage";
 
 // Offline indicator component
