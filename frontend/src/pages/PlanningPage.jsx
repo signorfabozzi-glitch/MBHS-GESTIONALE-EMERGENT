@@ -722,8 +722,13 @@ export default function PlanningPage() {
                           <div
                             key={time}
                             onClick={() => !isSlotOccupied(time, col.id) && handleSlotClick(time, col.id)}
+                            onDragOver={(e) => handleDragOver(e, time, col.id)}
+                            onDragLeave={handleDragLeave}
+                            onDrop={(e) => handleDrop(e, time, col.id)}
                             className={`h-12 border-b border-[#E2E8F0]/20 transition-colors ${
                               time.endsWith(':00') ? 'bg-white' : 'bg-[#F8FAFC]/50'
+                            } ${
+                              dragOverSlot === `${time}-${col.id}` ? 'bg-[#0EA5E9]/30 ring-2 ring-[#0EA5E9] ring-inset' : ''
                             } ${
                               !isSlotOccupied(time, col.id) 
                                 ? 'hover:bg-[#0EA5E9]/20 cursor-pointer' 
