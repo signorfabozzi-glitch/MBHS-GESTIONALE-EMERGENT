@@ -38,12 +38,15 @@ const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const CATEGORIES = [
   { value: 'taglio', label: 'Taglio', color: '#0EA5E9' },
-  { value: 'colore', label: 'Colore', color: '#789F8A' },
   { value: 'piega', label: 'Piega', color: '#E9C46A' },
-  { value: 'trattamento', label: 'Trattamento', color: '#334155' },
+  { value: 'trattamento', label: 'Trattamenti', color: '#334155' },
+  { value: 'colore', label: 'Colore', color: '#789F8A' },
   { value: 'modellanti', label: 'Modellanti', color: '#C084FC' },
-  { value: 'altro', label: 'Altro', color: '#0F172A' },
+  { value: 'abbonamenti', label: 'Abbonamenti/Prepagate', color: '#6366F1' },
+  { value: 'prodotti', label: 'Prodotti e Varie', color: '#F97316' },
 ];
+
+const CATEGORY_ORDER = CATEGORIES.map(c => c.value);
 
 export default function ServicesPage() {
   const [services, setServices] = useState([]);
