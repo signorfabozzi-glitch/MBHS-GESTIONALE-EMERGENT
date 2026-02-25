@@ -103,6 +103,10 @@ export default function PlanningPage() {
   const [pendingRemindersCount, setPendingRemindersCount] = useState(0);
   const [inactiveClientsCount, setInactiveClientsCount] = useState(0);
 
+  // Drag & Drop state
+  const [draggedApt, setDraggedApt] = useState(null);
+  const [dragOverSlot, setDragOverSlot] = useState(null);
+
   useEffect(() => {
     fetchData();
     fetchReminderCounts();
