@@ -1162,21 +1162,25 @@ export default function PlanningPage() {
               <div className="space-y-2">
                 <Label className="text-[#0F172A] font-semibold">Servizi</Label>
                 <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto">
-                  {services.map((service) => (
+                  {sortedServices.map((service) => (
                     <Button
                       key={service.id}
                       type="button"
                       variant="outline"
                       className={`justify-start h-auto py-2 px-3 ${
                         formData.service_ids.includes(service.id)
-                          ? 'bg-[#0EA5E9]/20 border-2 border-[#0EA5E9] text-[#0EA5E9] font-semibold'
+                          ? 'ring-2 ring-offset-1 font-semibold'
                           : 'border-2 border-[#E2E8F0] text-[#0F172A]'
                       }`}
+                      style={formData.service_ids.includes(service.id) ? { borderColor: service.color || '#0EA5E9', color: service.color || '#0EA5E9', backgroundColor: `${service.color || '#0EA5E9'}15` } : {}}
                       onClick={() => toggleService(service.id)}
                     >
-                      <div className="text-left">
-                        <p className="font-medium text-sm">{service.name}</p>
-                        <p className="text-xs opacity-70">{service.duration} min - €{service.price}</p>
+                      <div className="flex items-center gap-2 text-left">
+                        <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: service.color || '#0EA5E9' }} />
+                        <div>
+                          <p className="font-medium text-sm">{service.name}</p>
+                          <p className="text-xs opacity-70">{service.duration} min - {'\u20AC'}{service.price}</p>
+                        </div>
                       </div>
                     </Button>
                   ))}
