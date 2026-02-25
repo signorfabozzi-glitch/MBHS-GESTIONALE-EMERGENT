@@ -387,7 +387,7 @@ export default function BookingPage() {
       <section className="py-20 sm:py-28">
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="rounded-3xl overflow-hidden h-80 lg:h-96 border-2 border-rose-400/20">
+            <div className="rounded-3xl overflow-hidden h-80 lg:h-96 border-2 border-rose-400/20 hover:shadow-xl hover:shadow-rose-400/20 transition-all duration-300">
               <img src={SALON_RECEPTION} alt="Il nostro salone" className="w-full h-full object-cover" />
             </div>
             <div>
@@ -488,23 +488,23 @@ export default function BookingPage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
             <a href="https://maps.google.com/?q=Via+Vito+Nicola+Melorio+101+Santa+Maria+Capua+Vetere" target="_blank" rel="noopener noreferrer"
-              className="bg-[#242445]/80 border border-amber-400/25 rounded-3xl p-5 hover:border-amber-400/50 transition-all text-center" data-testid="contact-address">
+              className="bg-[#242445]/80 border border-amber-400/25 rounded-3xl p-5 hover:border-amber-400/50 hover:shadow-lg hover:shadow-amber-400/20 transition-all duration-300 text-center" data-testid="contact-address">
               <MapPin className="w-6 h-6 text-amber-400 mx-auto mb-3" />
               <h3 className="font-bold text-white text-sm mb-1">Indirizzo</h3>
               <p className="text-gray-400 text-xs leading-relaxed">Via Vito Nicola Melorio 101<br />Santa Maria Capua Vetere (CE)</p>
             </a>
-            <div className="bg-[#242445]/80 border border-rose-400/25 rounded-3xl p-5 text-center">
+            <div className="bg-[#242445]/80 border border-rose-400/25 rounded-3xl p-5 text-center hover:shadow-lg hover:shadow-rose-400/20 transition-all duration-300">
               <Phone className="w-6 h-6 text-rose-400 mx-auto mb-3" />
               <h3 className="font-bold text-white text-sm mb-1">Telefono</h3>
               <a href="tel:08231878320" className="text-gray-400 text-xs hover:text-white transition-colors block">0823 18 78 320</a>
               <a href="tel:3397833526" className="text-gray-400 text-xs hover:text-white transition-colors block mt-1">339 78 33 526</a>
             </div>
-            <a href="mailto:melitobruno@gmail.com" className="bg-[#242445]/80 border border-teal-400/25 rounded-3xl p-5 hover:border-teal-400/50 transition-all text-center">
+            <a href="mailto:melitobruno@gmail.com" className="bg-[#242445]/80 border border-teal-400/25 rounded-3xl p-5 hover:border-teal-400/50 hover:shadow-lg hover:shadow-teal-400/20 transition-all duration-300 text-center">
               <Mail className="w-6 h-6 text-teal-400 mx-auto mb-3" />
               <h3 className="font-bold text-white text-sm mb-1">Email</h3>
               <p className="text-gray-400 text-xs">melitobruno@gmail.com</p>
             </a>
-            <div className="bg-[#242445]/80 border border-violet-400/25 rounded-3xl p-5 text-center">
+            <div className="bg-[#242445]/80 border border-violet-400/25 rounded-3xl p-5 text-center hover:shadow-lg hover:shadow-violet-400/20 transition-all duration-300">
               <Clock className="w-6 h-6 text-violet-400 mx-auto mb-3" />
               <h3 className="font-bold text-white text-sm mb-1">Orari</h3>
               <p className="text-gray-400 text-xs">Mar - Sab: 08:00 - 19:00</p>
