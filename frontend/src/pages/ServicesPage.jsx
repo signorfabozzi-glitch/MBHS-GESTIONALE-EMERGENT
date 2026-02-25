@@ -194,8 +194,9 @@ export default function ServicesPage() {
           </div>
         ) : services.length > 0 ? (
           <div className="space-y-8">
-            {CATEGORIES.map((category) => {
-              const categoryServices = groupedServices[category.value];
+            {sortedCategories.map((catValue) => {
+              const category = CATEGORIES.find(c => c.value === catValue);
+              const categoryServices = groupedServices[catValue];
               if (!categoryServices || categoryServices.length === 0) return null;
               
               return (
