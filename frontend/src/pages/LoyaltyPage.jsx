@@ -217,39 +217,76 @@ export default function LoyaltyPage() {
           </Card>
         </div>
 
-        {/* Rewards Info */}
+        {/* Rewards Info - Editable */}
         <Card className="border-[#E2E8F0]/30">
           <CardHeader className="pb-3">
-            <CardTitle className="text-lg font-bold text-[#0F172A] flex items-center gap-2">
-              <Gift className="w-5 h-5 text-[#0EA5E9]" />
-              Premi Disponibili
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg font-bold text-[#0F172A] flex items-center gap-2">
+                <Gift className="w-5 h-5 text-[#0EA5E9]" />
+                Premi Disponibili
+              </CardTitle>
+              {!editingRewards ? (
+                <Button variant="outline" size="sm" onClick={startEditRewards} className="text-[#0EA5E9] border-[#0EA5E9]/30" data-testid="edit-rewards-btn">
+                  <Pencil className="w-4 h-4 mr-1" /> Modifica
+                </Button>
+              ) : (
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" onClick={() => setEditingRewards(false)} className="text-gray-500">Annulla</Button>
+                  <Button size="sm" onClick={saveRewards} className="bg-[#0EA5E9] text-white" data-testid="save-rewards-btn">
+                    <Save className="w-4 h-4 mr-1" /> Salva
+                  </Button>
+                </div>
+              )}
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-4 bg-purple-50 rounded-xl border border-purple-200">
-                <div className="flex items-center gap-2 mb-2">
-                  <Award className="w-5 h-5 text-purple-600" />
-                  <h3 className="font-bold text-purple-800">Sconto 10% Colorazione</h3>
-                </div>
-                <p className="text-sm text-purple-600 mb-2">Sconto del 10% sul prossimo servizio di colorazione</p>
-                <div className="flex items-center gap-1">
-                  <Star className="w-4 h-4 text-amber-500" />
-                  <span className="text-sm font-black text-purple-700">5 punti necessari</span>
-                </div>
+            {editingRewards ? (
+              <div className="space-y-4">
+                {Object.entries(editRewards).map(([key, reward]) => (
+                  <div key={key} className="p-4 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0] space-y-3">
+                    <div>
+                      <label className="text-xs font-bold text-[#334155] block mb-1">Nome Premio</label>
+                      <Input value={reward.name || ''} onChange={(e) => updateReward(key, 'name', e.target.value)} className="border-[#E2E8F0]" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-[#334155] block mb-1">Descrizione</label>
+                      <Input value={reward.description || ''} onChange={(e) => updateReward(key, 'description', e.target.value)} className="border-[#E2E8F0]" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-xs font-bold text-[#334155] block mb-1">Punti Necessari</label>
+                        <Input type="number" value={reward.points_required || 0} onChange={(e) => updateReward(key, 'points_required', e.target.value)} className="border-[#E2E8F0]" />
+                      </div>
+                      {reward.discount_percent !== undefined && (
+                        <div>
+                          <label className="text-xs font-bold text-[#334155] block mb-1">Sconto %</label>
+                          <Input type="number" value={reward.discount_percent || 0} onChange={(e) => updateReward(key, 'discount_percent', e.target.value)} className="border-[#E2E8F0]" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-200">
-                <div className="flex items-center gap-2 mb-2">
-                  <Trophy className="w-5 h-5 text-emerald-600" />
-                  <h3 className="font-bold text-emerald-800">Taglio Gratuito</h3>
-                </div>
-                <p className="text-sm text-emerald-600 mb-2">Un taglio completamente gratuito</p>
-                <div className="flex items-center gap-1">
-                  <Star className="w-4 h-4 text-amber-500" />
-                  <span className="text-sm font-black text-emerald-700">10 punti necessari</span>
-                </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {config?.rewards && Object.entries(config.rewards).map(([key, reward]) => {
+                  const isSconto = key.includes('sconto');
+                  return (
+                    <div key={key} className={`p-4 ${isSconto ? 'bg-purple-50 border-purple-200' : 'bg-emerald-50 border-emerald-200'} rounded-xl border`}>
+                      <div className="flex items-center gap-2 mb-2">
+                        {isSconto ? <Award className="w-5 h-5 text-purple-600" /> : <Trophy className="w-5 h-5 text-emerald-600" />}
+                        <h3 className={`font-bold ${isSconto ? 'text-purple-800' : 'text-emerald-800'}`}>{reward.name}</h3>
+                      </div>
+                      <p className={`text-sm ${isSconto ? 'text-purple-600' : 'text-emerald-600'} mb-2`}>{reward.description}</p>
+                      <div className="flex items-center gap-1">
+                        <Star className="w-4 h-4 text-amber-500" />
+                        <span className={`text-sm font-black ${isSconto ? 'text-purple-700' : 'text-emerald-700'}`}>{reward.points_required} punti necessari</span>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            </div>
+            )}
           </CardContent>
         </Card>
 
