@@ -122,7 +122,7 @@ export default function BookingPage() {
   // SUCCESS PAGE
   if (success) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#1a1a2e] flex items-center justify-center p-4">
         <Toaster position="top-center" />
         <div className="max-w-md w-full text-center">
           <CheckCircle className="w-20 h-20 mx-auto text-emerald-400 mb-6" />
@@ -139,7 +139,7 @@ export default function BookingPage() {
   // BOOKING FORM
   if (showBooking) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a]">
+      <div className="min-h-screen bg-[#1a1a2e]">
         <Toaster position="top-center" />
         <div className="bg-[#111] border-b border-gray-800 py-4 px-4 sticky top-0 z-50">
           <div className="max-w-lg mx-auto flex items-center gap-3">
@@ -247,11 +247,11 @@ export default function BookingPage() {
 
   // ==================== LANDING PAGE ====================
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white" data-testid="booking-welcome">
+    <div className="min-h-screen bg-[#1a1a2e] text-white" data-testid="booking-welcome">
       <Toaster position="top-center" />
 
       {/* NAVBAR */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/5">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#1a1a2e]/90 backdrop-blur-md border-b border-white/5">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img src="/logo.png?v=3" alt="MBHS Salon" className="w-10 h-10 rounded-lg" />
@@ -524,7 +524,7 @@ export default function BookingPage() {
       </footer>
 
       {/* Fixed bottom CTA on mobile */}
-      <div className="fixed bottom-0 left-0 right-0 p-3 bg-[#0a0a0a]/95 backdrop-blur-md border-t border-white/5 sm:hidden z-50">
+      <div className="fixed bottom-0 left-0 right-0 p-3 bg-[#1a1a2e]/95 backdrop-blur-md border-t border-white/5 sm:hidden z-50">
         <Button onClick={() => setShowBooking(true)} className="w-full bg-white text-[#0a0a0a] hover:bg-gray-200 font-black py-5 rounded-xl" data-testid="mobile-book-btn">
           <Scissors className="w-5 h-5 mr-2" /> PRENOTA ORA
         </Button>
