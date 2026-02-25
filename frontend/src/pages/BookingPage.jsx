@@ -386,11 +386,11 @@ export default function BookingPage() {
       <section className="py-20 sm:py-28">
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="rounded-2xl overflow-hidden h-80 lg:h-96">
+            <div className="rounded-3xl overflow-hidden h-80 lg:h-96 border-2 border-rose-400/20">
               <img src={SALON_RECEPTION} alt="Il nostro salone" className="w-full h-full object-cover" />
             </div>
             <div>
-              <p className="text-amber-400 font-bold text-sm tracking-widest uppercase mb-3">Chi Siamo</p>
+              <p className="text-rose-400 font-bold text-sm tracking-widest uppercase mb-3">Chi Siamo</p>
               <h2 className="text-3xl sm:text-4xl font-black mb-6">Dal 1983<br />con Passione</h2>
               <p className="text-gray-400 leading-relaxed mb-6">
                 Dal 1983 con grande soddisfazione nostra e delle clienti che ci seguono, siamo un punto di riferimento per chi cerca qualità e professionalità nell'hair styling.
@@ -401,7 +401,7 @@ export default function BookingPage() {
               <div className="grid grid-cols-2 gap-3">
                 {["Dal 1983 nel settore", "Senza parabeni e solfati", "Colorazioni senza ammoniaca", "Cheratina e olio di argan"].map((item, idx) => (
                   <div key={idx} className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-amber-400 shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-teal-400 shrink-0" />
                     <span className="text-sm text-gray-300">{item}</span>
                   </div>
                 ))}
@@ -525,9 +525,9 @@ export default function BookingPage() {
       </section>
 
       {/* FOOTER */}
-      <footer className="py-8 border-t border-gray-800/50">
+      <footer className="py-8 border-t border-amber-400/10">
         <div className="max-w-6xl mx-auto px-4 text-center">
-          <img src="/logo.png?v=3" alt="MBHS Salon" className="w-12 h-12 rounded-lg mx-auto mb-3" />
+          <img src="/logo.png?v=3" alt="MBHS Salon" className="w-12 h-12 rounded-2xl mx-auto mb-3 border border-amber-400/20" />
           <p className="text-gray-500 text-sm font-semibold">BRUNO MELITO HAIR</p>
           <p className="text-gray-700 text-xs mt-2">Via Vito Nicola Melorio 101, Santa Maria Capua Vetere (CE)</p>
           <p className="text-gray-800 text-xs mt-4">&copy; {new Date().getFullYear()} Bruno Melito Hair. Tutti i diritti riservati.</p>
