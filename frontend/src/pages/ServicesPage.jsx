@@ -41,6 +41,7 @@ const CATEGORIES = [
   { value: 'colore', label: 'Colore', color: '#789F8A' },
   { value: 'piega', label: 'Piega', color: '#E9C46A' },
   { value: 'trattamento', label: 'Trattamento', color: '#334155' },
+  { value: 'modellanti', label: 'Modellanti', color: '#C084FC' },
   { value: 'altro', label: 'Altro', color: '#0F172A' },
 ];
 
