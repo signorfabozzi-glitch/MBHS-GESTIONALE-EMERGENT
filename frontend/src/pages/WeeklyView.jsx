@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Layout from '../components/Layout';
 import { Card, CardContent } from '@/components/ui/card';
@@ -10,163 +11,165 @@ import { it } from 'date-fns/locale';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
+const generateTimeSlots = () => {
+  const slots = [];
+  for (let hour = 8; hour <= 20; hour++) {
+    for (let min = 0; min < 60; min += 15) {
+      if (hour === 20 && min > 0) break;
+      slots.push(`${hour.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')}`);
+    }
+  }
+  return slots;
+};
+const TIME_SLOTS = generateTimeSlots();
+
 export default function WeeklyView() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [weekStart, setWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }));
+  const scrollRef = useRef(null);
+  const navigate = useNavigate();
+
+  useEffect(() => { fetchAppointments(); }, [weekStart]);
 
   useEffect(() => {
-    fetchAppointments();
-  }, [weekStart]);
+    if (scrollRef.current) {
+      const h = new Date().getHours();
+      const target = h >= 8 && h <= 20 ? h : 9;
+      scrollRef.current.scrollTop = (target - 8) * 4 * 40;
+    }
+  }, [loading]);
 
   const fetchAppointments = async () => {
     setLoading(true);
     try {
       const startDate = format(weekStart, 'yyyy-MM-dd');
-      const endDate = format(addDays(weekStart, 6), 'yyyy-MM-dd');
+      const endDate = format(addDays(weekStart, 5), 'yyyy-MM-dd');
       const res = await axios.get(`${API}/appointments?start_date=${startDate}&end_date=${endDate}`);
       setAppointments(res.data);
-    } catch (err) {
-      console.error('Error fetching appointments:', err);
-    } finally {
-      setLoading(false);
-    }
+    } catch (err) { console.error(err); }
+    finally { setLoading(false); }
   };
 
-  const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
+  const weekDays = Array.from({ length: 6 }, (_, i) => addDays(weekStart, i));
 
   const getAppointmentsForDay = (date) => {
     const dateStr = format(date, 'yyyy-MM-dd');
     return appointments.filter(apt => apt.date === dateStr);
   };
 
-  const getStatusBg = (status) => {
-    switch (status) {
-      case 'completed': return 'bg-[#789F8A]';
-      case 'cancelled': return 'bg-[#E76F51]/50';
-      default: return 'bg-[#0EA5E9]';
-    }
+  const getAppointmentStyle = (apt) => {
+    const [h, m] = apt.time.split(':').map(Number);
+    const startIdx = (h - 8) * 4 + Math.floor(m / 15);
+    const slots = Math.ceil((apt.total_duration || 15) / 15);
+    return { top: `${startIdx * 40}px`, height: `${slots * 40 - 2}px` };
+  };
+
+  const getStatusColor = (status) => {
+    if (status === 'completed') return 'bg-emerald-500';
+    if (status === 'cancelled') return 'bg-red-400';
+    return 'bg-[#0EA5E9]';
   };
 
   return (
     <Layout>
-      <div className="space-y-6" data-testid="weekly-view-page">
-        {/* Header */}
+      <div className="space-y-4" data-testid="weekly-view-page">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="font-playfair text-3xl font-medium text-[#0F172A]">Vista Settimanale</h1>
             <p className="text-[#334155] mt-1 font-manrope">
-              {format(weekStart, "d MMMM", { locale: it })} - {format(addDays(weekStart, 6), "d MMMM yyyy", { locale: it })}
+              {format(weekStart, "d MMMM", { locale: it })} - {format(addDays(weekStart, 5), "d MMMM yyyy", { locale: it })}
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setWeekStart(subWeeks(weekStart, 1))}
-              className="border-[#E2E8F0]"
-            >
+            <Button variant="outline" size="icon" onClick={() => setWeekStart(subWeeks(weekStart, 1))} className="border-[#E2E8F0]">
               <ChevronLeft className="w-4 h-4" />
             </Button>
-            <Button
-              variant="outline"
-              onClick={() => setWeekStart(startOfWeek(new Date(), { weekStartsOn: 1 }))}
-              className="border-[#E2E8F0] text-[#0F172A]"
-            >
+            <Button variant="outline" onClick={() => setWeekStart(startOfWeek(new Date(), { weekStartsOn: 1 }))} className="border-[#E2E8F0] text-[#0F172A]">
               Oggi
             </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setWeekStart(addWeeks(weekStart, 1))}
-              className="border-[#E2E8F0]"
-            >
+            <Button variant="outline" size="icon" onClick={() => setWeekStart(addWeeks(weekStart, 1))} className="border-[#E2E8F0]">
               <ChevronRight className="w-4 h-4" />
             </Button>
           </div>
         </div>
 
-        {/* Week Grid */}
         {loading ? (
-          <div className="grid grid-cols-7 gap-4">
-            {[1, 2, 3, 4, 5, 6, 7].map((i) => (
-              <Skeleton key={i} className="h-64" />
-            ))}
-          </div>
+          <Skeleton className="h-96" />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
-            {weekDays.map((day) => {
-              const dayAppointments = getAppointmentsForDay(day);
-              const isToday = isSameDay(day, new Date());
-              
-              return (
-                <Card
-                  key={day.toString()}
-                  data-testid={`day-${format(day, 'yyyy-MM-dd')}`}
-                  className={`bg-white border-[#E2E8F0]/30 min-h-[300px] ${
-                    isToday ? 'ring-2 ring-[#0EA5E9] border-[#0EA5E9]' : ''
-                  }`}
-                >
-                  <CardContent className="p-3">
-                    {/* Day Header */}
-                    <div className={`text-center pb-3 mb-3 border-b border-[#E2E8F0]/30 ${
-                      isToday ? 'text-[#0EA5E9]' : 'text-[#0F172A]'
-                    }`}>
-                      <p className="text-xs uppercase tracking-wide font-manrope">
-                        {format(day, 'EEE', { locale: it })}
-                      </p>
-                      <p className={`text-2xl font-playfair font-medium ${
-                        isToday ? 'bg-[#0EA5E9] text-white w-10 h-10 rounded-full mx-auto flex items-center justify-center' : ''
-                      }`}>
-                        {format(day, 'd')}
-                      </p>
+          <Card className="bg-white border-[#E2E8F0]/30 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] overflow-hidden">
+            <CardContent className="p-0">
+              {/* Day Headers */}
+              <div className="flex border-b border-[#E2E8F0]">
+                <div className="w-16 shrink-0 border-r border-[#E2E8F0] p-2 bg-[#F8FAFC]">
+                  <span className="text-xs text-[#334155]">Ora</span>
+                </div>
+                {weekDays.map((day) => {
+                  const isToday = isSameDay(day, new Date());
+                  const dayApts = getAppointmentsForDay(day);
+                  return (
+                    <div key={day.toString()} className={`flex-1 min-w-[120px] p-2 text-center border-r border-[#E2E8F0] last:border-r-0 ${isToday ? 'bg-[#0EA5E9]/5' : 'bg-[#F8FAFC]'}`}>
+                      <p className="text-xs uppercase tracking-wide text-[#334155] font-manrope">{format(day, 'EEE', { locale: it })}</p>
+                      <p className={`text-lg font-bold ${isToday ? 'text-[#0EA5E9]' : 'text-[#0F172A]'}`}>{format(day, 'd')}</p>
+                      {dayApts.length > 0 && <p className="text-[10px] text-[#0EA5E9] font-bold">{dayApts.length} app.</p>}
                     </div>
+                  );
+                })}
+              </div>
 
-                    {/* Appointments */}
-                    <div className="space-y-2">
-                      {dayAppointments.length > 0 ? (
-                        dayAppointments.map((apt) => (
-                          <div
-                            key={apt.id}
-                            className={`p-2 rounded-lg text-white text-xs ${getStatusBg(apt.status)}`}
-                          >
-                            <p className="font-semibold">{apt.time}</p>
-                            <p className="truncate">{apt.client_name}</p>
-                            <p className="text-white/80 truncate text-[10px]">
-                              {apt.services.map(s => s.name).join(', ')}
-                            </p>
-                          </div>
-                        ))
-                      ) : (
-                        <p className="text-xs text-[#334155] text-center py-4">-</p>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
+              {/* Time Grid */}
+              <div ref={scrollRef} className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 260px)' }}>
+                <div className="flex relative">
+                  {/* Time column */}
+                  <div className="w-16 shrink-0 border-r border-[#E2E8F0]">
+                    {TIME_SLOTS.map((time, idx) => (
+                      <div key={time} className="h-10 flex items-center justify-center border-b border-[#E2E8F0]/50" style={idx % 4 === 0 ? { borderBottomColor: '#E2E8F0' } : {}}>
+                        {idx % 4 === 0 && <span className="text-xs font-bold text-[#334155]">{time}</span>}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Day columns */}
+                  {weekDays.map((day) => {
+                    const dayApts = getAppointmentsForDay(day);
+                    const isToday = isSameDay(day, new Date());
+                    return (
+                      <div key={day.toString()} className={`flex-1 min-w-[120px] border-r border-[#E2E8F0] last:border-r-0 relative ${isToday ? 'bg-[#0EA5E9]/[0.02]' : ''}`}>
+                        {TIME_SLOTS.map((time, idx) => (
+                          <div key={time} className={`h-10 border-b ${idx % 4 === 0 ? 'border-[#E2E8F0]' : 'border-[#E2E8F0]/30'}`} />
+                        ))}
+                        {/* Appointments overlay */}
+                        {dayApts.map((apt) => {
+                          const style = getAppointmentStyle(apt);
+                          return (
+                            <div
+                              key={apt.id}
+                              className={`absolute left-0.5 right-0.5 ${getStatusColor(apt.status)} text-white rounded-lg px-1.5 py-0.5 overflow-hidden cursor-pointer hover:brightness-110 transition-all text-xs shadow-sm`}
+                              style={style}
+                              title={`${apt.time} - ${apt.client_name}\n${apt.services.map(s => s.name).join(', ')}`}
+                              onClick={() => navigate(`/planning?date=${format(day, 'yyyy-MM-dd')}`)}
+                            >
+                              <p className="font-bold truncate leading-tight">{apt.time} {apt.client_name}</p>
+                              <p className="truncate opacity-80 leading-tight text-[10px]">{apt.services.map(s => s.name).join(', ')}</p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         )}
 
-        {/* Summary */}
         <Card className="bg-white border-[#E2E8F0]/30">
           <CardContent className="p-4">
             <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-[#0EA5E9]" />
-                <span className="text-[#334155]">Programmati</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-[#789F8A]" />
-                <span className="text-[#334155]">Completati</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-[#E76F51]/50" />
-                <span className="text-[#334155]">Annullati</span>
-              </div>
-              <div className="text-[#0F172A] font-medium">
-                Totale: {appointments.length} appuntamenti
-              </div>
+              <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-[#0EA5E9]" /><span className="text-[#334155]">Programmati</span></div>
+              <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-emerald-500" /><span className="text-[#334155]">Completati</span></div>
+              <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-red-400" /><span className="text-[#334155]">Cancellati</span></div>
+              <span className="text-[#334155] font-bold">Totale: {appointments.length} appuntamenti</span>
             </div>
           </CardContent>
         </Card>
