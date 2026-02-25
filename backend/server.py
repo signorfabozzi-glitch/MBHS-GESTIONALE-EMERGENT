@@ -1818,10 +1818,26 @@ async def get_all_loyalty(current_user: dict = Depends(get_current_user)):
 @api_router.get("/loyalty/config")
 async def get_loyalty_config(current_user: dict = Depends(get_current_user)):
     """Get loyalty program configuration"""
+    rewards = await get_loyalty_rewards(current_user["id"])
     return {
         "points_per_euro": LOYALTY_POINTS_PER_EURO,
-        "rewards": LOYALTY_REWARDS
+        "rewards": rewards
     }
+
+@api_router.put("/loyalty/config")
+async def update_loyalty_config(data: dict, current_user: dict = Depends(get_current_user)):
+    """Update loyalty rewards configuration"""
+    rewards = data.get("rewards", {})
+    for key, reward in rewards.items():
+        reward["key"] = key
+        reward["user_id"] = current_user["id"]
+        await db.loyalty_rewards.update_one(
+            {"key": key, "user_id": current_user["id"]},
+            {"$set": reward},
+            upsert=True
+        )
+    updated = await get_loyalty_rewards(current_user["id"])
+    return {"points_per_euro": LOYALTY_POINTS_PER_EURO, "rewards": updated}
 
 @api_router.get("/loyalty/{client_id}")
 async def get_client_loyalty(client_id: str, current_user: dict = Depends(get_current_user)):
