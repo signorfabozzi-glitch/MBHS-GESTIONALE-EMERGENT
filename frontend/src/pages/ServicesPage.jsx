@@ -141,19 +141,22 @@ export default function ServicesPage() {
     return CATEGORIES.find(c => c.value === category) || CATEGORIES[4];
   };
 
-  // Sort services by number prefix and group by category
-  const sortByNumber = (a, b) => {
-    const numA = parseInt(a.name.match(/^\d+/)?.[0] || '999');
-    const numB = parseInt(b.name.match(/^\d+/)?.[0] || '999');
-    return numA - numB;
+  // Sort services by sort_order (or number prefix) and group by category
+  const sortByOrder = (a, b) => {
+    const orderA = a.sort_order || parseInt(a.name.match(/^\d+/)?.[0] || '999');
+    const orderB = b.sort_order || parseInt(b.name.match(/^\d+/)?.[0] || '999');
+    return orderA - orderB;
   };
 
-  const groupedServices = services.sort(sortByNumber).reduce((acc, service) => {
+  const groupedServices = services.sort(sortByOrder).reduce((acc, service) => {
     const cat = service.category;
     if (!acc[cat]) acc[cat] = [];
     acc[cat].push(service);
     return acc;
   }, {});
+
+  // Sort categories in the defined order
+  const sortedCategories = CATEGORY_ORDER.filter(cat => groupedServices[cat]);
 
   return (
     <Layout>
