@@ -279,7 +279,7 @@ export default function BookingPage() {
             <div className="flex justify-center mb-8">
               <img src={HERO_ARTWORK} alt="Metti la testa a posto!!" className="w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 object-contain drop-shadow-2xl" />
             </div>
-            <div className="inline-block bg-white/10 backdrop-blur-sm text-white text-xs font-bold px-4 py-2 rounded-full border border-white/10 mb-6">
+            <div className="inline-block bg-white/10 backdrop-blur-sm text-white text-xs font-bold px-4 py-2 rounded-full border border-amber-400/20 mb-6">
               SOLO PER APPUNTAMENTO
             </div>
             <p className="text-base sm:text-lg text-gray-300 max-w-lg mx-auto mb-8 leading-relaxed">
@@ -308,7 +308,7 @@ export default function BookingPage() {
             </div>
           </div>
           {/* Experience badge */}
-          <div className="absolute right-4 sm:right-8 bottom-20 sm:bottom-32 bg-white/5 backdrop-blur-md border border-rose-400/30 rounded-3xl p-5 text-center hidden md:block">
+          <div className="absolute right-4 sm:right-8 bottom-20 sm:bottom-32 bg-white/5 backdrop-blur-md border border-rose-400/30 rounded-3xl p-5 text-center hidden md:block hover:shadow-lg hover:shadow-rose-400/20 transition-all duration-300">
             <p className="text-4xl font-black text-rose-300">40+</p>
             <p className="text-xs text-gray-400 font-semibold">Anni di<br />Esperienza</p>
             <p className="text-[10px] text-gray-600 mt-1">Dal 1983</p>
