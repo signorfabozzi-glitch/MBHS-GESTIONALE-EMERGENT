@@ -419,20 +419,25 @@ export default function BookingPage() {
             <h2 className="text-3xl sm:text-4xl font-black">Cosa Dicono di Noi</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {REVIEWS.map((review, idx) => (
-              <div key={idx} className="bg-[#242445] border border-gray-800/50 rounded-3xl p-5">
+            {REVIEWS.map((review, idx) => {
+              const borders = ['border-amber-400/25', 'border-rose-400/25', 'border-teal-400/25', 'border-violet-400/25'];
+              const avatarBgs = ['bg-amber-400/15', 'bg-rose-400/15', 'bg-teal-400/15', 'bg-violet-400/15'];
+              const avatarTexts = ['text-amber-400', 'text-rose-400', 'text-teal-400', 'text-violet-400'];
+              return (
+              <div key={idx} className={`bg-[#242445]/80 border ${borders[idx % 4]} rounded-3xl p-5 hover:border-opacity-50 transition-all`}>
                 <div className="flex gap-0.5 mb-3">
                   {[...Array(review.rating)].map((_, i) => (<Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />))}
                 </div>
                 <p className="text-gray-300 text-sm leading-relaxed mb-4">"{review.text}"</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-amber-400/10 rounded-full flex items-center justify-center">
-                    <span className="text-amber-400 font-bold text-sm">{review.name[0]}</span>
+                  <div className={`w-8 h-8 ${avatarBgs[idx % 4]} rounded-full flex items-center justify-center`}>
+                    <span className={`${avatarTexts[idx % 4]} font-bold text-sm`}>{review.name[0]}</span>
                   </div>
                   <span className="text-sm text-gray-400 font-semibold">{review.name}</span>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
