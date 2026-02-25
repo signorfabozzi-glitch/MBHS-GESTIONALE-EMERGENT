@@ -607,11 +607,11 @@ export default function BookingPage() {
               <a href="tel:3397833526" className="text-gray-400 text-xs hover:text-white transition-colors block mt-1">339 78 33 526</a>
             </div>
             {/* Email */}
-            <a href="mailto:info@brunomelitoair.it"
+            <a href="mailto:melitobruno@gmail.com"
               className="bg-[#0a0a0a] border border-gray-800/50 rounded-2xl p-5 hover:border-gray-700 transition-colors text-center">
               <Mail className="w-6 h-6 text-amber-400 mx-auto mb-3" />
               <h3 className="font-bold text-white text-sm mb-1">Email</h3>
-              <p className="text-gray-400 text-xs">info@brunomelitoair.it</p>
+              <p className="text-gray-400 text-xs">melitobruno@gmail.com</p>
             </a>
             {/* Hours */}
             <div className="bg-[#0a0a0a] border border-gray-800/50 rounded-2xl p-5 text-center">
