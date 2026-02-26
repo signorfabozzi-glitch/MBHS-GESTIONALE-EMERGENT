@@ -2308,7 +2308,9 @@ async def get_website_config(current_user: dict = Depends(get_current_user)):
     config = await db.website_config.find_one({"user_id": current_user["id"]}, {"_id": 0})
     if not config:
         return {**DEFAULT_WEBSITE_CONFIG, "user_id": current_user["id"]}
-    return config
+    # Merge with defaults for missing fields
+    merged = {**DEFAULT_WEBSITE_CONFIG, **config}
+    return merged
 
 @api_router.put("/website/config")
 async def update_website_config(data: dict, current_user: dict = Depends(get_current_user)):
