@@ -254,6 +254,70 @@ export default function SettingsPage() {
             </Button>
           </div>
         </form>
+
+        {/* Change Password */}
+        <Card className="border-2 border-[#E2E8F0]">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-[#0F172A]">
+              <Lock className="w-5 h-5 text-[#0EA5E9]" />
+              Cambia Password
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleChangePassword} className="space-y-4">
+              <div className="space-y-2">
+                <Label className="text-[#0F172A] font-semibold">Password Attuale</Label>
+                <Input
+                  type="password"
+                  value={pwForm.current_password}
+                  onChange={(e) => setPwForm({ ...pwForm, current_password: e.target.value })}
+                  placeholder="Inserisci password attuale"
+                  required
+                  data-testid="current-password-input"
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-[#0F172A] font-semibold">Nuova Password</Label>
+                  <Input
+                    type="password"
+                    value={pwForm.new_password}
+                    onChange={(e) => setPwForm({ ...pwForm, new_password: e.target.value })}
+                    placeholder="Minimo 6 caratteri"
+                    required
+                    data-testid="new-password-input"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[#0F172A] font-semibold">Conferma Nuova Password</Label>
+                  <Input
+                    type="password"
+                    value={pwForm.confirm_password}
+                    onChange={(e) => setPwForm({ ...pwForm, confirm_password: e.target.value })}
+                    placeholder="Ripeti nuova password"
+                    required
+                    data-testid="confirm-password-input"
+                  />
+                </div>
+              </div>
+              <Button
+                type="submit"
+                disabled={changingPw}
+                className="bg-[#0F172A] hover:bg-[#1E293B] text-white"
+                data-testid="change-password-btn"
+              >
+                {changingPw ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <>
+                    <Lock className="w-4 h-4 mr-2" />
+                    Cambia Password
+                  </>
+                )}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </Layout>
   );
