@@ -268,6 +268,16 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
+          {/* REGISTRO USCITE */}
+          <Route
+            path="/uscite"
+            element={
+              <ProtectedRoute>
+                <ExpensesPage />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
       <Toaster 
