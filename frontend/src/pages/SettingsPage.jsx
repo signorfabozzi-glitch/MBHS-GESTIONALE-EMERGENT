@@ -76,6 +76,31 @@ export default function SettingsPage() {
     }));
   };
 
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    if (pwForm.new_password !== pwForm.confirm_password) {
+      toast.error('Le nuove password non coincidono');
+      return;
+    }
+    if (pwForm.new_password.length < 6) {
+      toast.error('La password deve avere almeno 6 caratteri');
+      return;
+    }
+    setChangingPw(true);
+    try {
+      await axios.put(`${API}/auth/change-password`, {
+        current_password: pwForm.current_password,
+        new_password: pwForm.new_password
+      });
+      toast.success('Password cambiata con successo!');
+      setPwForm({ current_password: '', new_password: '', confirm_password: '' });
+    } catch (err) {
+      toast.error(err.response?.data?.detail || 'Errore nel cambio password');
+    } finally {
+      setChangingPw(false);
+    }
+  };
+
   if (loading) {
     return (
       <Layout>
