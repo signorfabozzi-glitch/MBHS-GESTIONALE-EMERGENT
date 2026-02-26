@@ -265,7 +265,7 @@ export default function PlanningPage() {
   };
 
   // Open edit dialog for appointment
-  const openEditDialog = (apt) => {
+  const openEditDialog = async (apt) => {
     setEditingAppointment(apt);
     setFormData({
       client_id: apt.client_id,
@@ -278,6 +278,20 @@ export default function PlanningPage() {
     const client = clients.find(c => c.id === apt.client_id);
     setSelectedClientInfo(client);
     setEditDialogOpen(true);
+    // Load client cards and loyalty points
+    if (apt.client_id && apt.client_id !== 'generic') {
+      try {
+        const [cardsRes, loyaltyRes] = await Promise.all([
+          axios.get(`${API}/clients/${apt.client_id}/cards`),
+          axios.get(`${API}/clients/${apt.client_id}/loyalty`)
+        ]);
+        setClientCards(cardsRes.data);
+        setClientLoyalty(loyaltyRes.data);
+      } catch { setClientCards([]); setClientLoyalty({ points: 0 }); }
+    } else {
+      setClientCards([]);
+      setClientLoyalty({ points: 0 });
+    }
   };
 
   // Update appointment
