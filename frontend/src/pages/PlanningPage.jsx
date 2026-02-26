@@ -752,6 +752,16 @@ export default function PlanningPage() {
                 ref={scrollRef}
                 className="overflow-auto"
                 style={{ maxHeight: 'calc(100vh - 280px)' }}
+                onTouchStart={(e) => { touchStartRef.current = e.touches[0].clientX; }}
+                onTouchEnd={(e) => {
+                  if (!touchStartRef.current) return;
+                  const diff = e.changedTouches[0].clientX - touchStartRef.current;
+                  if (Math.abs(diff) > 80) {
+                    if (diff > 0) setSelectedDate(subDays(selectedDate, 1));
+                    else setSelectedDate(addDays(selectedDate, 1));
+                  }
+                  touchStartRef.current = null;
+                }}
               >
                 <div className="flex relative">
                   {/* Time column */}
