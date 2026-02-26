@@ -2211,6 +2211,85 @@ async def get_tomorrow_reminders(current_user: dict = Depends(get_current_user))
     
     return results
 
+@api_router.post("/reminders/batch-mark-sent")
+async def batch_mark_reminders_sent(data: dict, current_user: dict = Depends(get_current_user)):
+    """Mark multiple appointment reminders as sent (for batch WhatsApp send)"""
+    appointment_ids = data.get("appointment_ids", [])
+    if not appointment_ids:
+        raise HTTPException(status_code=400, detail="Nessun appuntamento specificato")
+    
+    count = 0
+    for apt_id in appointment_ids:
+        apt = await db.appointments.find_one(
+            {"id": apt_id, "user_id": current_user["id"]},
+            {"_id": 0}
+        )
+        if apt:
+            # Check if already sent
+            existing = await db.reminders_sent.find_one(
+                {"user_id": current_user["id"], "type": "appointment", "appointment_id": apt_id}
+            )
+            if not existing:
+                await db.reminders_sent.insert_one({
+                    "id": str(uuid.uuid4()),
+                    "user_id": current_user["id"],
+                    "type": "appointment",
+                    "appointment_id": apt_id,
+                    "client_id": apt.get("client_id"),
+                    "date": apt["date"],
+                    "sent_at": datetime.now(timezone.utc).isoformat()
+                })
+                count += 1
+    
+    return {"success": True, "marked_count": count}
+
+@api_router.get("/reminders/auto-check")
+async def auto_reminder_check(current_user: dict = Depends(get_current_user)):
+    """Check if it's time to send reminders (after 15:00) and return pending ones"""
+    now = datetime.now(timezone.utc)
+    # Italian time is UTC+1 (or UTC+2 in summer). We check if current UTC hour >= 14 (which is ~15:00 in Italy)
+    is_reminder_time = now.hour >= 14
+    
+    tomorrow = (now + timedelta(days=1)).strftime("%Y-%m-%d")
+    
+    appointments = await db.appointments.find(
+        {"user_id": current_user["id"], "date": tomorrow, "status": {"$ne": "cancelled"}},
+        {"_id": 0}
+    ).to_list(100)
+    
+    reminded_ids = set()
+    reminders_sent = await db.reminders_sent.find(
+        {"user_id": current_user["id"], "type": "appointment", "date": tomorrow},
+        {"_id": 0}
+    ).to_list(500)
+    for r in reminders_sent:
+        reminded_ids.add(r.get("appointment_id"))
+    
+    pending = []
+    for apt in appointments:
+        if apt["id"] not in reminded_ids:
+            client_phone = apt.get("client_phone", "")
+            if not client_phone and apt.get("client_id"):
+                cl = await db.clients.find_one({"id": apt["client_id"]}, {"_id": 0})
+                if cl:
+                    client_phone = cl.get("phone", "")
+            if client_phone:  # only include clients with phone
+                pending.append({
+                    "id": apt["id"],
+                    "client_name": apt.get("client_name", ""),
+                    "client_phone": client_phone,
+                    "time": apt["time"],
+                    "services": apt.get("services", []),
+                })
+    
+    return {
+        "is_reminder_time": is_reminder_time,
+        "tomorrow_date": tomorrow,
+        "total_tomorrow": len(appointments),
+        "already_sent": len(reminded_ids),
+        "pending": pending
+    }
+
 @api_router.post("/reminders/appointment/{appointment_id}/mark-sent")
 async def mark_reminder_sent(appointment_id: str, current_user: dict = Depends(get_current_user)):
     """Mark an appointment reminder as sent"""
