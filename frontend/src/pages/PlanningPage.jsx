@@ -964,7 +964,12 @@ export default function PlanningPage() {
                             }`}
                             onClick={() => handleClientSelect(client.id, client.name)}
                           >
-                            {client.name}
+                            <div className="flex items-center justify-between">
+                              <span>{client.name}</span>
+                              {!client.phone && (
+                                <span className="text-[10px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded-full font-bold ml-2">TEL MANCANTE</span>
+                              )}
+                            </div>
                           </button>
                         ))}
                       {clients.filter(c => c.name.toLowerCase().includes(clientSearch.toLowerCase())).length === 0 && (
