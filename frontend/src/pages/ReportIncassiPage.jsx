@@ -153,7 +153,7 @@ export default function ReportIncassiPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-[#334155] font-semibold">Contanti</p>
-                      <p className="text-3xl font-black text-[#0F172A] mt-2">€{stats.cash.toFixed(2)}</p>
+                      <p className="text-3xl font-black text-[#0F172A] mt-2">{'\u20AC'}{stats.cash.toFixed(2)}</p>
                     </div>
                     <Banknote className="w-10 h-10 text-green-500" />
                   </div>
@@ -164,22 +164,10 @@ export default function ReportIncassiPage() {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-[#334155] font-semibold">Carta</p>
-                      <p className="text-3xl font-black text-[#0F172A] mt-2">€{stats.card.toFixed(2)}</p>
+                      <p className="text-[#334155] font-semibold">Abbonamento / Prepagata</p>
+                      <p className="text-3xl font-black text-[#0F172A] mt-2">{'\u20AC'}{stats.prepaid.toFixed(2)}</p>
                     </div>
-                    <CreditCard className="w-10 h-10 text-blue-500" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white border-2 border-[#E2E8F0]">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-[#334155] font-semibold">Bonifico/Prepagata</p>
-                      <p className="text-3xl font-black text-[#0F172A] mt-2">€{(stats.transfer + stats.prepaid).toFixed(2)}</p>
-                    </div>
-                    <TrendingUp className="w-10 h-10 text-purple-500" />
+                    <CreditCard className="w-10 h-10 text-purple-500" />
                   </div>
                 </CardContent>
               </Card>
