@@ -973,6 +973,21 @@ async def checkout_appointment(appointment_id: str, data: CheckoutData, current_
     )
     points_after = points_before + points_earned
     
+    # Record promo usage if applied
+    if data.promo_id:
+        promo = await db.promotions.find_one({"id": data.promo_id, "user_id": current_user["id"]}, {"_id": 0})
+        if promo:
+            await db.promo_usage.insert_one({
+                "id": str(uuid.uuid4()),
+                "promo_id": data.promo_id,
+                "user_id": current_user["id"],
+                "client_id": appointment.get("client_id", ""),
+                "client_name": appointment.get("client_name", ""),
+                "appointment_id": appointment_id,
+                "free_service": data.promo_free_service or promo.get("free_service_name", ""),
+                "used_at": datetime.now(timezone.utc).isoformat()
+            })
+    
     # Check if crossed 5 or 10 point threshold
     threshold_reached = None
     if points_before < 10 and points_after >= 10:
