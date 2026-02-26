@@ -12,7 +12,7 @@ Applicazione gestionale completa per un salone di parrucchiera.
 ## Funzionalita Implementate
 
 ### Core
-- Autenticazione JWT, Dashboard moduli, Planning giornaliero con Drag & Drop
+- Autenticazione JWT, Dashboard moduli, Planning giornaliero
 - Vista settimanale/mensile, Gestione Clienti/Servizi/Operatori
 - Checkout, Card Prepagate, Report Incassi, Backup dati
 - PWA installabile, Riepilogo Giornaliero, Programma Fedelta
@@ -22,47 +22,45 @@ Applicazione gestionale completa per un salone di parrucchiera.
 - Pagina admin /gestione-sito con 6 tab
 - Upload immagini con Object Storage
 
-### Fix Gestionale - Batch Critici
-- Metodi pagamento: solo Contanti e Abbonamento/Prepagata
-- Checkout con card prepagata: mostra card attive, scala servizi e valore
-- Riscatto punti fedelta in cassa
-- Appuntamento ricorrente: settimanale E mensile
-- Cliente Generico e Nuovo Cliente al volo
-- Operatore MBHS aggiunto, Ricerca cliente card/abbonamenti
-- Frecce navigazione e swipe touch per cambiare giorno
-- Report Incassi con nuovi label
+### Promemoria & Richiami
+- Template messaggi personalizzabili con variabili
+- Invio WhatsApp individuale e batch automatico
+- Reset/reinvio promemoria
+- Banner auto-reminder nel Planning
 
-### Promemoria & Richiami (26 Feb 2026)
-- Pagina /reminders con template messaggi e variabili
-- CRUD template messaggi, dialog anteprima, selezione template
-- Reinvio promemoria (reset stato)
-- WhatsApp funzionante con wa.me e messaggio personalizzabile
+### Registro Uscite / Scadenziario
+- CRUD spese con 8 categorie
+- Pagamenti ricorrenti automatici
+- Banner scadenze evidenziato sul Planning
+- Filtri per stato e categoria
 
-### Pacchetti Preimpostati (26 Feb 2026)
-- Sezione "Pacchetti Preimpostati" nella pagina Card & Abbonamenti
-- CRUD pacchetti con assegnazione rapida a cliente
+### Avviso Telefono Mancante
+- Badge nel dropdown clienti e nella lista
+- Card rossa nel Planning quando manca
+- Campo evidenziato nel form nuovo cliente
 
-### Avviso Telefono Mancante (26 Feb 2026)
-- Badge "TEL MANCANTE" nel dropdown clienti del Planning
-- Card info cliente diventa rossa quando telefono mancante
-- Campo telefono evidenziato nel form nuovo cliente
-- Badge "Telefono mancante!" nella lista clienti
+### Pacchetti Preimpostati Card/Abbonamenti
+- Template pacchetti con assegnazione rapida
 
-### Registro Uscite / Scadenziario (26 Feb 2026)
-- Nuova pagina /uscite con CRUD completo spese
-- Categorie: affitto, fornitori, bollette, stipendi, tasse, prodotti, manutenzione, altro
-- Pagamenti ricorrenti (mensile, trimestrale, annuale) - crea automaticamente la prossima scadenza
-- Filtri per stato (da pagare/pagate/tutte) e per categoria
-- Stats cards: Da Pagare, Scadute, Pagate
-- Badge SCADUTA (rosso) e IN SCADENZA (arancione) per evidenza
-- Banner scadenze sul Planning con link diretto
-
-### Promemoria Automatici WhatsApp (26 Feb 2026)
-- Endpoint auto-check che verifica appuntamenti domani non ancora avvisati
-- Banner verde "Invio Automatico Promemoria" con pulsante batch
-- "Invia Tutti su WhatsApp" apre i link wa.me sequenzialmente
-- Segna automaticamente tutti come inviati dopo l'invio batch
-- Banner animato nel Planning quando ci sono promemoria da inviare
+### Sistema Promozioni (26 Feb 2026)
+- Nuova pagina /promozioni per creare e gestire promozioni
+- 7 tipi di regole: Under 30, Prima Visita, Compleanno, Porta un'Amica, Recensione Google, Fidelity VIP, Codice Promo
+- Servizio extra in omaggio (non sconti!)
+- Codice promo copiabile per condivisione social
+- Toggle attiva/disattiva per ogni promo
+- Toggle "Mostra sulla prenotazione online"
+- Tracking utilizzi per ogni promozione
+- Suggerimento automatico promozioni al checkout
+- Promozioni visibili sulla pagina pubblica /prenota con design accattivante
+- 8 promozioni default create:
+  1. Speciale Under 30 (UNDER30) - Piega o Trattamento Lucidante
+  2. Recensione Google (REVIEW) - Maschera Ristrutturante o Olaplex
+  3. Porta un'Amica (AMICA) - Taglio Punte o Trattamento
+  4. Prima Visita (BENVENUTA) - Consulenza Colore + Trattamento
+  5. Buon Compleanno (AUGURI) - Piega o Trattamento
+  6. Fidelity VIP (VIP10) - Servizio a Scelta
+  7. Card Prepagata -15% (CARD15) - Sconto 15% su tutti i servizi
+  8. Abbonamento Mensile + Piega Omaggio (ABBO)
 
 ## Credenziali Test
 - Email: melitobruno@gmail.com
@@ -70,8 +68,7 @@ Applicazione gestionale completa per un salone di parrucchiera.
 
 ## Backlog
 - (P1) Attivare Twilio SMS Reminders (richiede chiavi API utente)
-- (P1) EMERGENT_LLM_KEY nelle env di Render per upload foto
+- (P1) EMERGENT_LLM_KEY su Render per upload foto sito
 - (P2) Stampa ricevuta dopo checkout
 - (P2) Blocco fasce orarie (pause/ferie)
-- (P2) Refactoring server.py in moduli separati (>2700 righe)
-- (P2) Refactoring PlanningPage.jsx in componenti piu piccoli
+- (P2) Refactoring server.py (>3000 righe) in moduli separati
