@@ -433,6 +433,8 @@ export default function PlanningPage() {
     setPaymentMethod('cash');
     setDiscountType('none');
     setDiscountValue('');
+    setSelectedCardId('');
+    setUseLoyaltyPoints(false);
   };
 
   // Recurring appointments handler
