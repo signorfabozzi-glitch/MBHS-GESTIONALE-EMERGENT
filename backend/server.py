@@ -884,6 +884,8 @@ class CheckoutData(BaseModel):
     total_paid: float
     card_id: Optional[str] = None  # ID della card prepagata/abbonamento
     loyalty_points_used: int = 0   # Punti fedeltà usati
+    promo_id: Optional[str] = None  # ID promozione applicata
+    promo_free_service: Optional[str] = None  # Nome servizio omaggio
 
 @api_router.post("/appointments/{appointment_id}/checkout")
 async def checkout_appointment(appointment_id: str, data: CheckoutData, current_user: dict = Depends(get_current_user)):
