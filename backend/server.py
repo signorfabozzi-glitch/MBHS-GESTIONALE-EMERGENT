@@ -2820,6 +2820,15 @@ async def get_public_promotions(user_id: str):
     ).to_list(20)
     return promos
 
+@api_router.get("/public/promotions/all")
+async def get_all_public_promotions():
+    """Get all active public promotions (for the shared booking page)"""
+    promos = await db.promotions.find(
+        {"active": True, "show_on_booking": True},
+        {"_id": 0, "user_id": 0}
+    ).to_list(20)
+    return promos
+
 # ============== WEBSITE CMS ==============
 
 # Object Storage config
