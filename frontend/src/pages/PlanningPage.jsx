@@ -440,7 +440,7 @@ export default function PlanningPage() {
   // Recurring appointments handler
   const openRecurringDialog = (apt) => {
     setSelectedAppointment(apt);
-    setRecurringData({ repeat_weeks: 3, repeat_count: 4 });
+    setRecurringData({ repeat_type: 'weeks', repeat_weeks: 3, repeat_months: 1, repeat_count: 4 });
     setRecurringDialogOpen(true);
   };
 
@@ -449,11 +449,13 @@ export default function PlanningPage() {
     
     setCreatingRecurring(true);
     try {
-      const res = await axios.post(`${API}/appointments/recurring`, {
+      const payload = {
         appointment_id: selectedAppointment.id,
-        repeat_weeks: recurringData.repeat_weeks,
-        repeat_count: recurringData.repeat_count
-      });
+        repeat_count: recurringData.repeat_count,
+        repeat_weeks: recurringData.repeat_type === 'weeks' ? recurringData.repeat_weeks : 0,
+        repeat_months: recurringData.repeat_type === 'months' ? recurringData.repeat_months : 0
+      };
+      const res = await axios.post(`${API}/appointments/recurring`, payload);
       toast.success(`Creati ${res.data.created} appuntamenti ricorrenti!`);
       setRecurringDialogOpen(false);
       fetchData();
