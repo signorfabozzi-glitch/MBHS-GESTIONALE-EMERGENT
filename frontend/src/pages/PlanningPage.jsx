@@ -459,6 +459,8 @@ export default function PlanningPage() {
     setDiscountValue('');
     setSelectedCardId('');
     setUseLoyaltyPoints(false);
+    setSelectedPromo(null);
+    setEligiblePromos([]);
   };
 
   // Recurring appointments handler
