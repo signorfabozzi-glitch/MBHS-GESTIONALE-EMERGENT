@@ -584,12 +584,42 @@ export default function PlanningPage() {
         )}
 
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <h1 className="text-4xl font-black text-black">Planning</h1>
-            <p className="text-[#0EA5E9] mt-1 font-bold text-lg">
-              {format(selectedDate, "EEEE d MMMM yyyy", { locale: it })}
-            </p>
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-black text-black">Planning</h1>
+              <p className="text-[#0EA5E9] mt-1 font-bold text-lg">
+                {format(selectedDate, "EEEE d MMMM yyyy", { locale: it })}
+              </p>
+            </div>
+            {/* Date Navigation - always visible and centered on mobile */}
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setSelectedDate(subDays(selectedDate, 1))}
+                className="border-[#E2E8F0] h-10 w-10"
+                data-testid="prev-day-btn"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setSelectedDate(new Date())}
+                className="border-[#E2E8F0] text-[#0F172A] px-4"
+              >
+                Oggi
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setSelectedDate(addDays(selectedDate, 1))}
+                className="border-[#E2E8F0] h-10 w-10"
+                data-testid="next-day-btn"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </Button>
+            </div>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             {/* Search Bar */}
