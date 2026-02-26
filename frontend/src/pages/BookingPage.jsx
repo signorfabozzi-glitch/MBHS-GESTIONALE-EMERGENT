@@ -380,6 +380,59 @@ export default function BookingPage() {
         </div>
       </section>
 
+      {/* PROMOTIONS SECTION */}
+      {publicPromos.length > 0 && (
+        <section className="py-20 sm:py-28 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 via-transparent to-amber-500/10" />
+          <div className="max-w-6xl mx-auto px-4 relative">
+            <div className="text-center mb-12">
+              <p className="text-pink-400 font-bold text-sm tracking-widest uppercase mb-3">Offerte Speciali</p>
+              <h2 className="text-3xl sm:text-4xl font-black">Promozioni Attive</h2>
+              <p className="text-gray-400 mt-3 max-w-xl mx-auto">Servizi extra in omaggio per te!</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {publicPromos.map((promo, idx) => {
+                const gradients = [
+                  'from-pink-500/20 to-rose-500/10 border-pink-400/30 hover:shadow-pink-400/20',
+                  'from-amber-500/20 to-orange-500/10 border-amber-400/30 hover:shadow-amber-400/20',
+                  'from-teal-500/20 to-cyan-500/10 border-teal-400/30 hover:shadow-teal-400/20',
+                  'from-violet-500/20 to-purple-500/10 border-violet-400/30 hover:shadow-violet-400/20',
+                  'from-blue-500/20 to-indigo-500/10 border-blue-400/30 hover:shadow-blue-400/20',
+                  'from-emerald-500/20 to-green-500/10 border-emerald-400/30 hover:shadow-emerald-400/20',
+                ];
+                const g = gradients[idx % gradients.length];
+                return (
+                  <div key={promo.id || idx} className={`bg-gradient-to-br ${g} border rounded-3xl p-6 transition-all duration-300 hover:shadow-lg hover:scale-[1.02]`}
+                    data-testid={`public-promo-${promo.id || idx}`}>
+                    <div className="flex items-center gap-2 mb-3">
+                      <Gift className="w-5 h-5 text-pink-400" />
+                      <h3 className="text-lg font-black text-white">{promo.name}</h3>
+                    </div>
+                    <p className="text-gray-300 text-sm mb-4">{promo.description}</p>
+                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/10">
+                      <p className="text-pink-300 font-black text-sm flex items-center gap-2">
+                        <Gift className="w-4 h-4" /> IN OMAGGIO: {promo.free_service_name}
+                      </p>
+                    </div>
+                    {promo.promo_code && (
+                      <div className="mt-3 flex items-center gap-2">
+                        <span className="text-xs text-gray-500">Codice:</span>
+                        <span className="font-mono font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded text-sm">{promo.promo_code}</span>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            <div className="text-center mt-10">
+              <Button onClick={() => setShowBooking(true)} className="bg-pink-500 hover:bg-pink-600 text-white font-black text-base px-8 py-6 rounded-xl">
+                <Gift className="w-5 h-5 mr-2" /> PRENOTA CON PROMOZIONE
+              </Button>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* SALON GALLERY */}
       <section className="py-20 sm:py-28 bg-[#242445]">
         <div className="max-w-6xl mx-auto px-4">
