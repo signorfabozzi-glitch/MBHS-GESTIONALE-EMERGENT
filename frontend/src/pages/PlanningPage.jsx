@@ -1356,28 +1356,10 @@ export default function PlanningPage() {
                         type="button"
                         variant={paymentMethod === 'cash' ? 'default' : 'outline'}
                         className={paymentMethod === 'cash' ? 'bg-green-600 text-white' : 'border-2'}
-                        onClick={() => setPaymentMethod('cash')}
+                        onClick={() => { setPaymentMethod('cash'); setSelectedCardId(''); }}
                       >
                         <Banknote className="w-4 h-4 mr-2" />
                         Contanti
-                      </Button>
-                      <Button
-                        type="button"
-                        variant={paymentMethod === 'card' ? 'default' : 'outline'}
-                        className={paymentMethod === 'card' ? 'bg-green-600 text-white' : 'border-2'}
-                        onClick={() => setPaymentMethod('card')}
-                      >
-                        <CreditCard className="w-4 h-4 mr-2" />
-                        Carta
-                      </Button>
-                      <Button
-                        type="button"
-                        variant={paymentMethod === 'transfer' ? 'default' : 'outline'}
-                        className={paymentMethod === 'transfer' ? 'bg-green-600 text-white' : 'border-2'}
-                        onClick={() => setPaymentMethod('transfer')}
-                      >
-                        <Euro className="w-4 h-4 mr-2" />
-                        Bonifico
                       </Button>
                       <Button
                         type="button"
@@ -1385,11 +1367,53 @@ export default function PlanningPage() {
                         className={paymentMethod === 'prepaid' ? 'bg-green-600 text-white' : 'border-2'}
                         onClick={() => setPaymentMethod('prepaid')}
                       >
-                        <CreditCard className="w-4 h-4 mr-2" />
-                        Prepagata
+                        <Ticket className="w-4 h-4 mr-2" />
+                        Abbonamento / Prepagata
                       </Button>
                     </div>
+                    {/* Show client's active cards when prepaid selected */}
+                    {paymentMethod === 'prepaid' && (
+                      <div className="space-y-2 mt-2">
+                        {clientCards.length > 0 ? (
+                          clientCards.map(card => (
+                            <button key={card.id} type="button"
+                              onClick={() => setSelectedCardId(card.id)}
+                              className={`w-full p-3 rounded-lg border-2 text-left transition-all ${selectedCardId === card.id ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-400'}`}
+                              data-testid={`select-card-${card.id}`}>
+                              <div className="flex justify-between items-center">
+                                <div>
+                                  <p className="font-bold text-sm">{card.name}</p>
+                                  <p className="text-xs text-gray-500">{card.card_type === 'subscription' ? 'Abbonamento' : 'Prepagata'}</p>
+                                </div>
+                                <div className="text-right">
+                                  <p className="font-black text-green-600">{'\u20AC'}{card.remaining_value?.toFixed(2)}</p>
+                                  {card.total_services && <p className="text-xs text-gray-500">{card.used_services}/{card.total_services} servizi</p>}
+                                </div>
+                              </div>
+                            </button>
+                          ))
+                        ) : (
+                          <p className="text-sm text-amber-600 p-2 bg-amber-50 rounded-lg">Nessun abbonamento/card attiva per questo cliente</p>
+                        )}
+                      </div>
+                    )}
                   </div>
+
+                  {/* Loyalty Points */}
+                  {clientLoyalty.points > 0 && (
+                    <div className="mb-4">
+                      <button type="button"
+                        onClick={() => setUseLoyaltyPoints(!useLoyaltyPoints)}
+                        className={`w-full p-3 rounded-lg border-2 flex items-center justify-between transition-all ${useLoyaltyPoints ? 'border-amber-500 bg-amber-50' : 'border-gray-200 hover:border-amber-300'}`}
+                        data-testid="use-loyalty-btn">
+                        <div className="flex items-center gap-2">
+                          <Star className={`w-5 h-5 ${useLoyaltyPoints ? 'text-amber-500 fill-amber-500' : 'text-gray-400'}`} />
+                          <span className="font-bold text-sm">Usa punti fedeltà</span>
+                        </div>
+                        <span className="font-black text-amber-600">{clientLoyalty.points} punti</span>
+                      </button>
+                    </div>
+                  )}
 
                   {/* Discount */}
                   <div className="space-y-2 mb-4">
