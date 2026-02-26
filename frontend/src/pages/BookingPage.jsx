@@ -86,6 +86,7 @@ export default function BookingPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [publicPromos, setPublicPromos] = useState([]);
   const servicesRef = useRef(null);
   const contactRef = useRef(null);
 
