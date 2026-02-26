@@ -2811,20 +2811,20 @@ async def validate_promo_code(promo_id: str, data: dict, current_user: dict = De
     return promo
 
 # Public endpoint for promotions on booking page
-@api_router.get("/public/promotions/{user_id}")
-async def get_public_promotions(user_id: str):
-    """Get active promotions for the public booking page"""
-    promos = await db.promotions.find(
-        {"user_id": user_id, "active": True, "show_on_booking": True},
-        {"_id": 0, "user_id": 0}
-    ).to_list(20)
-    return promos
-
 @api_router.get("/public/promotions/all")
 async def get_all_public_promotions():
     """Get all active public promotions (for the shared booking page)"""
     promos = await db.promotions.find(
         {"active": True, "show_on_booking": True},
+        {"_id": 0, "user_id": 0}
+    ).to_list(20)
+    return promos
+
+@api_router.get("/public/promotions/{user_id}")
+async def get_public_promotions(user_id: str):
+    """Get active promotions for the public booking page"""
+    promos = await db.promotions.find(
+        {"user_id": user_id, "active": True, "show_on_booking": True},
         {"_id": 0, "user_id": 0}
     ).to_list(20)
     return promos
