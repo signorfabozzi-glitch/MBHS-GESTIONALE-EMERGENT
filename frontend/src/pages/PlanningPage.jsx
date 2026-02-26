@@ -596,6 +596,36 @@ export default function PlanningPage() {
           </a>
         )}
 
+        {/* Expenses Due Banner */}
+        {upcomingExpenses.length > 0 && (
+          <a
+            href="/uscite"
+            className="flex items-center gap-3 p-3 bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-xl hover:shadow-md transition-shadow"
+            data-testid="expenses-banner"
+          >
+            <Euro className="w-5 h-5 text-red-500 shrink-0" />
+            <div className="flex-1 text-sm">
+              {upcomingExpenses.filter(e => e.overdue).length > 0 && (
+                <span className="font-bold text-red-600">
+                  {upcomingExpenses.filter(e => e.overdue).length} scadenze SCADUTE!
+                </span>
+              )}
+              {upcomingExpenses.filter(e => e.overdue).length > 0 && upcomingExpenses.filter(e => !e.overdue).length > 0 && (
+                <span className="text-[#334155]"> · </span>
+              )}
+              {upcomingExpenses.filter(e => !e.overdue).length > 0 && (
+                <span className="font-bold text-orange-600">
+                  {upcomingExpenses.filter(e => !e.overdue).length} in scadenza (7 giorni)
+                </span>
+              )}
+              <span className="text-[#334155] ml-1">
+                — Totale: &euro;{upcomingExpenses.reduce((s, e) => s + e.amount, 0).toFixed(2)}
+              </span>
+            </div>
+            <span className="text-xs text-red-500 font-bold shrink-0">Vedi →</span>
+          </a>
+        )}
+
         {/* Header */}
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
