@@ -2627,6 +2627,182 @@ async def get_upcoming_expenses(days: int = 7, current_user: dict = Depends(get_
 async def root():
     return {"message": "Salone Parrucchiera API", "status": "ok"}
 
+# ============== PROMOZIONI ==============
+
+class PromoCreate(BaseModel):
+    name: str
+    description: str
+    rule_type: str  # under_30, first_visit, birthday, bring_friend, google_review, fidelity_vip, promo_code
+    free_service_name: str
+    promo_code: Optional[str] = None
+    active: bool = True
+    show_on_booking: bool = True
+
+class PromoUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    rule_type: Optional[str] = None
+    free_service_name: Optional[str] = None
+    promo_code: Optional[str] = None
+    active: Optional[bool] = None
+    show_on_booking: Optional[bool] = None
+
+@api_router.get("/promotions")
+async def get_promotions(current_user: dict = Depends(get_current_user)):
+    """Get all promotions"""
+    promos = await db.promotions.find(
+        {"user_id": current_user["id"]},
+        {"_id": 0, "user_id": 0}
+    ).sort("created_at", -1).to_list(50)
+    
+    # Get usage counts
+    for promo in promos:
+        count = await db.promo_usage.count_documents({"promo_id": promo["id"]})
+        promo["usage_count"] = count
+    
+    return promos
+
+@api_router.post("/promotions")
+async def create_promotion(data: PromoCreate, current_user: dict = Depends(get_current_user)):
+    """Create a new promotion"""
+    code = data.promo_code
+    if not code and data.rule_type == "promo_code":
+        code = f"MBHS{uuid.uuid4().hex[:6].upper()}"
+    elif not code:
+        code = data.rule_type.upper()[:4] + uuid.uuid4().hex[:4].upper()
+    
+    promo = {
+        "id": str(uuid.uuid4()),
+        "user_id": current_user["id"],
+        "name": data.name,
+        "description": data.description,
+        "rule_type": data.rule_type,
+        "free_service_name": data.free_service_name,
+        "promo_code": code,
+        "active": data.active,
+        "show_on_booking": data.show_on_booking,
+        "usage_count": 0,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.promotions.insert_one(promo)
+    return {k: v for k, v in promo.items() if k not in ("_id", "user_id")}
+
+@api_router.put("/promotions/{promo_id}")
+async def update_promotion(promo_id: str, data: PromoUpdate, current_user: dict = Depends(get_current_user)):
+    """Update a promotion"""
+    update_data = {k: v for k, v in data.model_dump().items() if v is not None}
+    if not update_data:
+        raise HTTPException(status_code=400, detail="Nessun dato da aggiornare")
+    result = await db.promotions.update_one(
+        {"id": promo_id, "user_id": current_user["id"]},
+        {"$set": update_data}
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Promozione non trovata")
+    promo = await db.promotions.find_one({"id": promo_id}, {"_id": 0, "user_id": 0})
+    count = await db.promo_usage.count_documents({"promo_id": promo_id})
+    promo["usage_count"] = count
+    return promo
+
+@api_router.delete("/promotions/{promo_id}")
+async def delete_promotion(promo_id: str, current_user: dict = Depends(get_current_user)):
+    """Delete a promotion"""
+    result = await db.promotions.delete_one({"id": promo_id, "user_id": current_user["id"]})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Promozione non trovata")
+    return {"success": True}
+
+@api_router.get("/promotions/check/{client_id}")
+async def check_client_promotions(client_id: str, current_user: dict = Depends(get_current_user)):
+    """Check which promotions a client is eligible for (at checkout)"""
+    promos = await db.promotions.find(
+        {"user_id": current_user["id"], "active": True},
+        {"_id": 0, "user_id": 0}
+    ).to_list(50)
+    
+    eligible = []
+    
+    for promo in promos:
+        rt = promo["rule_type"]
+        
+        if rt == "first_visit":
+            # Check if client has any completed appointments
+            count = await db.appointments.count_documents({
+                "client_id": client_id,
+                "user_id": current_user["id"],
+                "status": "completed"
+            })
+            if count == 0:
+                eligible.append(promo)
+        
+        elif rt == "fidelity_vip":
+            # Check if 10+ visits
+            count = await db.appointments.count_documents({
+                "client_id": client_id,
+                "user_id": current_user["id"],
+                "status": "completed"
+            })
+            if count >= 10:
+                # Check not already used in last 30 days
+                recent = await db.promo_usage.find_one({
+                    "promo_id": promo["id"],
+                    "client_id": client_id,
+                    "used_at": {"$gte": (datetime.now(timezone.utc) - timedelta(days=30)).isoformat()}
+                })
+                if not recent:
+                    eligible.append(promo)
+        
+        else:
+            # under_30, birthday, bring_friend, google_review, promo_code → always suggest, operator decides
+            eligible.append(promo)
+    
+    return eligible
+
+@api_router.post("/promotions/{promo_id}/use")
+async def use_promotion(promo_id: str, data: dict, current_user: dict = Depends(get_current_user)):
+    """Record usage of a promotion"""
+    promo = await db.promotions.find_one(
+        {"id": promo_id, "user_id": current_user["id"]},
+        {"_id": 0}
+    )
+    if not promo:
+        raise HTTPException(status_code=404, detail="Promozione non trovata")
+    
+    usage = {
+        "id": str(uuid.uuid4()),
+        "promo_id": promo_id,
+        "user_id": current_user["id"],
+        "client_id": data.get("client_id", ""),
+        "client_name": data.get("client_name", ""),
+        "appointment_id": data.get("appointment_id", ""),
+        "free_service": promo["free_service_name"],
+        "used_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.promo_usage.insert_one(usage)
+    return {"success": True}
+
+@api_router.post("/promotions/{promo_id}/validate-code")
+async def validate_promo_code(promo_id: str, data: dict, current_user: dict = Depends(get_current_user)):
+    """Validate a promo code"""
+    code = data.get("code", "")
+    promo = await db.promotions.find_one(
+        {"id": promo_id, "user_id": current_user["id"], "promo_code": code, "active": True},
+        {"_id": 0, "user_id": 0}
+    )
+    if not promo:
+        raise HTTPException(status_code=404, detail="Codice non valido")
+    return promo
+
+# Public endpoint for promotions on booking page
+@api_router.get("/public/promotions/{user_id}")
+async def get_public_promotions(user_id: str):
+    """Get active promotions for the public booking page"""
+    promos = await db.promotions.find(
+        {"user_id": user_id, "active": True, "show_on_booking": True},
+        {"_id": 0, "user_id": 0}
+    ).to_list(20)
+    return promos
+
 # ============== WEBSITE CMS ==============
 
 # Object Storage config
