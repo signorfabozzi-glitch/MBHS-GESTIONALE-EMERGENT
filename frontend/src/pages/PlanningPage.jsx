@@ -1603,12 +1603,18 @@ export default function PlanningPage() {
                   <div className="bg-white rounded-lg p-4 border-2 border-green-200 space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="font-semibold">Subtotale:</span>
-                      <span>€{calculateTotal().toFixed(2)}</span>
+                      <span>&euro;{calculateTotal().toFixed(2)}</span>
                     </div>
+                    {selectedPromo && (
+                      <div className="flex justify-between text-sm text-pink-600">
+                        <span className="font-semibold flex items-center gap-1"><Gift className="w-3.5 h-3.5" /> Omaggio:</span>
+                        <span>{selectedPromo.free_service_name}</span>
+                      </div>
+                    )}
                     {discountType !== 'none' && calculateDiscount() > 0 && (
                       <div className="flex justify-between text-sm text-red-600">
                         <span className="font-semibold">Sconto:</span>
-                        <span>-€{calculateDiscount().toFixed(2)}</span>
+                        <span>-&euro;{calculateDiscount().toFixed(2)}</span>
                       </div>
                     )}
                     <div className="flex justify-between text-xl font-black pt-2 border-t border-green-200">
