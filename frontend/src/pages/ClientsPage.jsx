@@ -354,13 +354,18 @@ export default function ClientsPage() {
                   </div>
 
                   <div className="space-y-2 text-sm">
-                    {client.phone && (
+                    {client.phone ? (
                       <div className="flex items-center gap-2 text-[#334155]">
                         <Phone className="w-4 h-4" />
                         <span>{client.phone}</span>
                         {client.sms_reminder && (
                           <MessageSquare className="w-3 h-3 text-[#789F8A]" title="SMS attivi" />
                         )}
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 text-red-500 bg-red-50 px-2 py-1.5 rounded-lg">
+                        <Phone className="w-4 h-4" />
+                        <span className="font-semibold text-xs">Telefono mancante!</span>
                       </div>
                     )}
                     {client.email && (
