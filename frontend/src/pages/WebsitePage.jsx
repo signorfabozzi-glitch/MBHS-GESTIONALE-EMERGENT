@@ -519,6 +519,19 @@ export default function WebsitePage() {
               )}
             </div>
           </div>
+          
+          {/* Social Links section */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
+            {SOCIAL_LINKS.map((link, i) => (
+              <a key={i} href={link.url} target="_blank" rel="noopener noreferrer"
+                className={`flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#242445]/80 border border-white/10 text-gray-400 ${link.color} transition-all hover:bg-white/5 hover:scale-105 hover:border-white/20`}
+                data-testid={`social-link-${i}`}>
+                <link.icon className="w-5 h-5" />
+                <span className="text-sm font-semibold">{link.label}</span>
+              </a>
+            ))}
+          </div>
+
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button onClick={() => setShowBooking(true)} className="bg-gradient-to-r from-amber-400 to-rose-400 text-[#1a1a2e] hover:from-amber-300 hover:to-rose-300 font-black text-base px-10 py-6 rounded-2xl w-full sm:w-auto shadow-lg shadow-amber-400/20" data-testid="website-contact-book-btn">
               <Scissors className="w-5 h-5 mr-2" /> PRENOTA ORA
