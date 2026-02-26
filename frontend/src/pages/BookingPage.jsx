@@ -119,7 +119,7 @@ export default function BookingPage() {
   const handleSubmit = async () => {
     if (!formData.client_name || !formData.client_phone) { toast.error('Inserisci nome e telefono'); return; }
     setSubmitting(true);
-    try { await axios.post(`${API}/public/book-appointment`, formData); setSuccess(true); }
+    try { await axios.post(`${API}/public/booking`, formData); setSuccess(true); }
     catch (err) { toast.error(err.response?.data?.detail || 'Errore nella prenotazione'); }
     finally { setSubmitting(false); }
   };
