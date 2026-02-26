@@ -881,28 +881,40 @@ async def checkout_appointment(appointment_id: str, data: CheckoutData, current_
     )
     
     # If using prepaid card, deduct from card
-    if data.payment_method == "prepaid":
-        # Find client's active prepaid card
+    if data.payment_method == "prepaid" and data.card_id:
         card = await db.cards.find_one({
-            "client_id": appointment["client_id"],
+            "id": data.card_id,
             "user_id": current_user["id"],
-            "active": True,
-            "remaining_value": {"$gte": data.total_paid}
+            "active": True
         })
         if card:
-            new_remaining = card["remaining_value"] - data.total_paid
+            new_remaining = max(0, card["remaining_value"] - data.total_paid)
+            new_used = card.get("used_services", 0) + len(appointment.get("services", []))
             transaction = {
                 "date": datetime.now(timezone.utc).isoformat(),
                 "description": f"Servizi: {', '.join([s['name'] for s in appointment['services']])}",
-                "amount": data.total_paid
+                "amount": data.total_paid,
+                "appointment_id": appointment_id
             }
+            update_fields = {
+                "remaining_value": new_remaining,
+                "used_services": new_used
+            }
+            # Deactivate card if value is 0 or services exhausted
+            total_svc = card.get("total_services")
+            if new_remaining <= 0 or (total_svc and new_used >= total_svc):
+                update_fields["active"] = False
             await db.cards.update_one(
                 {"id": card["id"]},
-                {
-                    "$set": {"remaining_value": new_remaining},
-                    "$push": {"transactions": transaction}
-                }
+                {"$set": update_fields, "$push": {"transactions": transaction}}
             )
+    
+    # If redeeming loyalty points, deduct them
+    if data.loyalty_points_used > 0:
+        await db.loyalty.update_one(
+            {"client_id": appointment["client_id"], "user_id": current_user["id"]},
+            {"$inc": {"points": -data.loyalty_points_used}}
+        )
     
     # Award loyalty points and check thresholds
     loyalty_before = await get_or_create_loyalty(appointment["client_id"], current_user["id"])
