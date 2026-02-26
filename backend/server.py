@@ -830,10 +830,12 @@ async def delete_appointment(appointment_id: str, current_user: dict = Depends(g
 # ============== APPOINTMENT CHECKOUT ==============
 
 class CheckoutData(BaseModel):
-    payment_method: str = "cash"  # cash, card, transfer, prepaid
-    discount_type: str = "none"   # none, percent, fixed
+    payment_method: str = "cash"  # cash, prepaid
+    discount_type: str = "none"   # none, percent, fixed, loyalty
     discount_value: float = 0
     total_paid: float
+    card_id: Optional[str] = None  # ID della card prepagata/abbonamento
+    loyalty_points_used: int = 0   # Punti fedeltà usati
 
 @api_router.post("/appointments/{appointment_id}/checkout")
 async def checkout_appointment(appointment_id: str, data: CheckoutData, current_user: dict = Depends(get_current_user)):
