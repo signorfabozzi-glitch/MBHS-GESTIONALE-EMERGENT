@@ -106,6 +106,9 @@ export default function PlanningPage() {
   // Upcoming expenses
   const [upcomingExpenses, setUpcomingExpenses] = useState([]);
 
+  // Auto-reminder check
+  const [autoReminderPending, setAutoReminderPending] = useState(0);
+
   // Drag & Drop state
   const [draggedApt, setDraggedApt] = useState(null);
   const [dragOverSlot, setDragOverSlot] = useState(null);
