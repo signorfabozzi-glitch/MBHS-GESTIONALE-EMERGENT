@@ -279,6 +279,16 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
+          {/* PROMOZIONI */}
+          <Route
+            path="/promozioni"
+            element={
+              <ProtectedRoute>
+                <PromotionsPage />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
       <Toaster 
