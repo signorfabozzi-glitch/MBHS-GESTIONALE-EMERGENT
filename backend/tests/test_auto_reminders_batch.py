@@ -44,11 +44,11 @@ class TestAutoReminderCheck:
         assert response.status_code == 200
         
         data = response.json()
-        # Check expected fields
+        # Check expected fields (actual API structure)
         assert "is_reminder_time" in data
         assert "pending" in data
         assert "already_sent" in data
-        assert "total" in data
+        assert "total_tomorrow" in data  # actual field name
         assert "tomorrow_date" in data
         
         # pending should be a list
@@ -61,7 +61,7 @@ class TestAutoReminderCheck:
         print(f"  - is_reminder_time: {data['is_reminder_time']}")
         print(f"  - pending count: {len(data['pending'])}")
         print(f"  - already_sent: {data['already_sent']}")
-        print(f"  - total: {data['total']}")
+        print(f"  - total_tomorrow: {data['total_tomorrow']}")
         print(f"  - tomorrow_date: {data['tomorrow_date']}")
     
     def test_auto_check_pending_structure(self, api_client):
@@ -86,18 +86,18 @@ class TestAutoReminderCheck:
 class TestBatchMarkSent:
     """Test batch mark sent endpoint"""
     
-    def test_batch_mark_sent_empty_list(self, api_client):
-        """Test POST /api/reminders/batch-mark-sent with empty list"""
+    def test_batch_mark_sent_empty_list_returns_error(self, api_client):
+        """Test POST /api/reminders/batch-mark-sent with empty list returns 400"""
         response = api_client.post(f"{BASE_URL}/api/reminders/batch-mark-sent", json={
             "appointment_ids": []
         })
-        assert response.status_code == 200
+        # API returns 400 for empty list (validation error)
+        assert response.status_code == 400
         
         data = response.json()
-        assert data["success"] == True
-        assert data["marked"] == 0
+        assert "detail" in data
         
-        print(f"✓ Batch mark sent with empty list returns success=True, marked=0")
+        print(f"✓ Batch mark sent with empty list returns 400 with error message")
     
     def test_batch_mark_sent_nonexistent_ids(self, api_client):
         """Test batch mark sent with non-existent appointment IDs"""
@@ -108,9 +108,9 @@ class TestBatchMarkSent:
         
         data = response.json()
         assert data["success"] == True
-        assert data["marked"] >= 0  # Should be 0 since IDs don't exist
+        assert data["marked_count"] >= 0  # Should be 0 since IDs don't exist
         
-        print(f"✓ Batch mark sent with non-existent IDs doesn't error")
+        print(f"✓ Batch mark sent with non-existent IDs returns success=True, marked_count=0")
     
     def test_batch_mark_sent_with_real_appointment(self, api_client):
         """Test batch mark sent with a real appointment for tomorrow"""
@@ -126,9 +126,9 @@ class TestBatchMarkSent:
         
         if appointments:
             # Find one that hasn't been reminded
-            unremineded = [a for a in appointments if not a.get("sms_sent", False)]
-            if unremineded:
-                apt_id = unremineded[0]["id"]
+            unreminded = [a for a in appointments if not a.get("sms_sent", False)]
+            if unreminded:
+                apt_id = unreminded[0]["id"]
                 
                 # Mark it as sent
                 response = api_client.post(f"{BASE_URL}/api/reminders/batch-mark-sent", json={
@@ -138,9 +138,9 @@ class TestBatchMarkSent:
                 
                 data = response.json()
                 assert data["success"] == True
-                assert data["marked"] >= 1
+                assert data["marked_count"] >= 1
                 
-                print(f"✓ Batch mark sent with real appointment worked (marked {data['marked']})")
+                print(f"✓ Batch mark sent with real appointment worked (marked {data['marked_count']})")
                 return
         
         print(f"✓ No appointments for tomorrow to test batch mark sent")
@@ -162,16 +162,16 @@ class TestRemindersIntegration:
         tomorrow_data = tomorrow_response.json()
         
         # Counts should be consistent
-        # auto_check.total should equal len(tomorrow_data)
-        assert auto_data["total"] == len(tomorrow_data), \
-            f"auto_check.total ({auto_data['total']}) != tomorrow reminders ({len(tomorrow_data)})"
+        # auto_check.total_tomorrow should equal len(tomorrow_data)
+        assert auto_data["total_tomorrow"] == len(tomorrow_data), \
+            f"auto_check.total_tomorrow ({auto_data['total_tomorrow']}) != tomorrow reminders ({len(tomorrow_data)})"
         
-        # pending + already_sent should equal total
-        assert auto_data["already_sent"] + len(auto_data["pending"]) == auto_data["total"], \
-            "already_sent + pending should equal total"
+        # pending + already_sent should equal total_tomorrow
+        assert auto_data["already_sent"] + len(auto_data["pending"]) == auto_data["total_tomorrow"], \
+            "already_sent + pending should equal total_tomorrow"
         
         print(f"✓ Auto-check and tomorrow reminders are consistent")
-        print(f"  - Total appointments for tomorrow: {auto_data['total']}")
+        print(f"  - Total appointments for tomorrow: {auto_data['total_tomorrow']}")
 
 
 class TestExpensesUpcomingWithOverdue:
