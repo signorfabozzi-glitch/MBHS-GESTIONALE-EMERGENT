@@ -28,6 +28,7 @@ import DailySummaryPage from "./pages/DailySummaryPage";
 import WebsitePage from "./pages/WebsitePage";
 import WebsiteAdminPage from "./pages/WebsiteAdminPage";
 import ExpensesPage from "./pages/ExpensesPage";
+import PromotionsPage from "./pages/PromotionsPage";
 import LoginPage from "./pages/LoginPage";
 import { useAuth } from "./context/AuthContext";
 
