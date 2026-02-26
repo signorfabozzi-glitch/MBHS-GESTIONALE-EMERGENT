@@ -103,6 +103,11 @@ export default function BookingPage() {
         axios.get(`${API}/public/services`), axios.get(`${API}/public/operators`)
       ]);
       setServices(servicesRes.data); setOperators(operatorsRes.data);
+      // Fetch public promotions (need user_id from services endpoint context)
+      try {
+        const promosRes = await axios.get(`${API}/public/promotions/all`);
+        setPublicPromos(promosRes.data);
+      } catch (e) { /* promos not critical */ }
     } catch (err) { console.error(err); }
     finally { setLoading(false); }
   };
