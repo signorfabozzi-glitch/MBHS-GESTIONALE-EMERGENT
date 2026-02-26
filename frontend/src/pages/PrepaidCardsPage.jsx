@@ -93,12 +93,14 @@ export default function PrepaidCardsPage() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [cardsRes, clientsRes] = await Promise.all([
+      const [cardsRes, clientsRes, templatesRes] = await Promise.all([
         axios.get(`${API}/cards?active_only=${!showInactive}`),
-        axios.get(`${API}/clients`)
+        axios.get(`${API}/clients`),
+        axios.get(`${API}/card-templates`)
       ]);
       setCards(cardsRes.data);
       setClients(clientsRes.data);
+      setCardTemplates(templatesRes.data);
     } catch (err) {
       console.error('Error fetching data:', err);
       toast.error('Errore nel caricamento dei dati');
