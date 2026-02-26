@@ -127,6 +127,7 @@ export default function PlanningPage() {
   useEffect(() => {
     fetchData();
     fetchReminderCounts();
+    fetchUpcomingExpenses();
   }, [selectedDate]);
 
   useEffect(() => {
