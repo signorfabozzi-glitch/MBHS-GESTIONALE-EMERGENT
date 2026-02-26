@@ -109,6 +109,10 @@ export default function PlanningPage() {
   // Auto-reminder check
   const [autoReminderPending, setAutoReminderPending] = useState(0);
 
+  // Promotions at checkout
+  const [eligiblePromos, setEligiblePromos] = useState([]);
+  const [selectedPromo, setSelectedPromo] = useState(null);
+
   // Drag & Drop state
   const [draggedApt, setDraggedApt] = useState(null);
   const [dragOverSlot, setDragOverSlot] = useState(null);
