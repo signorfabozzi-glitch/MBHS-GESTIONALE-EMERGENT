@@ -191,6 +191,84 @@ export default function PrepaidCardsPage() {
     setCardClientSearch('');
   };
 
+  const applyTemplate = (tmpl) => {
+    let validUntil = '';
+    if (tmpl.duration_months) {
+      const d = new Date();
+      d.setMonth(d.getMonth() + tmpl.duration_months);
+      validUntil = d.toISOString().split('T')[0];
+    }
+    setFormData(prev => ({
+      ...prev,
+      card_type: tmpl.card_type,
+      name: tmpl.name,
+      total_value: String(tmpl.total_value),
+      total_services: tmpl.total_services ? String(tmpl.total_services) : '',
+      valid_until: validUntil,
+      notes: tmpl.notes || ''
+    }));
+    setDialogOpen(true);
+  };
+
+  const openTemplateDialog = (tmpl = null) => {
+    if (tmpl) {
+      setEditingTemplate(tmpl);
+      setTemplateForm({
+        name: tmpl.name,
+        card_type: tmpl.card_type,
+        total_value: String(tmpl.total_value),
+        total_services: tmpl.total_services ? String(tmpl.total_services) : '',
+        duration_months: tmpl.duration_months ? String(tmpl.duration_months) : '',
+        notes: tmpl.notes || ''
+      });
+    } else {
+      setEditingTemplate(null);
+      setTemplateForm({ name: '', card_type: 'prepaid', total_value: '', total_services: '', duration_months: '', notes: '' });
+    }
+    setTemplateDialogOpen(true);
+  };
+
+  const saveTemplate = async () => {
+    if (!templateForm.name || !templateForm.total_value) {
+      toast.error('Inserisci nome e valore');
+      return;
+    }
+    setSavingTemplate(true);
+    try {
+      const payload = {
+        name: templateForm.name,
+        card_type: templateForm.card_type,
+        total_value: parseFloat(templateForm.total_value),
+        total_services: templateForm.total_services ? parseInt(templateForm.total_services) : null,
+        duration_months: templateForm.duration_months ? parseInt(templateForm.duration_months) : null,
+        notes: templateForm.notes
+      };
+      if (editingTemplate) {
+        await axios.put(`${API}/card-templates/${editingTemplate.id}`, payload);
+        toast.success('Pacchetto aggiornato');
+      } else {
+        await axios.post(`${API}/card-templates`, payload);
+        toast.success('Pacchetto creato');
+      }
+      setTemplateDialogOpen(false);
+      fetchData();
+    } catch (err) {
+      toast.error('Errore nel salvataggio');
+    }
+    setSavingTemplate(false);
+  };
+
+  const deleteCardTemplate = async (id) => {
+    if (!window.confirm('Eliminare questo pacchetto?')) return;
+    try {
+      await axios.delete(`${API}/card-templates/${id}`);
+      toast.success('Pacchetto eliminato');
+      fetchData();
+    } catch (err) {
+      toast.error('Errore nell\'eliminazione');
+    }
+  };
+
   const filteredCards = cards.filter(card =>
     card.client_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     card.name.toLowerCase().includes(searchQuery.toLowerCase())
