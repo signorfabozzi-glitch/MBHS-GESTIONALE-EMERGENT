@@ -49,8 +49,13 @@ export default function RemindersPage() {
   const [templateForm, setTemplateForm] = useState({ name: '', text: '', template_type: 'appointment' });
   const [savingTemplate, setSavingTemplate] = useState(false);
 
+  // Auto-send batch state
+  const [autoCheck, setAutoCheck] = useState(null);
+  const [batchSending, setBatchSending] = useState(false);
+
   useEffect(() => {
     fetchData();
+    checkAutoReminder();
   }, []);
 
   const fetchData = async () => {
