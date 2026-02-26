@@ -712,9 +712,9 @@ async def create_appointment(data: AppointmentCreate, current_user: dict = Depen
     appointment_doc = {
         "id": appointment_id,
         "user_id": current_user["id"],
-        "client_id": data.client_id,
-        "client_name": client["name"],
-        "client_phone": client.get("phone", ""),
+        "client_id": client_id,
+        "client_name": client_name,
+        "client_phone": client_phone,
         "service_ids": data.service_ids,
         "services": [{"id": s["id"], "name": s["name"], "duration": s["duration"], "price": s["price"]} for s in services],
         "operator_id": data.operator_id,
