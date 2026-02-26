@@ -2402,6 +2402,8 @@ async def public_get_website():
     config = await db.website_config.find_one({}, {"_id": 0, "user_id": 0})
     if not config:
         config = {k: v for k, v in DEFAULT_WEBSITE_CONFIG.items()}
+    else:
+        config = {**DEFAULT_WEBSITE_CONFIG, **{k: v for k, v in config.items() if k != "user_id"}}
     reviews = await db.website_reviews.find({}, {"_id": 0, "user_id": 0}).to_list(100)
     gallery = await db.website_gallery.find({"is_deleted": {"$ne": True}}, {"_id": 0, "user_id": 0}).sort("sort_order", 1).to_list(100)
     services = await db.services.find({}, {"_id": 0}).sort("sort_order", 1).to_list(100)
