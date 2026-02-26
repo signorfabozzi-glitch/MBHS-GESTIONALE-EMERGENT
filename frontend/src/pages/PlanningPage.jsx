@@ -920,14 +920,23 @@ export default function PlanningPage() {
                       className="bg-white border-2 border-emerald-300 text-[#0F172A] font-medium"
                       data-testid="new-client-name-input"
                     />
-                    <Input
-                      type="text"
-                      placeholder="Telefono (opzionale)"
-                      value={newClientPhone}
-                      onChange={(e) => setNewClientPhone(e.target.value)}
-                      className="bg-white border-2 border-emerald-300 text-[#0F172A] font-medium"
-                      data-testid="new-client-phone-input"
-                    />
+                    <div className="relative">
+                      <Input
+                        type="text"
+                        placeholder="Telefono (importante per promemoria!)"
+                        value={newClientPhone}
+                        onChange={(e) => setNewClientPhone(e.target.value)}
+                        className={`bg-white border-2 text-[#0F172A] font-medium ${
+                          newClientPhone ? 'border-emerald-300' : 'border-orange-400 ring-1 ring-orange-300'
+                        }`}
+                        data-testid="new-client-phone-input"
+                      />
+                      {!newClientPhone && (
+                        <p className="text-xs text-orange-600 font-semibold mt-1 flex items-center gap-1">
+                          <Bell className="w-3 h-3" /> Inserisci il numero per inviare promemoria WhatsApp
+                        </p>
+                      )}
+                    </div>
                     <button type="button" className="text-xs text-gray-500 hover:text-red-500" onClick={() => { setNewClientMode(false); setNewClientName(''); setNewClientPhone(''); }}>
                       Annulla nuovo cliente
                     </button>
