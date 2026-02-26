@@ -1538,6 +1538,37 @@ export default function PlanningPage() {
                     </div>
                   )}
 
+                  {/* Eligible Promotions */}
+                  {eligiblePromos.length > 0 && (
+                    <div className="mb-4">
+                      <Label className="text-[#0F172A] font-bold flex items-center gap-2 mb-2">
+                        <Gift className="w-4 h-4 text-pink-500" /> Promozioni Disponibili
+                      </Label>
+                      <div className="space-y-2">
+                        {eligiblePromos.map(promo => (
+                          <button key={promo.id} type="button"
+                            onClick={() => setSelectedPromo(selectedPromo?.id === promo.id ? null : promo)}
+                            className={`w-full p-3 rounded-lg border-2 text-left transition-all ${
+                              selectedPromo?.id === promo.id
+                                ? 'border-pink-500 bg-pink-50'
+                                : 'border-gray-200 hover:border-pink-300'
+                            }`}
+                            data-testid={`select-promo-${promo.id}`}>
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <p className="font-bold text-sm text-[#0F172A]">{promo.name}</p>
+                                <p className="text-xs text-pink-600 font-semibold mt-0.5">
+                                  OMAGGIO: {promo.free_service_name}
+                                </p>
+                              </div>
+                              <Gift className={`w-5 h-5 ${selectedPromo?.id === promo.id ? 'text-pink-500' : 'text-gray-300'}`} />
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Discount */}
                   <div className="space-y-2 mb-4">
                     <Label className="text-[#0F172A] font-bold">Sconto</Label>
