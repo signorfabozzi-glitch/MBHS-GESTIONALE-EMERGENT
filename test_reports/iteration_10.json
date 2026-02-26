@@ -1,0 +1,76 @@
+{
+  "summary": "Completed iteration 10 testing for Promotions System. All 15 backend API tests passed. All frontend features verified - /promozioni page displays 8 promos with stats, create dialog, toggle switches, copy codes. Public /prenota page shows 'Offerte Speciali - Promozioni Attive' section with 8 promo cards. Checkout in Planning page shows 'Promozioni Disponibili' section. Sidebar has 'Promozioni' link correctly placed between Promemoria and Report Incassi.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_promotions_api.py",
+    "/app/test_reports/pytest/pytest_promotions.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [],
+  "updated_files": [
+    "/app/backend/tests/test_promotions_api.py"
+  ],
+  "success_rate": {
+    "backend": "100% (15/15 tests passed)",
+    "frontend": "100% - All pages load correctly and features work"
+  },
+  "test_credentials": {
+    "email": "melitobruno@gmail.com",
+    "password": "password123"
+  },
+  "seed_data_creation": "8 default promotions already exist with promo codes: UNDER30, REVIEW, AMICA, BENVENUTA, AUGURI, VIP10, CARD15, ABBO",
+  "retest_needed": false,
+  "main_agent_can_self_test": false,
+  "context_for_next_testing_agent": "All 8 promotions system features working. Backend CRUD fully tested. Public /api/public/promotions/all endpoint returns all 8 active promos without auth. Checkout integration shows promozioni disponibili when editing appointment with client.",
+  "features_verified": {
+    "backend_apis": {
+      "GET /api/promotions": "PASS - Returns 8+ promotions with usage_count",
+      "POST /api/promotions": "PASS - Creates new promotion, auto-generates promo_code if missing",
+      "PUT /api/promotions/{id}": "PASS - Updates promotion, toggle active status works",
+      "DELETE /api/promotions/{id}": "PASS - Deletes promotion",
+      "GET /api/promotions/check/{client_id}": "PASS - Returns eligible promos for client",
+      "POST /api/promotions/{id}/use": "PASS - Records promo usage",
+      "GET /api/public/promotions/all": "PASS - Public endpoint returns 8 active promos (no auth)"
+    },
+    "frontend_pages": {
+      "/promozioni (Promotions Page)": {
+        "stats_cards": "PASS - Shows 8 Promozioni Attive, 8 Totale, 0 Utilizzi",
+        "promo_list": "PASS - Shows 8 promos with badges, toggle switches, copy buttons",
+        "new_promo_button": "PASS - Opens create dialog with all fields",
+        "create_dialog": "PASS - Has Nome, Descrizione, Regola select, Servizio in Omaggio, Codice Promo, toggle for show_on_booking",
+        "toggle_switches": "PASS - 8 switches visible, one per promo",
+        "copy_code_buttons": "PASS - 8 copy buttons, click triggers copy action",
+        "edit_buttons": "PASS - 8 edit buttons visible"
+      },
+      "/prenota (Public Booking Page)": {
+        "promotions_section": "PASS - Shows 'Offerte Speciali - Promozioni Attive' heading",
+        "promo_cards": "PASS - 8 public promo cards displayed with name, description, OMAGGIO, promo code"
+      },
+      "Planning page (Checkout)": {
+        "promozioni_disponibili": "PASS - Shows 'Promozioni Disponibili' section when editing appointment",
+        "promo_selection": "PASS - All 8 promos selectable during checkout"
+      },
+      "Sidebar Navigation": {
+        "promozioni_link": "PASS - 'Promozioni' link appears at position 10, between Promemoria (9) and Report Incassi (11)"
+      }
+    },
+    "8_default_promotions": {
+      "UNDER30": "Speciale Under 30 - rule_type: under_30",
+      "REVIEW": "Recensione Google - rule_type: google_review",
+      "AMICA": "Porta un'Amica - rule_type: bring_friend",
+      "BENVENUTA": "Prima Visita - rule_type: first_visit",
+      "AUGURI": "Buon Compleanno! - rule_type: birthday",
+      "VIP10": "Fidelity VIP - rule_type: fidelity_vip",
+      "CARD15": "Card Prepagata -15% - rule_type: promo_code",
+      "ABBO": "Abbonamento Mensile + Piega Omaggio - rule_type: promo_code"
+    }
+  }
+}
