@@ -339,6 +339,83 @@ export default function PrepaidCardsPage() {
           </CardContent>
         </Card>
 
+        {/* Pacchetti Preimpostati */}
+        <Card className="bg-white border-[#E2E8F0]/30">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg font-bold text-[#0F172A] flex items-center gap-2">
+                <Package className="w-5 h-5 text-[#0EA5E9]" />
+                Pacchetti Preimpostati
+              </CardTitle>
+              <Button
+                onClick={() => openTemplateDialog()}
+                size="sm"
+                className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white"
+                data-testid="new-package-btn"
+              >
+                <Plus className="w-4 h-4 mr-1" /> Nuovo Pacchetto
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {cardTemplates.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {cardTemplates.map((tmpl) => (
+                  <div
+                    key={tmpl.id}
+                    className="p-4 rounded-xl border-2 border-[#E2E8F0] bg-[#F8FAFC] hover:border-[#0EA5E9] transition-colors group"
+                    data-testid={`package-${tmpl.id}`}
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <p className="font-bold text-[#0F172A] text-sm">{tmpl.name}</p>
+                        <Badge className={getCardTypeColor(tmpl.card_type) + ' mt-1'}>
+                          {getCardTypeLabel(tmpl.card_type)}
+                        </Badge>
+                      </div>
+                      <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-[#334155] hover:text-[#0EA5E9]" onClick={() => openTemplateDialog(tmpl)} data-testid={`edit-package-${tmpl.id}`}>
+                          <Pencil className="w-3.5 h-3.5" />
+                        </Button>
+                        <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-[#334155] hover:text-red-500" onClick={() => deleteCardTemplate(tmpl.id)} data-testid={`delete-package-${tmpl.id}`}>
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <span className="text-2xl font-black text-[#0EA5E9]">&euro;{tmpl.total_value}</span>
+                      {tmpl.total_services && (
+                        <span className="text-xs text-[#64748B]">{tmpl.total_services} servizi</span>
+                      )}
+                    </div>
+                    {tmpl.duration_months && (
+                      <p className="text-xs text-[#64748B] mb-2">Durata: {tmpl.duration_months} mesi</p>
+                    )}
+                    {tmpl.notes && <p className="text-xs text-[#94A3B8] mb-2">{tmpl.notes}</p>}
+                    <Button
+                      onClick={() => applyTemplate(tmpl)}
+                      size="sm"
+                      className="w-full bg-[#0EA5E9] hover:bg-[#0284C7] text-white mt-1"
+                      data-testid={`use-package-${tmpl.id}`}
+                    >
+                      <Plus className="w-3.5 h-3.5 mr-1" /> Assegna a Cliente
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-6">
+                <Package className="w-10 h-10 mx-auto text-[#E2E8F0] mb-2" />
+                <p className="text-sm text-[#334155]">Nessun pacchetto preimpostato</p>
+                <p className="text-xs text-[#94A3B8] mt-1">Crea pacchetti per assegnare rapidamente card ai clienti</p>
+                <Button onClick={() => openTemplateDialog()} size="sm" className="mt-3 bg-[#0EA5E9] hover:bg-[#0284C7] text-white">
+                  <Plus className="w-4 h-4 mr-1" /> Crea il primo pacchetto
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         {/* Cards List */}
         {loading ? (
           <div className="space-y-4">
