@@ -761,13 +761,13 @@ export default function PrepaidCardsPage() {
                 <div className="p-4 bg-[#F8FAFC] rounded-lg">
                   <p className="text-sm text-[#334155]">Credito attuale</p>
                   <p className="text-2xl font-semibold text-[#0F172A]">
-                    €{selectedCard.remaining_value.toFixed(2)}
+                    &euro;{selectedCard.remaining_value.toFixed(2)}
                   </p>
                 </div>
               )}
 
               <div className="space-y-2">
-                <Label>Importo da aggiungere (€)</Label>
+                <Label>Importo da aggiungere (&euro;)</Label>
                 <Input
                   type="number"
                   step="0.01"
@@ -803,6 +803,100 @@ export default function PrepaidCardsPage() {
                 </Button>
               </DialogFooter>
             </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Package Template Dialog */}
+        <Dialog open={templateDialogOpen} onOpenChange={setTemplateDialogOpen}>
+          <DialogContent className="sm:max-w-[480px]">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold text-[#0F172A]">
+                {editingTemplate ? 'Modifica Pacchetto' : 'Nuovo Pacchetto Preimpostato'}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 mt-2">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Nome Pacchetto *</Label>
+                  <Input
+                    value={templateForm.name}
+                    onChange={(e) => setTemplateForm({ ...templateForm, name: e.target.value })}
+                    placeholder="es. Card 10 Pieghe"
+                    data-testid="package-name-input"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Tipo</Label>
+                  <Select
+                    value={templateForm.card_type}
+                    onValueChange={(v) => setTemplateForm({ ...templateForm, card_type: v })}
+                  >
+                    <SelectTrigger data-testid="package-type-select">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="prepaid">Card Prepagata</SelectItem>
+                      <SelectItem value="subscription">Abbonamento</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label>Valore (&euro;) *</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={templateForm.total_value}
+                    onChange={(e) => setTemplateForm({ ...templateForm, total_value: e.target.value })}
+                    placeholder="200"
+                    data-testid="package-value-input"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>N. Servizi</Label>
+                  <Input
+                    type="number"
+                    min="1"
+                    value={templateForm.total_services}
+                    onChange={(e) => setTemplateForm({ ...templateForm, total_services: e.target.value })}
+                    placeholder="10"
+                    data-testid="package-services-input"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Durata (mesi)</Label>
+                  <Input
+                    type="number"
+                    min="1"
+                    value={templateForm.duration_months}
+                    onChange={(e) => setTemplateForm({ ...templateForm, duration_months: e.target.value })}
+                    placeholder="6"
+                    data-testid="package-duration-input"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Note</Label>
+                <Input
+                  value={templateForm.notes}
+                  onChange={(e) => setTemplateForm({ ...templateForm, notes: e.target.value })}
+                  placeholder="Descrizione del pacchetto..."
+                />
+              </div>
+            </div>
+            <DialogFooter className="mt-4">
+              <Button variant="outline" onClick={() => setTemplateDialogOpen(false)}>Annulla</Button>
+              <Button
+                onClick={saveTemplate}
+                disabled={savingTemplate}
+                className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white"
+                data-testid="save-package-btn"
+              >
+                {savingTemplate ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Salva'}
+              </Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>
