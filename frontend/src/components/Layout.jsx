@@ -38,6 +38,7 @@ const navItems = [
   { path: '/loyalty', label: 'Programma Fedeltà', icon: Star },
   { path: '/reminders', label: 'Promemoria', icon: Bell },
   { path: '/incassi', label: 'Report Incassi', icon: Euro },
+  { path: '/uscite', label: 'Registro Uscite', icon: ArrowDownCircle },
   { path: '/daily-summary', label: 'Riepilogo Giorno', icon: FileBarChart },
   { path: '/services', label: 'Servizi', icon: Scissors },
   { path: '/operators', label: 'Operatori', icon: UserCircle },
