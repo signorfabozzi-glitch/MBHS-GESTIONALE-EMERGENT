@@ -77,6 +77,17 @@ for (let h = 8; h <= 20; h++) {
   }
 }
 
+const getAvailableSlotsForDate = (dateStr) => {
+  const today = format(new Date(), 'yyyy-MM-dd');
+  if (dateStr !== today) return TIME_SLOTS;
+  const now = new Date();
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  return TIME_SLOTS.filter(slot => {
+    const [h, m] = slot.split(':').map(Number);
+    return h * 60 + m >= currentMinutes;
+  });
+};
+
 export default function BookingPage() {
   const [showBooking, setShowBooking] = useState(false);
   const [showServices, setShowServices] = useState(false);
