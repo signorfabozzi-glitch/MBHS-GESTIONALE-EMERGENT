@@ -29,6 +29,8 @@ const MODULES = [
   { path: '/cards', label: 'Card Prepagate', desc: 'Abbonamenti', icon: CreditCard, color: '#6366F1' },
   { path: '/loyalty', label: 'Fedeltà', desc: 'Programma punti', icon: Gift, color: '#EC4899' },
   { path: '/reminders', label: 'Promemoria', desc: 'Notifiche clienti', icon: Bell, color: '#F97316' },
+  { path: '/uscite', label: 'Uscite', desc: 'Registro spese', icon: TrendingUp, color: '#DC2626' },
+  { path: '/promozioni', label: 'Promozioni', desc: 'Offerte e promo', icon: Gift, color: '#D946EF' },
   { path: '/backup', label: 'Backup', desc: 'Esporta dati', icon: Download, color: '#64748B' },
   { path: '/prenota', label: 'Booking Online', desc: 'Pagina pubblica', icon: Globe, color: '#14B8A6' },
   { path: '/settings', label: 'Impostazioni', desc: 'Configurazione', icon: Settings, color: '#78716C' },

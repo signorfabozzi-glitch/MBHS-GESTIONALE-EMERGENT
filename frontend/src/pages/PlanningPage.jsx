@@ -63,6 +63,9 @@ export default function PlanningPage() {
     notes: ''
   });
 
+  // Edit date (separate from planning selectedDate)
+  const [editDate, setEditDate] = useState('');
+
   // Client search in dialog
   const [clientSearch, setClientSearch] = useState('');
   const [showClientDropdown, setShowClientDropdown] = useState(false);
