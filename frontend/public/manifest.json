@@ -2,7 +2,7 @@
   "name": "MBHS SALON",
   "short_name": "MBHS",
   "description": "Gestionale per il tuo salone",
-  "start_url": "/",
+  "start_url": "/planning",
   "display": "standalone",
   "background_color": "#0EA5E9",
   "theme_color": "#0EA5E9",
