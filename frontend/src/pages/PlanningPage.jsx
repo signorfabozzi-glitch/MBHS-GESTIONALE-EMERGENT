@@ -1480,11 +1480,22 @@ export default function PlanningPage() {
                       type="button"
                       onClick={() => {
                         setCheckoutMode(true);
-                        // Fetch eligible promotions
+                        // Fetch eligible promotions and auto-select first
                         if (editingAppointment?.client_id) {
                           axios.get(`${API}/promotions/check/${editingAppointment.client_id}`)
-                            .then(res => setEligiblePromos(res.data))
+                            .then(res => {
+                              setEligiblePromos(res.data);
+                              if (res.data.length > 0) setSelectedPromo(res.data[0]);
+                            })
                             .catch(() => {});
+                        }
+                        // Auto-select prepaid card if client has one
+                        if (clientCards.length > 0) {
+                          const activeCard = clientCards.find(c => c.remaining_value > 0);
+                          if (activeCard) {
+                            setPaymentMethod('prepaid');
+                            setSelectedCardId(activeCard.id);
+                          }
                         }
                       }}
                       className="bg-green-600 hover:bg-green-700 text-white font-bold px-6"
