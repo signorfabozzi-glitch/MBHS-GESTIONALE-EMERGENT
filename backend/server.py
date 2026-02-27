@@ -2664,6 +2664,34 @@ class PromoUpdate(BaseModel):
     active: Optional[bool] = None
     show_on_booking: Optional[bool] = None
 
+async def seed_default_promotions(user_id: str):
+    """Seed default promotions if none exist for this user"""
+    defaults = [
+        {"name": "Speciale Under 30", "description": "Piega o trattamento lucidante GRATIS con qualsiasi servizio colore per le under 30", "rule_type": "under_30", "free_service_name": "Piega o Trattamento Lucidante", "promo_code": "UNDER30"},
+        {"name": "Recensione Google", "description": "Lascia una recensione con foto su Google e ricevi un trattamento Olaplex o Maschera Ristrutturante IN OMAGGIO alla prossima visita", "rule_type": "review", "free_service_name": "Maschera Ristrutturante o Olaplex", "promo_code": "REVIEW"},
+        {"name": "Porta un'Amica", "description": "Porta un'amica e ricevete entrambe un servizio extra GRATIS (taglio punte o trattamento)", "rule_type": "referral", "free_service_name": "Taglio Punte o Trattamento", "promo_code": "AMICA"},
+        {"name": "Prima Visita", "description": "Per i nuovi clienti: consulenza colore personalizzata + trattamento IN OMAGGIO", "rule_type": "first_visit", "free_service_name": "Consulenza Colore + Trattamento", "promo_code": "BENVENUTA"},
+        {"name": "Buon Compleanno!", "description": "Nel mese del tuo compleanno ricevi una piega o trattamento IN OMAGGIO con qualsiasi servizio", "rule_type": "birthday", "free_service_name": "Piega o Trattamento", "promo_code": "AUGURI"},
+        {"name": "Fidelity VIP", "description": "Dopo 10 visite ricevi un servizio a scelta IN OMAGGIO", "rule_type": "loyalty_vip", "free_service_name": "Servizio a Scelta", "promo_code": "VIP10"},
+        {"name": "Card Prepagata -15%", "description": "Acquista una card prepagata e ottieni il 15% di sconto su tutti i servizi", "rule_type": "promo_code", "free_service_name": "Sconto 15% su tutti i servizi", "promo_code": "CARD15"},
+        {"name": "Abbonamento Mensile + Piega Omaggio", "description": "Sottoscrivi un abbonamento mensile e ricevi una piega extra IN OMAGGIO ogni mese", "rule_type": "promo_code", "free_service_name": "Piega Omaggio Mensile", "promo_code": "ABBO"},
+    ]
+    for d in defaults:
+        promo = {
+            "id": str(uuid.uuid4()),
+            "user_id": user_id,
+            "name": d["name"],
+            "description": d["description"],
+            "rule_type": d["rule_type"],
+            "free_service_name": d["free_service_name"],
+            "promo_code": d["promo_code"],
+            "active": True,
+            "show_on_booking": True,
+            "usage_count": 0,
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.promotions.insert_one(promo)
+
 @api_router.get("/promotions")
 async def get_promotions(current_user: dict = Depends(get_current_user)):
     """Get all promotions"""
@@ -2671,6 +2699,14 @@ async def get_promotions(current_user: dict = Depends(get_current_user)):
         {"user_id": current_user["id"]},
         {"_id": 0, "user_id": 0}
     ).sort("created_at", -1).to_list(50)
+    
+    # Auto-seed defaults if no promotions exist
+    if not promos:
+        await seed_default_promotions(current_user["id"])
+        promos = await db.promotions.find(
+            {"user_id": current_user["id"]},
+            {"_id": 0, "user_id": 0}
+        ).sort("created_at", -1).to_list(50)
     
     # Get usage counts
     for promo in promos:
