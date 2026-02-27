@@ -340,7 +340,7 @@ export default function PlanningPage() {
     try {
       await axios.put(`${API}/appointments/${editingAppointment.id}`, {
         ...formData,
-        date: format(selectedDate, 'yyyy-MM-dd')
+        date: editDate || format(selectedDate, 'yyyy-MM-dd')
       });
       toast.success('Appuntamento aggiornato!');
       setEditDialogOpen(false);
