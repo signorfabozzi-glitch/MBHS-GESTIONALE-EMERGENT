@@ -1,0 +1,87 @@
+{
+  "summary": "Completed iteration 11 testing for 5 new features: 1) Date field in edit appointment dialog, 2) Past time slot filtering on today, 3) Dashboard Uscite/Promozioni buttons, 4) Auto-apply promos at checkout, 5) Auto-select prepaid cards at checkout. All 14 backend API tests passed. All 5 main features verified working on frontend.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iteration11_features.py",
+    "/app/test_reports/pytest/pytest_iteration11.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [],
+  "updated_files": [
+    "/app/backend/tests/test_iteration11_features.py"
+  ],
+  "success_rate": {
+    "backend": "100% (14/14 tests passed)",
+    "frontend": "100% - All 5 features working correctly"
+  },
+  "test_credentials": {
+    "email": "melitobruno@gmail.com",
+    "password": "password123"
+  },
+  "seed_data_creation": "No new seed data created. Testing used existing appointments and promotions.",
+  "retest_needed": false,
+  "main_agent_can_self_test": false,
+  "context_for_next_testing_agent": "All 5 new features for iteration 11 are working. PlanningPage.jsx has getAvailableTimeSlots() helper at line 46 that filters past slots. Edit dialog has 3-column grid with Date/Time/Operator at lines 1360-1415. Dashboard MODULES array at lines 18-36 includes Uscite and Promozioni. INCASSA button at lines 1479-1506 auto-loads promos and auto-selects prepaid cards.",
+  "features_verified": {
+    "Feature_1_Date_in_Edit_Dialog": {
+      "status": "PASS",
+      "details": "Edit appointment dialog shows Data (date input), Orario (time select), Operatore (operator select) in 3-column grid. Date is pre-filled with appointment's current date (e.g., 2026-02-28).",
+      "code_location": "PlanningPage.jsx lines 1360-1416",
+      "data_testid": "edit-appointment-date"
+    },
+    "Feature_2_Past_Time_Slots_Planning": {
+      "status": "PASS",
+      "details": "When creating new appointment on today's date, only time slots from current time onwards are shown. Tested at 17:xx, showed slots starting at 17:30.",
+      "code_location": "PlanningPage.jsx lines 46-55 (getAvailableTimeSlots helper)"
+    },
+    "Feature_2b_Past_Time_Slots_BookingPage": {
+      "status": "PASS",
+      "details": "Public /prenota booking page correctly filters past time slots for today. Shows only future slots (17:30+).",
+      "code_location": "BookingPage.jsx lines 80-89 (getAvailableSlotsForDate helper)"
+    },
+    "Feature_2c_Past_Time_Slots_WebsitePage": {
+      "status": "PASS",
+      "details": "Public /sito website booking form correctly filters past time slots for today. Shows only future slots.",
+      "code_location": "WebsitePage.jsx lines 28-37 (getAvailableSlotsForDate helper)"
+    },
+    "Feature_3_Dashboard_Buttons": {
+      "status": "PASS",
+      "details": "Dashboard page shows Uscite (Registro spese) and Promozioni (Offerte e promo) buttons in the Moduli grid.",
+      "code_location": "Dashboard.jsx lines 18-36 (MODULES array)",
+      "verified_paths": ["/uscite", "/promozioni"]
+    },
+    "Feature_4_Auto_Apply_Promos": {
+      "status": "PASS",
+      "details": "When clicking INCASSA button, eligible promotions are loaded and the first promo is auto-selected. Promozioni Disponibili section shows all applicable promos.",
+      "code_location": "PlanningPage.jsx lines 1483-1490"
+    },
+    "Feature_5_Auto_Select_Prepaid_Cards": {
+      "status": "PASS (code verified)",
+      "details": "Code correctly checks for client's prepaid cards on INCASSA click. If active card with remaining_value > 0 exists, auto-switches to 'prepaid' payment and selects the card. Test client didn't have prepaid card to fully verify UI.",
+      "code_location": "PlanningPage.jsx lines 1492-1498"
+    },
+    "Regression_Login": {
+      "status": "PASS",
+      "details": "Login with melitobruno@gmail.com / password123 works correctly."
+    },
+    "Regression_Planning_Page": {
+      "status": "PASS",
+      "details": "Planning page loads correctly with time grid and operator columns."
+    }
+  },
+  "screenshots_captured": [
+    ".screenshots/dashboard_modules.png - Dashboard with Uscite and Promozioni buttons",
+    ".screenshots/edit_dialog_opened.png - Edit dialog with Data/Orario/Operatore fields",
+    ".screenshots/checkout_full.png - Checkout with Promozioni Disponibili section",
+    ".screenshots/new_apt_dialog_today.png - New appointment dialog with filtered time slots",
+    ".screenshots/booking_step2.png - Public booking with filtered time slots"
+  ]
+}
