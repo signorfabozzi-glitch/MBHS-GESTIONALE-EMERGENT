@@ -21,6 +21,7 @@ Applicazione gestionale completa per un salone di parrucchiera (MBHS SALON / Bru
 - Clic su giorno per tornare alla vista giornaliera
 - Navigazione prev/next adattata per ogni vista
 - BUG FIX: Appuntamenti online ora visibili in vista giornaliera (auto-assign operatore + colonna "Non assegnato")
+- Notifica automatica nuove prenotazioni online (polling ogni 30s, banner con dettagli, dismiss singolo/tutti, click per navigare alla data)
 
 ### Punti Fedelta (28 Feb 2026)
 - Pulsante "Azzera" per reset completo punti
@@ -42,8 +43,11 @@ Applicazione gestionale completa per un salone di parrucchiera (MBHS SALON / Bru
 - Sito pubblico: https://mbhssalon.onrender.com/sito
 - Prenotazioni: https://mbhssalon.onrender.com/prenota
 
+### Sito Web / Galleria (28 Feb 2026)
+- Galleria foto salone popolata con 8 immagini reali (4 salone + 4 lavori)
+- Foto caricate da CDN customer-assets (funzionano ovunque, anche su Render)
+
 ## Backlog
-- (P1) Foto pagina web non si caricano su Render (verificare EMERGENT_LLM_KEY)
 - (P1) Attivare Twilio SMS/WhatsApp Reminders automatici
 - (P2) Stampa ricevuta dopo checkout
 - (P2) Blocco fasce orarie per pause/ferie
