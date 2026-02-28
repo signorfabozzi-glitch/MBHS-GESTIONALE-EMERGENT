@@ -691,6 +691,49 @@ export default function PlanningPage() {
   return (
     <Layout>
       <div className="space-y-4" data-testid="planning-page">
+        {/* New Online Booking Banner */}
+        {newOnlineBookings.length > 0 && (
+          <div className="relative overflow-hidden rounded-xl border-2 border-emerald-400 bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 shadow-lg animate-pulse-slow" data-testid="new-booking-banner">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400" />
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <div className="relative">
+                    <CalendarDays className="w-6 h-6 text-emerald-600" />
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-black rounded-full flex items-center justify-center">
+                      {newOnlineBookings.length}
+                    </span>
+                  </div>
+                  <span className="font-black text-emerald-800 text-sm">
+                    {newOnlineBookings.length === 1 ? 'Nuova prenotazione online!' : `${newOnlineBookings.length} nuove prenotazioni online!`}
+                  </span>
+                </div>
+                <Button variant="ghost" size="sm" onClick={dismissAllOnlineBookings} className="text-xs text-emerald-600 hover:bg-emerald-100 h-7" data-testid="dismiss-all-bookings-btn">
+                  Segna tutte lette
+                </Button>
+              </div>
+              <div className="space-y-2">
+                {newOnlineBookings.slice(0, 3).map(booking => (
+                  <div key={booking.id} className="flex items-center gap-3 bg-white/80 rounded-lg p-2.5 border border-emerald-200 hover:shadow-md transition-shadow cursor-pointer" onClick={() => goToBookingDate(booking)} data-testid={`new-booking-${booking.id}`}>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-sm text-emerald-900 truncate">{booking.client_name}</p>
+                      <p className="text-xs text-emerald-700">
+                        {booking.date} alle {booking.time} - {booking.services?.map(s => s.name).join(', ')}
+                      </p>
+                    </div>
+                    <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); dismissOnlineBooking(booking.id); }} className="h-7 w-7 shrink-0 text-emerald-500 hover:bg-emerald-100" data-testid={`dismiss-booking-${booking.id}`}>
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+                {newOnlineBookings.length > 3 && (
+                  <p className="text-xs text-emerald-600 text-center font-medium">+{newOnlineBookings.length - 3} altre prenotazioni</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Reminder Banner */}
         {(pendingRemindersCount > 0 || inactiveClientsCount > 0 || autoReminderPending > 0) && (
           <a
