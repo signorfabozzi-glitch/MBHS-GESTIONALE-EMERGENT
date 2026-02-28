@@ -1834,7 +1834,182 @@ async def create_public_booking(data: PublicBookingRequest):
     
     await db.appointments.insert_one(appointment)
     
-    return {"success": True, "appointment_id": appointment_id}
+    return {"success": True, "appointment_id": appointment_id, "booking_code": appointment_id[:8].upper()}
+
+# --- Public: Lookup appointment by phone ---
+@api_router.get("/public/my-appointments")
+async def public_lookup_appointments(phone: str):
+    """Lookup appointments by phone number"""
+    user = await db.users.find_one({"email": "melitobruno@gmail.com"}, {"_id": 0})
+    if not user:
+        user = await db.users.find_one({}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=400, detail="Salone non configurato")
+    
+    phone_clean = phone.replace(" ", "").replace("-", "").replace("+", "")
+    client = await db.clients.find_one(
+        {"user_id": user["id"], "$or": [{"phone": phone}, {"phone": phone_clean}]},
+        {"_id": 0}
+    )
+    if not client:
+        return []
+    
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    appointments = await db.appointments.find(
+        {"user_id": user["id"], "client_id": client["id"], "date": {"$gte": today}, "status": {"$ne": "cancelled"}},
+        {"_id": 0, "user_id": 0}
+    ).sort("date", 1).to_list(20)
+    
+    return [{"id": a["id"], "date": a["date"], "time": a["time"], "services": [s["name"] for s in a.get("services", [])], "operator_name": a.get("operator_name", ""), "booking_code": a["id"][:8].upper()} for a in appointments]
+
+@api_router.put("/public/appointments/{appointment_id}")
+async def public_update_appointment(appointment_id: str, data: dict):
+    """Update a public appointment (date/time only)"""
+    phone = data.get("phone", "")
+    if not phone:
+        raise HTTPException(status_code=400, detail="Numero di telefono richiesto")
+    
+    user = await db.users.find_one({"email": "melitobruno@gmail.com"}, {"_id": 0})
+    if not user:
+        user = await db.users.find_one({}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=400, detail="Salone non configurato")
+    
+    apt = await db.appointments.find_one({"id": appointment_id, "user_id": user["id"]}, {"_id": 0})
+    if not apt:
+        raise HTTPException(status_code=404, detail="Appuntamento non trovato")
+    
+    # Verify phone matches client
+    client = await db.clients.find_one({"id": apt["client_id"]}, {"_id": 0})
+    phone_clean = phone.replace(" ", "").replace("-", "").replace("+", "")
+    if not client or (client.get("phone", "").replace(" ", "").replace("-", "").replace("+", "") != phone_clean):
+        raise HTTPException(status_code=403, detail="Numero non corrispondente")
+    
+    new_date = data.get("date", apt["date"])
+    new_time = data.get("time", apt["time"])
+    
+    # Check availability
+    existing = await db.appointments.find_one({
+        "user_id": user["id"], "date": new_date, "time": new_time,
+        "id": {"$ne": appointment_id},
+        "operator_id": apt.get("operator_id")
+    })
+    if existing:
+        raise HTTPException(status_code=400, detail="Orario già occupato")
+    
+    await db.appointments.update_one(
+        {"id": appointment_id},
+        {"$set": {"date": new_date, "time": new_time}}
+    )
+    return {"success": True}
+
+@api_router.delete("/public/appointments/{appointment_id}")
+async def public_cancel_appointment(appointment_id: str, phone: str):
+    """Cancel a public appointment"""
+    user = await db.users.find_one({"email": "melitobruno@gmail.com"}, {"_id": 0})
+    if not user:
+        user = await db.users.find_one({}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=400, detail="Salone non configurato")
+    
+    apt = await db.appointments.find_one({"id": appointment_id, "user_id": user["id"]}, {"_id": 0})
+    if not apt:
+        raise HTTPException(status_code=404, detail="Appuntamento non trovato")
+    
+    client = await db.clients.find_one({"id": apt["client_id"]}, {"_id": 0})
+    phone_clean = phone.replace(" ", "").replace("-", "").replace("+", "")
+    if not client or (client.get("phone", "").replace(" ", "").replace("-", "").replace("+", "") != phone_clean):
+        raise HTTPException(status_code=403, detail="Numero non corrispondente")
+    
+    await db.appointments.update_one(
+        {"id": appointment_id},
+        {"$set": {"status": "cancelled"}}
+    )
+    return {"success": True}
+
+# --- Color Reminder: Check clients due for color service ---
+@api_router.get("/reminders/color-expiry")
+async def get_color_expiry_reminders(current_user: dict = Depends(get_current_user)):
+    """Get clients whose last color service was 30+ days ago"""
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=30)).strftime("%Y-%m-%d")
+    
+    # Get color-related services
+    color_keywords = ["color", "colore", "tinta", "meche", "balayage", "schiaritu", "colpi di sole"]
+    services = await db.services.find({"user_id": current_user["id"]}, {"_id": 0}).to_list(200)
+    color_service_ids = [s["id"] for s in services if any(kw in s["name"].lower() for kw in color_keywords)]
+    
+    if not color_service_ids:
+        return []
+    
+    # Find appointments with color services
+    pipeline = [
+        {"$match": {"user_id": current_user["id"], "service_ids": {"$in": color_service_ids}, "status": {"$ne": "cancelled"}}},
+        {"$sort": {"date": -1}},
+        {"$group": {"_id": "$client_id", "last_date": {"$first": "$date"}, "last_services": {"$first": "$services"}, "client_name": {"$first": "$client_name"}}},
+        {"$match": {"last_date": {"$lte": cutoff}}}
+    ]
+    results = await db.appointments.aggregate(pipeline).to_list(100)
+    
+    # Get client phones
+    client_ids = [r["_id"] for r in results]
+    clients = {c["id"]: c for c in await db.clients.find({"id": {"$in": client_ids}}, {"_id": 0}).to_list(100)}
+    
+    # Check which have already been reminded
+    sent = await db.reminders_sent.find({"user_id": current_user["id"], "type": "color_expiry"}, {"_id": 0}).to_list(500)
+    sent_client_ids = {s["client_id"] for s in sent}
+    
+    return [{
+        "client_id": r["_id"],
+        "client_name": r["client_name"],
+        "last_color_date": r["last_date"],
+        "days_ago": (datetime.now(timezone.utc) - datetime.strptime(r["last_date"], "%Y-%m-%d").replace(tzinfo=timezone.utc)).days,
+        "phone": clients.get(r["_id"], {}).get("phone", ""),
+        "already_sent": r["_id"] in sent_client_ids
+    } for r in results]
+
+@api_router.post("/reminders/color-expiry/{client_id}/mark-sent")
+async def mark_color_reminder_sent(client_id: str, current_user: dict = Depends(get_current_user)):
+    await db.reminders_sent.insert_one({
+        "id": str(uuid.uuid4()),
+        "user_id": current_user["id"],
+        "type": "color_expiry",
+        "client_id": client_id,
+        "sent_at": datetime.now(timezone.utc).isoformat()
+    })
+    return {"success": True}
+
+@api_router.delete("/reminders/color-expiry/{client_id}/reset")
+async def reset_color_reminder(client_id: str, current_user: dict = Depends(get_current_user)):
+    await db.reminders_sent.delete_many({"user_id": current_user["id"], "type": "color_expiry", "client_id": client_id})
+    return {"success": True}
+
+# --- Loyalty: Modify/Delete points ---
+@api_router.put("/loyalty/{client_id}/adjust-points")
+async def adjust_loyalty_points(client_id: str, data: dict, current_user: dict = Depends(get_current_user)):
+    """Manually adjust loyalty points for a client"""
+    points = data.get("points", 0)
+    reason = data.get("reason", "Modifica manuale")
+    
+    loyalty = await get_or_create_loyalty(client_id, current_user["id"])
+    new_points = max(0, loyalty["points"] + points)
+    
+    await db.loyalty.update_one(
+        {"client_id": client_id, "user_id": current_user["id"]},
+        {"$set": {"points": new_points}}
+    )
+    
+    # Log the adjustment
+    await db.loyalty_log.insert_one({
+        "id": str(uuid.uuid4()),
+        "user_id": current_user["id"],
+        "client_id": client_id,
+        "points_change": points,
+        "reason": reason,
+        "new_total": new_points,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    })
+    
+    return {"success": True, "new_points": new_points}
 
 # ============== WHATSAPP MESSAGE ==============
 
