@@ -533,31 +533,31 @@ export default function WebsitePage() {
       <section ref={contactRef} className="py-20 sm:py-28">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
-            <p className="text-violet-400 font-bold text-sm tracking-widest uppercase mb-3">Contattaci</p>
-            <h2 className="text-3xl sm:text-4xl font-black">Prenota il Tuo Appuntamento</h2>
+            <p className="text-violet-500 font-bold text-sm tracking-widest uppercase mb-3">Contattaci</p>
+            <h2 className="text-3xl sm:text-4xl font-black text-[#1e293b]">Prenota il Tuo Appuntamento</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
             {config.address && (
-              <a href={config.maps_url} target="_blank" rel="noopener noreferrer" className="bg-[#242445]/80 border border-amber-400/25 rounded-3xl p-5 hover:border-amber-400/50 hover:shadow-lg hover:shadow-amber-400/20 transition-all duration-300 text-center" data-testid="website-contact-address">
-                <MapPin className="w-6 h-6 text-amber-400 mx-auto mb-3" />
-                <h3 className="font-bold text-white text-sm mb-1">Indirizzo</h3>
-                <p className="text-gray-400 text-xs leading-relaxed">{config.address}</p>
+              <a href={config.maps_url} target="_blank" rel="noopener noreferrer" className="bg-white border border-gray-200 rounded-3xl p-5 hover:border-amber-400/50 hover:shadow-lg transition-all duration-300 text-center" data-testid="website-contact-address">
+                <MapPin className="w-6 h-6 text-amber-500 mx-auto mb-3" />
+                <h3 className="font-bold text-[#1e293b] text-sm mb-1">Indirizzo</h3>
+                <p className="text-[#64748B] text-xs leading-relaxed">{config.address}</p>
               </a>
             )}
             {phones.length > 0 && (
-              <div className="bg-[#242445]/80 border border-rose-400/25 rounded-3xl p-5 text-center hover:shadow-lg hover:shadow-rose-400/20 transition-all duration-300">
-                <Phone className="w-6 h-6 text-rose-400 mx-auto mb-3" />
-                <h3 className="font-bold text-white text-sm mb-1">Telefono</h3>
+              <div className="bg-white border border-gray-200 rounded-3xl p-5 text-center hover:shadow-lg transition-all duration-300">
+                <Phone className="w-6 h-6 text-rose-500 mx-auto mb-3" />
+                <h3 className="font-bold text-[#1e293b] text-sm mb-1">Telefono</h3>
                 {phones.map((p, i) => (
-                  <a key={i} href={`tel:${p.replace(/\s/g, '')}`} className="text-gray-400 text-xs hover:text-white transition-colors block mt-1">{p}</a>
+                  <a key={i} href={`tel:${p.replace(/\s/g, '')}`} className="text-[#64748B] text-xs hover:text-[#0EA5E9] transition-colors block mt-1">{p}</a>
                 ))}
               </div>
             )}
             {config.email && (
-              <a href={`mailto:${config.email}`} className="bg-[#242445]/80 border border-teal-400/25 rounded-3xl p-5 hover:border-teal-400/50 hover:shadow-lg hover:shadow-teal-400/20 transition-all duration-300 text-center">
-                <Mail className="w-6 h-6 text-teal-400 mx-auto mb-3" />
-                <h3 className="font-bold text-white text-sm mb-1">Email</h3>
-                <p className="text-gray-400 text-xs">{config.email}</p>
+              <a href={`mailto:${config.email}`} className="bg-white border border-gray-200 rounded-3xl p-5 hover:shadow-lg transition-all duration-300 text-center">
+                <Mail className="w-6 h-6 text-teal-500 mx-auto mb-3" />
+                <h3 className="font-bold text-[#1e293b] text-sm mb-1">Email</h3>
+                <p className="text-[#64748B] text-xs">{config.email}</p>
               </a>
             )}
             <div className="bg-[#242445]/80 border border-violet-400/25 rounded-3xl p-5 text-center hover:shadow-lg hover:shadow-violet-400/20 transition-all duration-300">
