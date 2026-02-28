@@ -151,7 +151,6 @@ export default function PlanningPage() {
 
   // New online booking notifications
   const [newOnlineBookings, setNewOnlineBookings] = useState([]);
-  const lastCheckRef = useRef(new Date().toISOString());
 
   useEffect(() => {
     fetchData();
