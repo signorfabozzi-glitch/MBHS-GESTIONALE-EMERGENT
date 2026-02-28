@@ -614,7 +614,9 @@ export default function PlanningPage() {
   // Get appointments for a specific operator
   const getOperatorAppointments = (operatorId) => {
     if (operatorId === null) {
-      return appointments.filter(apt => !apt.operator_id);
+      // Show appointments with no operator or with an operator not in the active list
+      const activeOpIds = operators.map(op => op.id);
+      return appointments.filter(apt => !apt.operator_id || !activeOpIds.includes(apt.operator_id));
     }
     return appointments.filter(apt => apt.operator_id === operatorId);
   };
