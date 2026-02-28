@@ -858,7 +858,7 @@ export default function PlanningPage() {
         {/* Planning Grid */}
         {loading ? (
           <Skeleton className="h-[600px] w-full" />
-        ) : (
+        ) : viewMode === 'day' ? (
           <Card className="bg-white border-[#E2E8F0]/30 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] overflow-hidden">
             <CardContent className="p-0">
               {/* Header with operator names */}
