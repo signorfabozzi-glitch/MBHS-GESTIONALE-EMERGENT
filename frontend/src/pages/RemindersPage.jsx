@@ -61,14 +61,16 @@ export default function RemindersPage() {
 
   const fetchData = async () => {
     try {
-      const [remRes, inactRes, templRes] = await Promise.all([
+      const [remRes, inactRes, templRes, colorRes] = await Promise.all([
         axios.get(`${API}/reminders/tomorrow`),
         axios.get(`${API}/reminders/inactive-clients`),
-        axios.get(`${API}/reminders/templates`)
+        axios.get(`${API}/reminders/templates`),
+        axios.get(`${API}/reminders/color-expiry`).catch(() => ({ data: [] }))
       ]);
       setTomorrowReminders(remRes.data);
       setInactiveClients(inactRes.data);
       setTemplates(templRes.data);
+      setColorReminders(colorRes.data);
     } catch (err) {
       console.error(err);
       toast.error('Errore nel caricamento');
