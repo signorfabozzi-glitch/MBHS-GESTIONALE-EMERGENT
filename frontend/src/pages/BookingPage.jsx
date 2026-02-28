@@ -200,6 +200,96 @@ export default function BookingPage() {
     );
   }
 
+  // MANAGE APPOINTMENTS
+  if (showManage) {
+    return (
+      <div className="min-h-screen bg-[#1a1a2e]">
+        <Toaster position="top-center" />
+        <div className="bg-[#242445] border-b border-gray-800 py-4 px-4 sticky top-0 z-50">
+          <div className="max-w-lg mx-auto flex items-center gap-3">
+            <Button variant="ghost" size="icon" onClick={() => { setShowManage(false); setMyAppointments([]); setManagePhone(''); }} className="text-gray-400 hover:text-white hover:bg-white/10 shrink-0">
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div>
+              <h1 className="text-white text-sm font-black">Gestisci Appuntamento</h1>
+              <p className="text-gray-500 text-xs">Modifica o cancella la tua prenotazione</p>
+            </div>
+          </div>
+        </div>
+        <div className="max-w-lg mx-auto px-4 py-8">
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm text-gray-400 font-semibold mb-2 block">Il tuo numero di telefono</label>
+              <div className="flex gap-2">
+                <Input value={managePhone} onChange={(e) => setManagePhone(e.target.value)}
+                  placeholder="Es: 339 1234567" className="bg-[#242445] border-gray-800 text-white flex-1" data-testid="manage-phone-input" />
+                <Button onClick={lookupAppointments} disabled={lookingUp} className="bg-white text-[#1a1a2e] hover:bg-gray-200 font-bold" data-testid="lookup-btn">
+                  {lookingUp ? <Clock className="w-4 h-4 animate-spin" /> : 'Cerca'}
+                </Button>
+              </div>
+            </div>
+
+            {myAppointments.length > 0 && (
+              <div className="space-y-3">
+                <p className="text-white font-bold">{myAppointments.length} appuntament{myAppointments.length === 1 ? 'o' : 'i'} trovati:</p>
+                {myAppointments.map(apt => (
+                  <div key={apt.id} className="bg-[#242445] border border-gray-800 rounded-xl p-4" data-testid={`my-apt-${apt.id}`}>
+                    {editingApt?.id === apt.id ? (
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <label className="text-xs text-gray-400 mb-1 block">Data</label>
+                            <Input type="date" value={editDate} min={format(new Date(), 'yyyy-MM-dd')}
+                              onChange={(e) => setEditDate(e.target.value)} className="bg-[#1a1a2e] border-gray-700 text-white" />
+                          </div>
+                          <div>
+                            <label className="text-xs text-gray-400 mb-1 block">Ora</label>
+                            <select value={editTime} onChange={(e) => setEditTime(e.target.value)}
+                              className="w-full p-2 bg-[#1a1a2e] border border-gray-700 rounded-lg text-white text-sm">
+                              {getAvailableSlotsForDate(editDate).map(t => <option key={t} value={t}>{t}</option>)}
+                            </select>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button onClick={updateAppointment} className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold flex-1" data-testid="save-apt-btn">
+                            <CheckCircle className="w-4 h-4 mr-1" /> Salva
+                          </Button>
+                          <Button onClick={() => setEditingApt(null)} variant="outline" className="border-gray-700 text-gray-400 hover:text-white">Annulla</Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <p className="text-white font-bold">{format(new Date(apt.date + 'T00:00'), 'd MMMM yyyy', { locale: it })}</p>
+                            <p className="text-amber-400 font-black text-lg">ore {apt.time}</p>
+                          </div>
+                          <span className="text-xs bg-gray-800 text-gray-400 px-2 py-1 rounded font-mono">{apt.booking_code}</span>
+                        </div>
+                        <p className="text-sm text-gray-400 mb-1">{apt.services?.join(', ')}</p>
+                        {apt.operator_name && <p className="text-xs text-gray-500">Operatore: {apt.operator_name}</p>}
+                        <div className="flex gap-2 mt-3">
+                          <Button size="sm" onClick={() => { setEditingApt(apt); setEditDate(apt.date); setEditTime(apt.time); }}
+                            className="bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 font-bold flex-1" data-testid={`edit-apt-${apt.id}`}>
+                            <Pencil className="w-3 h-3 mr-1" /> Modifica
+                          </Button>
+                          <Button size="sm" onClick={() => cancelAppointment(apt.id)}
+                            className="bg-red-500/20 text-red-400 hover:bg-red-500/30 font-bold flex-1" data-testid={`cancel-apt-${apt.id}`}>
+                            <Trash2 className="w-3 h-3 mr-1" /> Cancella
+                          </Button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // BOOKING FORM
   if (showBooking) {
     return (
