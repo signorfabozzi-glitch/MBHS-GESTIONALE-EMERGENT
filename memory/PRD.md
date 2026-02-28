@@ -14,23 +14,27 @@ Applicazione gestionale completa per un salone di parrucchiera (MBHS SALON / Bru
 - Gestione Clienti/Servizi/Operatori, Checkout, Card Prepagate
 - Report Incassi, Backup dati, PWA, Programma Fedelta
 
-### Nuove Funzionalita (28 Feb 2026)
-- Logo BM sostituito con sfondo bianco + tutte le icone PWA
-- Pagine web e prenotazioni con tema vivace luminoso (crema/azzurro)
-- Gestione appuntamenti online (modifica/cancella dal cliente)
-- Scadenze uscite preimpostate (15gg/30gg/60gg/annuale)
-- Annullamento promemoria WhatsApp (pulsante "Annulla")
-- Promemoria colore dopo 30 giorni con invio WhatsApp
-- Punti fedelta visibili nel dialog modifica appuntamento
-- Pulsanti Aggiungi/Rimuovi punti manuali
-- Promozioni visibili su pagina /sito
-- Pulsante "Gestisci Appuntamento" sulla pagina /prenota
+### Planning (28 Feb 2026)
+- Vista Giorno/Settimana/Mese con toggle
+- Vista Settimana: 7 colonne con appuntamenti dettagliati
+- Vista Mese: calendario con conteggio e anteprime
+- Clic su giorno per tornare alla vista giornaliera
+- Navigazione prev/next adattata per ogni vista
 
-### Sessione Precedente (27 Feb 2026)
-- Cambio data/ora appuntamento, Blocco orari passati
-- Auto-selezione promo e card prepagate al checkout
-- Rimossa colonna "Non assegnato", aggiunto "Cliente Occasionale"
-- Pulsanti Uscite/Promozioni nella Dashboard
+### Punti Fedelta (28 Feb 2026)
+- Pulsante "Azzera" per reset completo punti
+- Visibili nel dialog modifica appuntamento
+- Pulsanti Aggiungi/Rimuovi/Azzera
+
+### SEO (28 Feb 2026)
+- Meta tags Open Graph per condivisione social
+- Keywords per motori di ricerca
+- Descrizione ottimizzata per Google
+
+### Logo e Tema
+- Nuovo logo BM con sfondo bianco
+- Pagine pubbliche con tema vivace crema/azzurro
+- Icone PWA aggiornate
 
 ## Link
 - Gestionale: https://mbhssalon.onrender.com (login)
@@ -38,7 +42,7 @@ Applicazione gestionale completa per un salone di parrucchiera (MBHS SALON / Bru
 - Prenotazioni: https://mbhssalon.onrender.com/prenota
 
 ## Backlog
-- (P1) Foto pagina web non si caricano su Render (richiede EMERGENT_LLM_KEY)
+- (P1) Foto pagina web non si caricano su Render (verificare EMERGENT_LLM_KEY)
 - (P1) Attivare Twilio SMS Reminders
 - (P2) Stampa ricevuta dopo checkout
 - (P2) Blocco fasce orarie per pause/ferie
