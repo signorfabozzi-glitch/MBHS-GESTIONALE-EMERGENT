@@ -405,9 +405,9 @@ export default function WebsitePage() {
                 </div>
               )}
               <div>
-                <p className="text-rose-400 font-bold text-sm tracking-widest uppercase mb-3">Chi Siamo</p>
-                <h2 className="text-3xl sm:text-4xl font-black mb-6">{config.about_title}</h2>
-                {config.about_text && <p className="text-gray-400 leading-relaxed mb-6">{config.about_text}</p>}
+                <p className="text-rose-500 font-bold text-sm tracking-widest uppercase mb-3">Chi Siamo</p>
+                <h2 className="text-3xl sm:text-4xl font-black text-[#1e293b] mb-6">{config.about_title}</h2>
+                {config.about_text && <p className="text-[#64748B] leading-relaxed mb-6">{config.about_text}</p>}
                 {config.about_text_2 && <p className="text-gray-400 leading-relaxed mb-8">{config.about_text_2}</p>}
                 {config.about_features && config.about_features.length > 0 && (
                   <div className="grid grid-cols-2 gap-3">
