@@ -101,6 +101,15 @@ export default function BookingPage() {
   const servicesRef = useRef(null);
   const contactRef = useRef(null);
 
+  // Manage appointment state
+  const [showManage, setShowManage] = useState(false);
+  const [managePhone, setManagePhone] = useState('');
+  const [myAppointments, setMyAppointments] = useState([]);
+  const [lookingUp, setLookingUp] = useState(false);
+  const [editingApt, setEditingApt] = useState(null);
+  const [editDate, setEditDate] = useState('');
+  const [editTime, setEditTime] = useState('');
+
   const [formData, setFormData] = useState({
     client_name: '', client_phone: '', service_ids: [], operator_id: '',
     date: format(new Date(), 'yyyy-MM-dd'), time: '09:00', notes: ''
