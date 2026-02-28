@@ -308,28 +308,28 @@ export default function WebsitePage() {
               <Button onClick={() => setShowBooking(true)} className="bg-[#0EA5E9] text-white hover:bg-[#0284C7] font-black text-base px-8 py-6 rounded-xl shadow-lg shadow-[#0EA5E9]/30" data-testid="website-hero-book-btn">
                 <Scissors className="w-5 h-5 mr-2" /> PRENOTA ORA
               </Button>
-              <Button onClick={() => { setShowServices(true); setTimeout(() => scrollTo(servicesRef), 100); }} variant="outline" className="border-white/20 text-white hover:bg-white/10 font-bold text-base px-8 py-6 rounded-xl">
+              <Button onClick={() => { setShowServices(true); setTimeout(() => scrollTo(servicesRef), 100); }} variant="outline" className="border-[#0EA5E9]/30 text-[#0EA5E9] hover:bg-[#0EA5E9]/10 font-bold text-base px-8 py-6 rounded-xl">
                 Scopri i Servizi <ChevronDown className="w-4 h-4 ml-2" />
               </Button>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 text-sm justify-center">
               {phones.map((p, i) => (
-                <a key={i} href={`tel:${p.replace(/\s/g, '')}`} className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors justify-center">
+                <a key={i} href={`tel:${p.replace(/\s/g, '')}`} className="flex items-center gap-2 text-[#64748B] hover:text-[#0EA5E9] transition-colors justify-center">
                   <Phone className="w-4 h-4" /> {p}
                 </a>
               ))}
               {config.address && (
-                <a href={config.maps_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors justify-center">
+                <a href={config.maps_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#64748B] hover:text-[#0EA5E9] transition-colors justify-center">
                   <MapPin className="w-4 h-4" /> {config.address}
                 </a>
               )}
             </div>
           </div>
           {config.years_experience && (
-            <div className="absolute right-4 sm:right-8 bottom-20 sm:bottom-32 bg-white/5 backdrop-blur-md border border-rose-400/30 rounded-3xl p-5 text-center hidden md:block hover:shadow-lg hover:shadow-rose-400/20 transition-all duration-300">
-              <p className="text-4xl font-black text-rose-300">{config.years_experience}</p>
-              <p className="text-xs text-gray-400 font-semibold">Anni di<br />Esperienza</p>
-              {config.year_founded && <p className="text-[10px] text-gray-600 mt-1">Dal {config.year_founded}</p>}
+            <div className="absolute right-4 sm:right-8 bottom-20 sm:bottom-32 bg-white/80 backdrop-blur-md border border-[#0EA5E9]/30 rounded-3xl p-5 text-center hidden md:block shadow-lg hover:shadow-xl transition-all duration-300">
+              <p className="text-4xl font-black text-[#0EA5E9]">{config.years_experience}</p>
+              <p className="text-xs text-[#64748B] font-semibold">Anni di<br />Esperienza</p>
+              {config.year_founded && <p className="text-[10px] text-[#94A3B8] mt-1">Dal {config.year_founded}</p>}
             </div>
           )}
         </div>
