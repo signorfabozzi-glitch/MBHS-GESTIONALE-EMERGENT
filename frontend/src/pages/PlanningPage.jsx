@@ -711,12 +711,16 @@ export default function PlanningPage() {
                 {format(selectedDate, "EEEE d MMMM yyyy", { locale: it })}
               </p>
             </div>
-            {/* Date Navigation - always visible and centered on mobile */}
+            {/* Date Navigation */}
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => setSelectedDate(subDays(selectedDate, 1))}
+                onClick={() => {
+                  if (viewMode === 'day') setSelectedDate(subDays(selectedDate, 1));
+                  else if (viewMode === 'week') setSelectedDate(subWeeks(selectedDate, 1));
+                  else setSelectedDate(subMonths(selectedDate, 1));
+                }}
                 className="border-[#E2E8F0] h-10 w-10"
                 data-testid="prev-day-btn"
               >
@@ -732,12 +736,26 @@ export default function PlanningPage() {
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => setSelectedDate(addDays(selectedDate, 1))}
+                onClick={() => {
+                  if (viewMode === 'day') setSelectedDate(addDays(selectedDate, 1));
+                  else if (viewMode === 'week') setSelectedDate(addWeeks(selectedDate, 1));
+                  else setSelectedDate(addMonths(selectedDate, 1));
+                }}
                 className="border-[#E2E8F0] h-10 w-10"
                 data-testid="next-day-btn"
               >
                 <ChevronRight className="w-5 h-5" />
               </Button>
+              <div className="flex border border-[#E2E8F0] rounded-lg overflow-hidden ml-2">
+                {[{key:'day',label:'Giorno'},{key:'week',label:'Settimana'},{key:'month',label:'Mese'}].map(v => (
+                  <Button key={v.key} variant="ghost" size="sm"
+                    onClick={() => setViewMode(v.key)}
+                    className={`rounded-none text-xs px-3 h-10 ${viewMode === v.key ? 'bg-[#0EA5E9] text-white hover:bg-[#0EA5E9]' : 'text-[#64748B] hover:bg-gray-100'}`}
+                    data-testid={`view-${v.key}-btn`}>
+                    {v.label}
+                  </Button>
+                ))}
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
