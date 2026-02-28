@@ -21,8 +21,8 @@ import {
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { ChevronLeft, ChevronRight, Plus, Clock, Loader2, Search, X, Repeat, Check, Trash2, Edit3, User, CreditCard, Banknote, Percent, Euro, CheckCircle, Star, MessageSquare, Bell, UserPlus, Ticket, Gift } from 'lucide-react';
-import { format, addDays, subDays } from 'date-fns';
+import { ChevronLeft, ChevronRight, Plus, Clock, Loader2, Search, X, Repeat, Check, Trash2, Edit3, User, CreditCard, Banknote, Percent, Euro, CheckCircle, Star, MessageSquare, Bell, UserPlus, Ticket, Gift, CalendarDays, LayoutGrid } from 'lucide-react';
+import { format, addDays, subDays, startOfWeek, endOfWeek, addWeeks, subWeeks, startOfMonth, endOfMonth, addMonths, subMonths, eachDayOfInterval, isSameDay, isSameMonth, isToday } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { toast } from 'sonner';
 
