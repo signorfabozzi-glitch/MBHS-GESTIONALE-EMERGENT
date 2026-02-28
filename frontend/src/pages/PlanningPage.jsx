@@ -1227,10 +1227,23 @@ export default function PlanningPage() {
                 Nuovo Appuntamento
               </DialogTitle>
               <DialogDescription>
-                {format(selectedDate, "EEEE d MMMM yyyy", { locale: it })} alle {formData.time}
+                {formData.date
+                  ? format(new Date(formData.date + 'T00:00:00'), "EEEE d MMMM yyyy", { locale: it })
+                  : format(selectedDate, "EEEE d MMMM yyyy", { locale: it })} alle {formData.time}
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+              {/* Date Picker */}
+              <div className="space-y-2">
+                <Label className="text-[#0F172A] font-semibold">Data</Label>
+                <Input
+                  type="date"
+                  value={formData.date || format(selectedDate, 'yyyy-MM-dd')}
+                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                  className="bg-white border-2 border-[#E2E8F0] text-[#0F172A] font-medium"
+                  data-testid="appointment-date-input"
+                />
+              </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label className="text-[#0F172A] font-semibold">Cliente</Label>
