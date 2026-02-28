@@ -149,6 +149,10 @@ export default function PlanningPage() {
   // Touch swipe
   const touchStartRef = useRef(null);
 
+  // New online booking notifications
+  const [newOnlineBookings, setNewOnlineBookings] = useState([]);
+  const lastCheckRef = useRef(new Date().toISOString());
+
   useEffect(() => {
     fetchData();
     fetchReminderCounts();
@@ -159,6 +163,47 @@ export default function PlanningPage() {
     if (viewMode === 'week') fetchWeekData();
     if (viewMode === 'month') fetchMonthData();
   }, [selectedDate, viewMode]);
+
+  // Poll for new online bookings every 30 seconds
+  useEffect(() => {
+    const checkNewBookings = async () => {
+      try {
+        const res = await axios.get(`${API}/notifications/new-bookings?since=${encodeURIComponent(lastCheckRef.current)}`);
+        const unseen = res.data.filter(b => !b.seen_at);
+        if (unseen.length > 0) {
+          setNewOnlineBookings(prev => {
+            const existingIds = prev.map(b => b.id);
+            const newOnes = unseen.filter(b => !existingIds.includes(b.id));
+            return [...newOnes, ...prev];
+          });
+        }
+      } catch { /* silent */ }
+    };
+    checkNewBookings();
+    const interval = setInterval(checkNewBookings, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const dismissOnlineBooking = async (aptId) => {
+    try {
+      await axios.post(`${API}/notifications/mark-seen`, { appointment_ids: [aptId] });
+      setNewOnlineBookings(prev => prev.filter(b => b.id !== aptId));
+    } catch { /* silent */ }
+  };
+
+  const dismissAllOnlineBookings = async () => {
+    try {
+      const ids = newOnlineBookings.map(b => b.id);
+      await axios.post(`${API}/notifications/mark-seen`, { appointment_ids: ids });
+      setNewOnlineBookings([]);
+    } catch { /* silent */ }
+  };
+
+  const goToBookingDate = (booking) => {
+    setSelectedDate(new Date(booking.date + 'T00:00:00'));
+    setViewMode('day');
+    dismissOnlineBooking(booking.id);
+  };
 
   useEffect(() => {
     // Scroll to 8:00 on load
