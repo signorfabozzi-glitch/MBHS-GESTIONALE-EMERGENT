@@ -1,0 +1,111 @@
+{
+  "summary": "Bug fix verification for online appointments not appearing in daily planning view. All backend tests passed (12/12). Frontend functionality verified working. The fix correctly auto-assigns first active operator when booking via public page without selecting operator. Daily, weekly, and monthly views all function correctly.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_online_booking_operator_fix.py",
+    "/app/test_reports/pytest/pytest_online_booking_fix.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [],
+  "updated_files": [
+    "/app/backend/tests/test_online_booking_operator_fix.py"
+  ],
+  "success_rate": {
+    "backend": "100% (12/12 tests passed)",
+    "frontend": "100% - All features verified working"
+  },
+  "test_credentials": {
+    "email": "melitobruno@gmail.com",
+    "password": "password123"
+  },
+  "seed_data_creation": "No new seed data created. Tests used existing services and operators, created temporary test appointments that were cleaned up.",
+  "retest_needed": false,
+  "main_agent_can_self_test": false,
+  "context_for_next_testing_agent": "Bug fix for online booking operator auto-assign is working correctly. The fix is in backend/server.py lines 1803-1819 (create_public_booking function). Frontend PlanningPage.jsx has 'Non assegnato' column logic at lines 639-644. All existing appointments have operators assigned.",
+  "features_verified": {
+    "BUG_FIX_1_Auto_Assign_Operator": {
+      "status": "PASS",
+      "details": "When booking via /prenota without selecting operator, the backend auto-assigns first active operator. Tested via API and verified appointment.operator_id is populated.",
+      "code_location": "server.py lines 1803-1819",
+      "test_method": "test_public_booking_without_operator_gets_auto_assigned"
+    },
+    "BUG_FIX_2_Explicit_Operator_Selection": {
+      "status": "PASS",
+      "details": "When user explicitly selects an operator on /prenota, that selection is preserved correctly.",
+      "test_method": "test_public_booking_with_operator_keeps_selected_operator"
+    },
+    "BUG_FIX_3_Daily_View_Shows_Online_Appointments": {
+      "status": "PASS",
+      "details": "Appointments created via public booking appear in daily planning grid because they now have operator_id assigned.",
+      "test_method": "test_appointments_appear_in_daily_view_query"
+    },
+    "FEATURE_Daily_View": {
+      "status": "PASS",
+      "details": "Daily planning view shows time grid with operator columns. Appointments displayed with correct colors and client names.",
+      "screenshot": ".screenshots/planning_page_loaded.png"
+    },
+    "FEATURE_Weekly_View": {
+      "status": "PASS",
+      "details": "Weekly view shows all 7 days with appointment cards. Shows client name, time, and service details.",
+      "screenshot": ".screenshots/weekly_view.png"
+    },
+    "FEATURE_Monthly_View": {
+      "status": "PASS",
+      "details": "Monthly calendar view shows appointment counts and previews for each day.",
+      "screenshot": ".screenshots/monthly_view.png"
+    },
+    "FEATURE_Login_Flow": {
+      "status": "PASS",
+      "details": "Login with melitobruno@gmail.com / password123 works correctly.",
+      "test_method": "test_login_valid_credentials"
+    },
+    "FEATURE_Internal_Appointment_Creation": {
+      "status": "PASS",
+      "details": "Creating appointments from planning page with operator works. Creating without operator also works (frontend 'Non assegnato' column catches these).",
+      "test_methods": ["test_internal_appointment_with_operator", "test_internal_appointment_without_operator"]
+    },
+    "FEATURE_Edit_Appointment": {
+      "status": "PASS",
+      "details": "Edit dialog opens when clicking appointment. Shows Date, Time, Operator fields with Elimina (Delete), Annulla (Cancel), Salva (Save) buttons.",
+      "screenshot": ".screenshots/edit_appointment_dialog.png"
+    },
+    "FEATURE_Update_Appointment_Time": {
+      "status": "PASS",
+      "details": "Updating appointment time via API works correctly.",
+      "test_method": "test_update_appointment_time"
+    },
+    "FEATURE_Update_Appointment_Operator": {
+      "status": "PASS",
+      "details": "Changing operator for an appointment works. operator_id, operator_name, operator_color all updated.",
+      "test_method": "test_update_appointment_operator"
+    },
+    "FEATURE_Delete_Appointment": {
+      "status": "PASS",
+      "details": "Deleting appointment via API works. Returns 404 when trying to GET deleted appointment.",
+      "test_method": "test_delete_appointment"
+    },
+    "FEATURE_Public_Booking_Page": {
+      "status": "PASS",
+      "details": "Public booking page (/prenota) has 3-step flow: Services -> Date/Time/Operator -> Client Details. Operator dropdown defaults to 'Nessuna preferenza' (empty).",
+      "screenshots": [".screenshots/public_booking_landing.png", ".screenshots/booking_step2_datetime.png"]
+    }
+  },
+  "bug_fix_summary": {
+    "original_bug": "Appointments booked via /prenota without selecting operator were not visible in daily planning grid view, but appeared in weekly and monthly views.",
+    "root_cause": "The daily planning grid only renders columns for active operators. Appointments without operator_id had no column to appear in.",
+    "fix_applied": [
+      "Backend (server.py lines 1813-1819): Auto-assigns first active operator when public booking has no operator_id selected",
+      "Frontend (PlanningPage.jsx lines 639-644): Added 'Non assegnato' column as safety net for any appointments with null/unmatched operator_id",
+      "Data migration: Existing 23 appointments without operator were bulk-updated (mentioned in problem statement)"
+    ],
+    "verification": "All tests pass. Online bookings now correctly appear in daily view."
+  }
+}
