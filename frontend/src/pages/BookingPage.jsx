@@ -741,7 +741,7 @@ export default function BookingPage() {
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button onClick={() => setShowBooking(true)} className="bg-gradient-to-r from-amber-400 to-rose-400 text-[#1a1a2e] hover:from-amber-300 hover:to-rose-300 font-black text-base px-10 py-6 rounded-2xl w-full sm:w-auto shadow-lg shadow-amber-400/20" data-testid="contact-book-btn">
+            <Button onClick={() => setShowBooking(true)} className="bg-[#0EA5E9] text-white hover:bg-[#0284C7] font-black text-base px-10 py-6 rounded-2xl w-full sm:w-auto shadow-lg shadow-[#0EA5E9]/30" data-testid="contact-book-btn">
               <Scissors className="w-5 h-5 mr-2" /> PRENOTA ORA
             </Button>
             <Button onClick={openWhatsApp} className="bg-[#25D366] hover:bg-[#20bd5a] text-[#1e293b] font-bold text-base px-10 py-6 rounded-2xl w-full sm:w-auto shadow-lg shadow-green-400/20" data-testid="contact-whatsapp-btn">
@@ -788,7 +788,7 @@ export default function BookingPage() {
 
       {/* Fixed bottom CTA on mobile */}
       <div className="fixed bottom-0 left-0 right-0 p-3 bg-white/95 backdrop-blur-md border-t border-gray-200 sm:hidden z-50">
-        <Button onClick={() => setShowBooking(true)} className="w-full bg-gradient-to-r from-amber-400 to-rose-400 text-[#1a1a2e] hover:from-amber-300 hover:to-rose-300 font-black py-5 rounded-2xl shadow-lg" data-testid="mobile-book-btn">
+        <Button onClick={() => setShowBooking(true)} className="w-full bg-[#0EA5E9] text-white hover:bg-[#0284C7] font-black py-5 rounded-2xl shadow-lg" data-testid="mobile-book-btn">
           <Scissors className="w-5 h-5 mr-2" /> PRENOTA ORA
         </Button>
       </div>
