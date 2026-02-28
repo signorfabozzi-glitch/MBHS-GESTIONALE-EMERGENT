@@ -240,7 +240,7 @@ export default function BookingPage() {
                           <div>
                             <label className="text-xs text-[#64748B] mb-1 block">Data</label>
                             <Input type="date" value={editDate} min={format(new Date(), 'yyyy-MM-dd')}
-                              onChange={(e) => setEditDate(e.target.value)} className="bg-[#1a1a2e] border-gray-700 text-[#1e293b]" />
+                              onChange={(e) => setEditDate(e.target.value)} className="bg-gray-50 border-gray-200 text-[#1e293b]" />
                           </div>
                           <div>
                             <label className="text-xs text-[#64748B] mb-1 block">Ora</label>
