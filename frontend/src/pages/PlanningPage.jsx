@@ -301,11 +301,11 @@ export default function PlanningPage() {
   };
 
   const openNewAppointmentForDate = (date) => {
-    setSelectedDate(date);
     setClientSearch('');
     setShowClientDropdown(false);
     setFormData({
-      client_id: '', service_ids: [], operator_id: '', time: '09:00', notes: ''
+      client_id: '', service_ids: [], operator_id: '', time: '09:00', notes: '',
+      date: format(date, 'yyyy-MM-dd')
     });
     setDialogOpen(true);
   };
