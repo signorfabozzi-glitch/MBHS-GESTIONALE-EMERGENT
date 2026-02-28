@@ -339,6 +339,8 @@ export default function PlanningPage() {
       setNewClientPhone('');
       setClientSearch('');
       fetchData();
+      if (viewMode === 'week') fetchWeekData();
+      if (viewMode === 'month') fetchMonthData();
     } catch (err) {
       toast.error(err.response?.data?.detail || 'Errore nella creazione');
     } finally {
