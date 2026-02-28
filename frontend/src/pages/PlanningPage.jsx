@@ -1355,6 +1355,50 @@ export default function PlanningPage() {
                 </div>
               )}
 
+              {/* Loyalty Points Display */}
+              {editingAppointment?.client_id && editingAppointment.client_id !== 'generic' && (
+                <div className="p-3 bg-amber-50 border-2 border-amber-200 rounded-lg" data-testid="loyalty-points-display">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Star className="w-5 h-5 text-amber-500 fill-amber-500" />
+                      <span className="font-bold text-amber-800">Punti Fedelta: {clientLoyalty.points}</span>
+                    </div>
+                    <div className="flex gap-1">
+                      <Button type="button" variant="outline" size="sm"
+                        className="h-7 text-xs border-green-300 text-green-700 hover:bg-green-50"
+                        onClick={async () => {
+                          const pts = prompt('Quanti punti aggiungere?', '10');
+                          if (pts && !isNaN(pts)) {
+                            try {
+                              const res = await axios.put(`${API}/loyalty/${editingAppointment.client_id}/adjust-points`, { points: parseInt(pts), reason: 'Aggiunta manuale' });
+                              setClientLoyalty({ ...clientLoyalty, points: res.data.new_points });
+                              toast.success(`+${pts} punti aggiunti`);
+                            } catch { toast.error('Errore'); }
+                          }
+                        }}
+                        data-testid="add-points-btn">
+                        <Plus className="w-3 h-3 mr-1" /> Aggiungi
+                      </Button>
+                      <Button type="button" variant="outline" size="sm"
+                        className="h-7 text-xs border-red-300 text-red-700 hover:bg-red-50"
+                        onClick={async () => {
+                          const pts = prompt('Quanti punti rimuovere?', '10');
+                          if (pts && !isNaN(pts)) {
+                            try {
+                              const res = await axios.put(`${API}/loyalty/${editingAppointment.client_id}/adjust-points`, { points: -parseInt(pts), reason: 'Rimozione manuale' });
+                              setClientLoyalty({ ...clientLoyalty, points: res.data.new_points });
+                              toast.success(`-${pts} punti rimossi`);
+                            } catch { toast.error('Errore'); }
+                          }
+                        }}
+                        data-testid="remove-points-btn">
+                        <Trash2 className="w-3 h-3 mr-1" /> Rimuovi
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="grid grid-cols-3 gap-3">
                 <div className="space-y-2">
                   <Label className="text-[#0F172A] font-semibold">Data</Label>
