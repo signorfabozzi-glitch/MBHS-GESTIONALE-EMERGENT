@@ -695,6 +695,89 @@ export default function RemindersPage() {
           </CardContent>
         </Card>
 
+        {/* Color Expiry Reminders (30 days) */}
+        {colorReminders.length > 0 && (
+          <Card className="border-[#E2E8F0]/30">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg font-bold text-[#0F172A] flex items-center gap-2">
+                <Palette className="w-5 h-5 text-purple-500" />
+                Scadenza Colore (30+ giorni)
+                <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-semibold">
+                  {colorReminders.filter(c => !c.already_sent).length} da avvisare
+                </span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {colorReminders.map((cr) => (
+                  <div key={cr.client_id}
+                    className={`p-4 rounded-xl border-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${
+                      cr.already_sent ? 'border-green-200 bg-green-50' : 'border-purple-200 bg-purple-50'
+                    }`}
+                    data-testid={`color-reminder-${cr.client_id}`}>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="font-bold text-[#0F172A] truncate">{cr.client_name}</p>
+                        {cr.already_sent && (
+                          <span className="text-xs bg-green-200 text-green-800 px-2 py-0.5 rounded-full font-semibold flex items-center gap-1">
+                            <Check className="w-3 h-3" /> Inviato
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-3 text-sm mt-1 flex-wrap">
+                        <span className="text-purple-700 font-semibold flex items-center gap-1">
+                          <Clock className="w-3.5 h-3.5" /> {cr.days_ago} giorni fa
+                        </span>
+                        {cr.phone && (
+                          <span className="text-[#334155] flex items-center gap-1">
+                            <Phone className="w-3.5 h-3.5" /> {cr.phone}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-[#64748B] mt-1">Ultimo colore: {cr.last_color_date}</p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {cr.already_sent ? (
+                        <Button variant="outline" size="sm"
+                          onClick={async () => {
+                            try {
+                              await axios.delete(`${API}/reminders/color-expiry/${cr.client_id}/reset`);
+                              setColorReminders(prev => prev.map(c => c.client_id === cr.client_id ? {...c, already_sent: false} : c));
+                              toast.success('Annullato');
+                            } catch { toast.error('Errore'); }
+                          }}
+                          className="border-red-300 text-red-600 hover:bg-red-50"
+                          data-testid={`reset-color-${cr.client_id}`}>
+                          <XCircle className="w-4 h-4 mr-1" /> Annulla
+                        </Button>
+                      ) : (
+                        <Button
+                          onClick={() => {
+                            if (!cr.phone) { toast.error('Numero mancante'); return; }
+                            const phone = formatPhone(cr.phone);
+                            const msg = encodeURIComponent(`Ciao ${cr.client_name}! Sono passati ${cr.days_ago} giorni dal tuo ultimo colore. E' il momento di rinfrescare il look! Prenota su MBHS SALON.`);
+                            window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+                            axios.post(`${API}/reminders/color-expiry/${cr.client_id}/mark-sent`)
+                              .then(() => {
+                                setColorReminders(prev => prev.map(c => c.client_id === cr.client_id ? {...c, already_sent: true} : c));
+                                toast.success(`Promemoria colore inviato a ${cr.client_name}`);
+                              })
+                              .catch(() => {});
+                          }}
+                          disabled={!cr.phone}
+                          className="bg-purple-500 hover:bg-purple-600 text-white font-bold"
+                          data-testid={`send-color-${cr.client_id}`}>
+                          <MessageSquare className="w-4 h-4 mr-2" /> Avvisa Colore
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Send Message Dialog */}
         <Dialog open={msgDialog} onOpenChange={setMsgDialog}>
           <DialogContent className="sm:max-w-[520px]">
