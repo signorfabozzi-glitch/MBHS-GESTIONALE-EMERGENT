@@ -186,7 +186,7 @@ export default function BookingPage() {
   // SUCCESS PAGE
   if (success) {
     return (
-      <div className="min-h-screen bg-[#1a1a2e] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-[#FFF8F0] via-[#FEF3E2] to-[#F0F4FF] flex items-center justify-center p-4">
         <Toaster position="top-center" />
         <div className="max-w-md w-full text-center">
           <CheckCircle className="w-20 h-20 mx-auto text-emerald-400 mb-6" />
@@ -245,7 +245,7 @@ export default function BookingPage() {
                           <div>
                             <label className="text-xs text-[#64748B] mb-1 block">Ora</label>
                             <select value={editTime} onChange={(e) => setEditTime(e.target.value)}
-                              className="w-full p-2 bg-[#1a1a2e] border border-gray-700 rounded-lg text-[#1e293b] text-sm">
+                              className="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg text-[#1e293b] text-sm">
                               {getAvailableSlotsForDate(editDate).map(t => <option key={t} value={t}>{t}</option>)}
                             </select>
                           </div>
@@ -401,11 +401,11 @@ export default function BookingPage() {
 
   // ==================== LANDING PAGE ====================
   return (
-    <div className="min-h-screen bg-[#1a1a2e] text-[#1e293b]" data-testid="booking-welcome">
+    <div className="min-h-screen bg-gradient-to-br from-[#FFF8F0] via-[#FEF3E2] to-[#F0F4FF] text-[#1e293b]" data-testid="booking-welcome">
       <Toaster position="top-center" />
 
       {/* NAVBAR */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#1a1a2e]/90 backdrop-blur-md border-b border-amber-400/10">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img src="/logo.png?v=3" alt="MBHS Salon" className="w-10 h-10 rounded-lg" />
@@ -787,7 +787,7 @@ export default function BookingPage() {
       </footer>
 
       {/* Fixed bottom CTA on mobile */}
-      <div className="fixed bottom-0 left-0 right-0 p-3 bg-[#1a1a2e]/95 backdrop-blur-md border-t border-amber-400/10 sm:hidden z-50">
+      <div className="fixed bottom-0 left-0 right-0 p-3 bg-white/95 backdrop-blur-md border-t border-gray-200 sm:hidden z-50">
         <Button onClick={() => setShowBooking(true)} className="w-full bg-gradient-to-r from-amber-400 to-rose-400 text-[#1a1a2e] hover:from-amber-300 hover:to-rose-300 font-black py-5 rounded-2xl shadow-lg" data-testid="mobile-book-btn">
           <Scissors className="w-5 h-5 mr-2" /> PRENOTA ORA
         </Button>
