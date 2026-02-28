@@ -999,6 +999,110 @@ export default function PlanningPage() {
               </div>
             </CardContent>
           </Card>
+        ) : viewMode === 'week' ? (
+          /* WEEK VIEW */
+          <Card className="bg-white border-[#E2E8F0]/30 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] overflow-hidden">
+            <CardContent className="p-0">
+              <div className="grid grid-cols-7 border-b-2 border-[#0EA5E9]/40 bg-gradient-to-r from-[#0EA5E9]/10 to-[#E2E8F0]/20">
+                {eachDayOfInterval({ start: startOfWeek(selectedDate, { weekStartsOn: 1 }), end: endOfWeek(selectedDate, { weekStartsOn: 1 }) }).map(day => {
+                  const dateStr = format(day, 'yyyy-MM-dd');
+                  const dayApts = weekAppointments[dateStr] || [];
+                  const isT = isToday(day);
+                  return (
+                    <div key={dateStr}
+                      className={`p-3 border-r border-[#E2E8F0] cursor-pointer hover:bg-[#0EA5E9]/5 transition-colors ${isT ? 'bg-[#0EA5E9]/10' : ''}`}
+                      onClick={() => { setSelectedDate(day); setViewMode('day'); }}
+                      data-testid={`week-day-${dateStr}`}>
+                      <div className="text-center">
+                        <p className={`text-xs font-bold uppercase ${isT ? 'text-[#0EA5E9]' : 'text-[#64748B]'}`}>
+                          {format(day, 'EEE', { locale: it })}
+                        </p>
+                        <p className={`text-2xl font-black ${isT ? 'text-[#0EA5E9]' : 'text-[#0F172A]'}`}>
+                          {format(day, 'd')}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="grid grid-cols-7" style={{ minHeight: 'calc(100vh - 320px)' }}>
+                {eachDayOfInterval({ start: startOfWeek(selectedDate, { weekStartsOn: 1 }), end: endOfWeek(selectedDate, { weekStartsOn: 1 }) }).map(day => {
+                  const dateStr = format(day, 'yyyy-MM-dd');
+                  const dayApts = weekAppointments[dateStr] || [];
+                  return (
+                    <div key={dateStr} className="border-r border-[#E2E8F0] p-2 overflow-auto">
+                      {dayApts.length === 0 ? (
+                        <p className="text-center text-xs text-[#94A3B8] mt-4">Nessun appuntamento</p>
+                      ) : (
+                        <div className="space-y-1.5">
+                          {dayApts.sort((a,b) => a.time.localeCompare(b.time)).map(apt => (
+                            <div key={apt.id}
+                              className={`p-2 rounded-lg text-xs cursor-pointer hover:scale-[1.02] transition-all border ${
+                                apt.status === 'completed' ? 'bg-emerald-50 border-emerald-200' : 'bg-[#0EA5E9]/10 border-[#0EA5E9]/30'
+                              }`}
+                              onClick={() => { setSelectedDate(day); setViewMode('day'); }}
+                              data-testid={`week-apt-${apt.id}`}>
+                              <p className="font-black text-[#0EA5E9]">{apt.time}</p>
+                              <p className="font-bold text-[#0F172A] truncate">{apt.client_name}</p>
+                              <p className="text-[#64748B] truncate">{apt.services?.map(s => s.name).join(', ')}</p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+          /* MONTH VIEW */
+          <Card className="bg-white border-[#E2E8F0]/30 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] overflow-hidden">
+            <CardContent className="p-0">
+              <div className="grid grid-cols-7 border-b-2 border-[#0EA5E9]/40 bg-gradient-to-r from-[#0EA5E9]/10 to-[#E2E8F0]/20">
+                {['Lun','Mar','Mer','Gio','Ven','Sab','Dom'].map(d => (
+                  <div key={d} className="p-2 text-center text-xs font-bold text-[#64748B] uppercase border-r border-[#E2E8F0]">{d}</div>
+                ))}
+              </div>
+              <div className="grid grid-cols-7">
+                {(() => {
+                  const ms = startOfMonth(selectedDate);
+                  const me = endOfMonth(selectedDate);
+                  const calStart = startOfWeek(ms, { weekStartsOn: 1 });
+                  const calEnd = endOfWeek(me, { weekStartsOn: 1 });
+                  return eachDayOfInterval({ start: calStart, end: calEnd }).map(day => {
+                    const dateStr = format(day, 'yyyy-MM-dd');
+                    const dayApts = monthAppointments[dateStr] || [];
+                    const inMonth = isSameMonth(day, selectedDate);
+                    const isT = isToday(day);
+                    return (
+                      <div key={dateStr}
+                        className={`border-r border-b border-[#E2E8F0] p-1.5 min-h-[80px] cursor-pointer hover:bg-[#0EA5E9]/5 transition-colors ${!inMonth ? 'bg-gray-50' : ''} ${isT ? 'bg-[#0EA5E9]/10' : ''}`}
+                        onClick={() => { setSelectedDate(day); setViewMode('day'); }}
+                        data-testid={`month-day-${dateStr}`}>
+                        <p className={`text-sm font-bold ${isT ? 'text-[#0EA5E9]' : inMonth ? 'text-[#0F172A]' : 'text-[#CBD5E1]'}`}>
+                          {format(day, 'd')}
+                        </p>
+                        {dayApts.length > 0 && (
+                          <div className="mt-1">
+                            <span className="inline-block bg-[#0EA5E9] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                              {dayApts.length}
+                            </span>
+                            {dayApts.slice(0, 2).map(apt => (
+                              <p key={apt.id} className="text-[10px] text-[#64748B] truncate mt-0.5">
+                                {apt.time} {apt.client_name}
+                              </p>
+                            ))}
+                            {dayApts.length > 2 && <p className="text-[10px] text-[#94A3B8]">+{dayApts.length - 2} altri</p>}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  });
+                })()}
+              </div>
+            </CardContent>
+          </Card>
         )}
 
         {/* Legend */}
