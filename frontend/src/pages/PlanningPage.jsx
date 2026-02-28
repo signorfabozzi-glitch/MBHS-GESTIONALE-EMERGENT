@@ -1106,15 +1106,24 @@ export default function PlanningPage() {
                   return (
                     <div key={dateStr}
                       className={`p-3 border-r border-[#E2E8F0] cursor-pointer hover:bg-[#0EA5E9]/5 transition-colors ${isT ? 'bg-[#0EA5E9]/10' : ''}`}
-                      onClick={() => { setSelectedDate(day); setViewMode('day'); }}
                       data-testid={`week-day-${dateStr}`}>
-                      <div className="text-center">
-                        <p className={`text-xs font-bold uppercase ${isT ? 'text-[#0EA5E9]' : 'text-[#64748B]'}`}>
-                          {format(day, 'EEE', { locale: it })}
-                        </p>
-                        <p className={`text-2xl font-black ${isT ? 'text-[#0EA5E9]' : 'text-[#0F172A]'}`}>
-                          {format(day, 'd')}
-                        </p>
+                      <div className="flex items-center justify-between">
+                        <div className="text-center flex-1" onClick={() => { setSelectedDate(day); setViewMode('day'); }}>
+                          <p className={`text-xs font-bold uppercase ${isT ? 'text-[#0EA5E9]' : 'text-[#64748B]'}`}>
+                            {format(day, 'EEE', { locale: it })}
+                          </p>
+                          <p className={`text-2xl font-black ${isT ? 'text-[#0EA5E9]' : 'text-[#0F172A]'}`}>
+                            {format(day, 'd')}
+                          </p>
+                        </div>
+                        <Button
+                          variant="ghost" size="icon"
+                          className="h-7 w-7 rounded-full bg-[#0EA5E9]/10 hover:bg-[#0EA5E9]/20 text-[#0EA5E9]"
+                          onClick={(e) => { e.stopPropagation(); openNewAppointmentForDate(day); }}
+                          data-testid={`week-add-apt-${dateStr}`}
+                        >
+                          <Plus className="w-4 h-4" />
+                        </Button>
                       </div>
                     </div>
                   );
