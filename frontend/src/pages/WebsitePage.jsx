@@ -349,21 +349,21 @@ export default function WebsitePage() {
             {showServices && (
               <div className="space-y-6 mt-8 animate-in fade-in duration-300">
                 {serviceCategories.map((cat, idx) => (
-                  <div key={idx} className={`bg-[#242445]/80 border ${BORDER_COLORS[idx % 3]} rounded-3xl p-6 transition-all duration-300 hover:shadow-lg ${GLOW_COLORS[idx % 3]} hover:border-opacity-60 hover:scale-[1.01]`}>
-                    <h3 className="text-xl font-black text-white mb-1">{cat.title}</h3>
-                    {cat.desc && <p className="text-sm text-gray-400 mb-4">{cat.desc}</p>}
+                  <div key={idx} className={`bg-white border border-gray-200 rounded-3xl p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.01]`}>
+                    <h3 className="text-xl font-black text-[#1e293b] mb-1">{cat.title}</h3>
+                    {cat.desc && <p className="text-sm text-[#64748B] mb-4">{cat.desc}</p>}
                     <div className="space-y-3">
                       {(cat.items || []).map((item, i) => (
-                        <div key={i} className="flex justify-between items-center py-2 border-b border-white/5 last:border-0">
-                          <span className="font-bold text-gray-300">{item.name}</span>
-                          <span className="font-black text-amber-400 text-lg shrink-0 ml-4">{'\u20AC'} {item.price}</span>
+                        <div key={i} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
+                          <span className="font-bold text-[#334155]">{item.name}</span>
+                          <span className="font-black text-[#0EA5E9] text-lg shrink-0 ml-4">{'\u20AC'} {item.price}</span>
                         </div>
                       ))}
                     </div>
                   </div>
                 ))}
                 <div className="text-center">
-                  <Button onClick={() => setShowBooking(true)} className="bg-white text-[#1a1a2e] hover:bg-gray-200 font-bold px-8 py-6 rounded-xl">
+                  <Button onClick={() => setShowBooking(true)} className="bg-[#0EA5E9] text-white hover:bg-[#0284C7] font-bold px-8 py-6 rounded-xl shadow-lg shadow-[#0EA5E9]/30">
                     <Scissors className="w-4 h-4 mr-2" /> PRENOTA ORA
                   </Button>
                 </div>
