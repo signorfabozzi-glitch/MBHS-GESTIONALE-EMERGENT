@@ -92,7 +92,7 @@ export default function BookingPage() {
   const cmsReviews = siteData?.reviews || [];
   const cmsGallery = siteData?.gallery || [];
   const salonPhotos = cmsGallery.filter(g => g.section === 'salon');
-  const hairstylePhotos = cmsGallery.filter(g => g.section === 'gallery');
+  const hairstylePhotos = cmsGallery.filter(g => g.section === 'gallery' || g.section === 'works');
   const serviceCategories = config.service_categories || [];
 
   const getImageUrl = (item) => {
