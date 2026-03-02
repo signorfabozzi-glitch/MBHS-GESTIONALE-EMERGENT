@@ -1,54 +1,105 @@
 from fastapi import APIRouter, HTTPException, Depends, UploadFile, File
-from fastapi.responses import Response
+from fastapi.responses import Response, FileResponse
 from datetime import datetime, timezone
 import uuid
 import os
 import requests as http_requests
+import logging
 
 from database import db
 from auth import get_current_user
 from models import PublicBookingRequest
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
-
-# ============== Object Storage ==============
+# ============== Object Storage with Local Fallback ==============
 
 STORAGE_URL = "https://integrations.emergentagent.com/objstore/api/v1/storage"
 EMERGENT_KEY = os.environ.get("EMERGENT_LLM_KEY")
 APP_NAME = "mbhssalon"
 _storage_key = None
+_use_local_storage = False
+
+# Local upload directory
+LOCAL_UPLOAD_DIR = "/app/backend/uploads"
+os.makedirs(LOCAL_UPLOAD_DIR, exist_ok=True)
 
 
 def init_storage():
-    global _storage_key
+    global _storage_key, _use_local_storage
+    if _use_local_storage:
+        return None
     if _storage_key:
         return _storage_key
-    resp = http_requests.post(f"{STORAGE_URL}/init", json={"emergent_key": EMERGENT_KEY}, timeout=30)
-    resp.raise_for_status()
-    _storage_key = resp.json()["storage_key"]
-    return _storage_key
+    try:
+        resp = http_requests.post(f"{STORAGE_URL}/init", json={"emergent_key": EMERGENT_KEY}, timeout=10)
+        resp.raise_for_status()
+        _storage_key = resp.json()["storage_key"]
+        return _storage_key
+    except Exception as e:
+        logger.warning(f"Object storage unavailable, using local storage: {e}")
+        _use_local_storage = True
+        return None
 
 
 def put_object(path: str, data: bytes, content_type: str) -> dict:
-    key = init_storage()
-    resp = http_requests.put(
-        f"{STORAGE_URL}/objects/{path}",
-        headers={"X-Storage-Key": key, "Content-Type": content_type},
-        data=data, timeout=120
-    )
-    resp.raise_for_status()
-    return resp.json()
+    global _use_local_storage
+    
+    # Try remote storage first
+    if not _use_local_storage:
+        try:
+            key = init_storage()
+            if key:
+                resp = http_requests.put(
+                    f"{STORAGE_URL}/objects/{path}",
+                    headers={"X-Storage-Key": key, "Content-Type": content_type},
+                    data=data, timeout=120
+                )
+                resp.raise_for_status()
+                return resp.json()
+        except Exception as e:
+            logger.warning(f"Remote storage failed, falling back to local: {e}")
+            _use_local_storage = True
+    
+    # Fallback to local storage
+    filename = path.split("/")[-1]
+    local_path = os.path.join(LOCAL_UPLOAD_DIR, filename)
+    with open(local_path, "wb") as f:
+        f.write(data)
+    return {"path": f"local://{filename}", "size": len(data)}
 
 
 def get_object(path: str):
-    key = init_storage()
-    resp = http_requests.get(
-        f"{STORAGE_URL}/objects/{path}",
-        headers={"X-Storage-Key": key}, timeout=60
-    )
-    resp.raise_for_status()
-    return resp.content, resp.headers.get("Content-Type", "application/octet-stream")
+    global _use_local_storage
+    
+    # Check if it's a local file
+    if path.startswith("local://"):
+        filename = path.replace("local://", "")
+        local_path = os.path.join(LOCAL_UPLOAD_DIR, filename)
+        if os.path.exists(local_path):
+            with open(local_path, "rb") as f:
+                data = f.read()
+            # Determine content type from extension
+            ext = filename.split(".")[-1].lower()
+            mime_map = {"jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png", "gif": "image/gif", "webp": "image/webp"}
+            return data, mime_map.get(ext, "application/octet-stream")
+        raise HTTPException(status_code=404, detail="File non trovato")
+    
+    # Try remote storage
+    try:
+        key = init_storage()
+        if key:
+            resp = http_requests.get(
+                f"{STORAGE_URL}/objects/{path}",
+                headers={"X-Storage-Key": key}, timeout=60
+            )
+            resp.raise_for_status()
+            return resp.content, resp.headers.get("Content-Type", "application/octet-stream")
+    except Exception as e:
+        logger.error(f"Failed to get object from remote storage: {e}")
+    
+    raise HTTPException(status_code=404, detail="File non trovato")
 
 
 # ============== Default Website Config ==============

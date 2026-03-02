@@ -149,6 +149,12 @@ export default function PlanningPage() {
   // Touch swipe
   const touchStartRef = useRef(null);
 
+  // Card/Promo selection in new appointment dialog
+  const [dialogClientCards, setDialogClientCards] = useState([]);
+  const [dialogClientPromos, setDialogClientPromos] = useState([]);
+  const [preSelectedCardId, setPreSelectedCardId] = useState('');
+  const [preSelectedPromoId, setPreSelectedPromoId] = useState('');
+
   // New online booking notifications
   const [newOnlineBookings, setNewOnlineBookings] = useState([]);
 
@@ -291,12 +297,19 @@ export default function PlanningPage() {
     setSelectedOperator(operatorId);
     setClientSearch('');
     setShowClientDropdown(false);
+    setDialogClientCards([]);
+    setDialogClientPromos([]);
+    setPreSelectedCardId('');
+    setPreSelectedPromoId('');
+    setSelectedClientInfo(null);
     setFormData({
       ...formData,
       client_id: '',
+      service_ids: [],
       time: time,
       operator_id: operatorId || '',
-      date: format(selectedDate, 'yyyy-MM-dd')
+      date: format(selectedDate, 'yyyy-MM-dd'),
+      notes: ''
     });
     setDialogOpen(true);
   };
@@ -304,6 +317,11 @@ export default function PlanningPage() {
   const openNewAppointmentForDate = (date) => {
     setClientSearch('');
     setShowClientDropdown(false);
+    setDialogClientCards([]);
+    setDialogClientPromos([]);
+    setPreSelectedCardId('');
+    setPreSelectedPromoId('');
+    setSelectedClientInfo(null);
     setFormData({
       client_id: '', service_ids: [], operator_id: '', time: '09:00', notes: '',
       date: format(date, 'yyyy-MM-dd')
@@ -331,14 +349,34 @@ export default function PlanningPage() {
         payload.client_name = newClientName || 'Cliente Occasionale';
         payload.client_phone = newClientPhone || '';
       }
+      // Add pre-selected card/promo info to notes for reference
+      if (preSelectedCardId || preSelectedPromoId) {
+        const notes = [];
+        if (preSelectedCardId) {
+          const card = dialogClientCards.find(c => c.id === preSelectedCardId);
+          if (card) notes.push(`[CARD: ${card.name}]`);
+        }
+        if (preSelectedPromoId) {
+          const promo = dialogClientPromos.find(p => p.id === preSelectedPromoId);
+          if (promo) notes.push(`[PROMO: ${promo.name}]`);
+        }
+        if (notes.length > 0) {
+          payload.notes = (payload.notes ? payload.notes + ' ' : '') + notes.join(' ');
+        }
+      }
       await axios.post(`${API}/appointments`, payload);
-      toast.success('Appuntamento creato!');
+      toast.success('Appuntamento creato!' + (preSelectedCardId || preSelectedPromoId ? ' Card/Promo salvate nelle note.' : ''));
       setDialogOpen(false);
       setFormData({ client_id: '', service_ids: [], operator_id: '', time: '09:00', notes: '', date: '' });
       setNewClientMode(false);
       setNewClientName('');
       setNewClientPhone('');
       setClientSearch('');
+      setDialogClientCards([]);
+      setDialogClientPromos([]);
+      setPreSelectedCardId('');
+      setPreSelectedPromoId('');
+      setSelectedClientInfo(null);
       fetchData();
       if (viewMode === 'week') fetchWeekData();
       if (viewMode === 'month') fetchMonthData();
@@ -392,7 +430,7 @@ export default function PlanningPage() {
   };
 
   // Get client info when selected
-  const handleClientSelect = (clientId, clientName) => {
+  const handleClientSelect = async (clientId, clientName) => {
     setFormData({ ...formData, client_id: clientId });
     setClientSearch(clientName);
     setShowClientDropdown(false);
@@ -400,6 +438,24 @@ export default function PlanningPage() {
     // Find client info
     const client = clients.find(c => c.id === clientId);
     setSelectedClientInfo(client);
+    
+    // Load client's cards and eligible promos for pre-selection
+    if (clientId && clientId !== 'generic') {
+      try {
+        const [cardsRes, promosRes] = await Promise.all([
+          axios.get(`${API}/cards?client_id=${clientId}`),
+          axios.get(`${API}/promotions/check/${clientId}`)
+        ]);
+        setDialogClientCards(cardsRes.data.filter(c => c.active && c.remaining_value > 0));
+        setDialogClientPromos(promosRes.data);
+      } catch {
+        setDialogClientCards([]);
+        setDialogClientPromos([]);
+      }
+    } else {
+      setDialogClientCards([]);
+      setDialogClientPromos([]);
+    }
   };
 
   // Open edit dialog for appointment
@@ -1457,6 +1513,96 @@ export default function PlanningPage() {
                   ))}
                 </div>
               </div>
+
+              {/* Card & Promozioni del Cliente - Selezionabili per cassa */}
+              {(dialogClientCards.length > 0 || dialogClientPromos.length > 0) && (
+                <div className="space-y-3 p-3 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl">
+                  <Label className="text-green-800 font-bold flex items-center gap-2">
+                    <Ticket className="w-4 h-4" /> Card & Promozioni Disponibili
+                  </Label>
+                  <p className="text-xs text-green-600 -mt-1">Seleziona per applicare automaticamente in cassa</p>
+                  
+                  {/* Client Cards */}
+                  {dialogClientCards.length > 0 && (
+                    <div className="space-y-2">
+                      <p className="text-xs font-semibold text-green-700 uppercase">Card/Abbonamenti</p>
+                      <div className="grid grid-cols-1 gap-2">
+                        {dialogClientCards.map(card => (
+                          <button
+                            key={card.id}
+                            type="button"
+                            onClick={() => setPreSelectedCardId(preSelectedCardId === card.id ? '' : card.id)}
+                            className={`w-full p-2.5 rounded-lg border-2 text-left transition-all ${
+                              preSelectedCardId === card.id 
+                                ? 'border-green-500 bg-green-100 ring-2 ring-green-400' 
+                                : 'border-green-200 bg-white hover:border-green-400'
+                            }`}
+                            data-testid={`preselect-card-${card.id}`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <CreditCard className={`w-4 h-4 ${preSelectedCardId === card.id ? 'text-green-600' : 'text-gray-400'}`} />
+                                <div>
+                                  <p className="font-bold text-sm text-[#0F172A]">{card.name}</p>
+                                  <p className="text-[10px] text-gray-500">{card.card_type === 'subscription' ? 'Abbonamento' : 'Prepagata'}</p>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className="font-black text-green-600 text-sm">€{card.remaining_value?.toFixed(2)}</p>
+                                {card.total_services && (
+                                  <p className="text-[10px] text-gray-500">{card.total_services - card.used_services} servizi rimasti</p>
+                                )}
+                              </div>
+                            </div>
+                            {preSelectedCardId === card.id && (
+                              <div className="mt-1.5 flex items-center gap-1 text-xs text-green-700 font-semibold">
+                                <Check className="w-3 h-3" /> Verrà applicata in cassa
+                              </div>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Client Promos */}
+                  {dialogClientPromos.length > 0 && (
+                    <div className="space-y-2">
+                      <p className="text-xs font-semibold text-pink-700 uppercase">Promozioni</p>
+                      <div className="grid grid-cols-1 gap-2">
+                        {dialogClientPromos.map(promo => (
+                          <button
+                            key={promo.id}
+                            type="button"
+                            onClick={() => setPreSelectedPromoId(preSelectedPromoId === promo.id ? '' : promo.id)}
+                            className={`w-full p-2.5 rounded-lg border-2 text-left transition-all ${
+                              preSelectedPromoId === promo.id 
+                                ? 'border-pink-500 bg-pink-100 ring-2 ring-pink-400' 
+                                : 'border-pink-200 bg-white hover:border-pink-400'
+                            }`}
+                            data-testid={`preselect-promo-${promo.id}`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Gift className={`w-4 h-4 ${preSelectedPromoId === promo.id ? 'text-pink-600' : 'text-gray-400'}`} />
+                                <div>
+                                  <p className="font-bold text-sm text-[#0F172A]">{promo.name}</p>
+                                  <p className="text-[10px] text-pink-600 font-semibold">OMAGGIO: {promo.free_service_name}</p>
+                                </div>
+                              </div>
+                            </div>
+                            {preSelectedPromoId === promo.id && (
+                              <div className="mt-1.5 flex items-center gap-1 text-xs text-pink-700 font-semibold">
+                                <Check className="w-3 h-3" /> Verrà applicata in cassa
+                              </div>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
               <div className="space-y-2">
                 <Label>Note (opzionale)</Label>

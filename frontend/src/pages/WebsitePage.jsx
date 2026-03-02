@@ -153,7 +153,7 @@ export default function WebsitePage() {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div className="flex items-center gap-3">
-              <img src="/logo.png?v=3" alt={config.salon_name} className="w-9 h-9 rounded-lg" />
+              <img src="/logo.png?v=4" alt={config.salon_name} className="w-9 h-9 rounded-lg" />
               <div>
                 <h1 className="text-white text-sm font-black leading-tight">{config.salon_name || 'BRUNO MELITO HAIR'}</h1>
                 <p className="text-gray-500 text-xs">Prenota il tuo appuntamento</p>
@@ -262,7 +262,7 @@ export default function WebsitePage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-amber-200/50 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/logo.png?v=3" alt={config.salon_name} className="w-10 h-10 rounded-lg" />
+            <img src="/logo.png?v=4" alt={config.salon_name} className="w-10 h-10 rounded-lg" />
             <span className="font-black text-sm sm:text-base tracking-tight">{config.salon_name || 'BRUNO MELITO HAIR'}</span>
           </div>
           <div className="hidden sm:flex items-center gap-6 text-sm text-[#64748B]">
@@ -286,17 +286,13 @@ export default function WebsitePage() {
       {/* HERO */}
       <section className="relative min-h-screen flex items-center pt-16">
         <div className="absolute inset-0">
-          {salonPhotos.length > 0 ? (
-            <img src={getImageUrl(salonPhotos[0])} alt={config.salon_name} className="w-full h-full object-cover opacity-20" />
-          ) : (
-            <div className="w-full h-full bg-gradient-to-br from-[#0EA5E9]/10 via-[#FFF8F0] to-amber-100/30" />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-transparent to-[#FFF8F0]" />
+          <img src="/logo.png?v=4" alt={config.salon_name} className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-[#FFF8F0]" />
         </div>
         <div className="relative max-w-6xl mx-auto px-4 py-20 sm:py-32 w-full">
           <div className="text-center max-w-3xl mx-auto">
             <div className="flex justify-center mb-8">
-              <img src="/logo.png?v=3" alt={config.salon_name} className="w-48 h-48 sm:w-64 sm:h-64 object-contain drop-shadow-2xl rounded-2xl" />
+              <img src="/logo.png?v=4" alt={config.salon_name} className="w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80 object-contain drop-shadow-2xl rounded-3xl border-2 border-white/30 shadow-2xl" />
             </div>
             <div className="inline-block bg-[#0EA5E9]/10 backdrop-blur-sm text-[#0EA5E9] text-xs font-bold px-4 py-2 rounded-full border border-[#0EA5E9]/30 mb-6">
               {config.subtitle || 'SOLO PER APPUNTAMENTO'}
@@ -613,7 +609,7 @@ export default function WebsitePage() {
       <footer className="py-12 border-t border-gray-200 bg-white/60">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex flex-col items-center gap-6">
-            <img src="/logo.png?v=3" alt={config.salon_name} className="w-14 h-14 rounded-2xl border border-gray-200 shadow-sm" />
+            <img src="/logo.png?v=4" alt={config.salon_name} className="w-14 h-14 rounded-2xl border border-gray-200 shadow-sm" />
             <p className="text-[#1e293b] text-sm font-bold">{config.salon_name || 'BRUNO MELITO HAIR'}</p>
             
             <div className="flex items-center gap-4">

@@ -178,3 +178,103 @@ async def delete_card_template(template_id: str, current_user: dict = Depends(ge
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Template non trovato")
     return {"success": True}
+
+
+# ============== CARD ALERTS (Expiring & Low Balance) ==============
+
+from datetime import timedelta
+
+@router.get("/cards/alerts/expiring")
+async def get_expiring_cards(days: int = 30, current_user: dict = Depends(get_current_user)):
+    """Get cards expiring within X days"""
+    today = datetime.now(timezone.utc).date()
+    limit_date = today + timedelta(days=days)
+    
+    cards = await db.cards.find(
+        {"user_id": current_user["id"], "active": True, "valid_until": {"$ne": None}},
+        {"_id": 0, "user_id": 0}
+    ).to_list(500)
+    
+    expiring = []
+    for card in cards:
+        if card.get("valid_until"):
+            try:
+                exp_date = datetime.strptime(card["valid_until"], "%Y-%m-%d").date()
+                if exp_date <= limit_date:
+                    days_left = (exp_date - today).days
+                    # Get client phone
+                    client = await db.clients.find_one({"id": card["client_id"]}, {"_id": 0, "phone": 1, "name": 1})
+                    card["days_until_expiry"] = days_left
+                    card["is_expired"] = days_left < 0
+                    card["client_phone"] = client.get("phone", "") if client else ""
+                    expiring.append(card)
+            except (ValueError, TypeError):
+                pass
+    
+    # Sort by days until expiry (most urgent first)
+    expiring.sort(key=lambda x: x.get("days_until_expiry", 999))
+    return expiring
+
+
+@router.get("/cards/alerts/low-balance")
+async def get_low_balance_cards(threshold_percent: int = 20, current_user: dict = Depends(get_current_user)):
+    """Get cards with balance below X% of total value"""
+    cards = await db.cards.find(
+        {"user_id": current_user["id"], "active": True},
+        {"_id": 0, "user_id": 0}
+    ).to_list(500)
+    
+    low_balance = []
+    for card in cards:
+        total = card.get("total_value", 0)
+        remaining = card.get("remaining_value", 0)
+        if total > 0:
+            percent_remaining = (remaining / total) * 100
+            if percent_remaining <= threshold_percent and remaining > 0:
+                # Get client phone
+                client = await db.clients.find_one({"id": card["client_id"]}, {"_id": 0, "phone": 1, "name": 1})
+                card["percent_remaining"] = round(percent_remaining, 1)
+                card["client_phone"] = client.get("phone", "") if client else ""
+                low_balance.append(card)
+    
+    # Sort by percent remaining (lowest first)
+    low_balance.sort(key=lambda x: x.get("percent_remaining", 100))
+    return low_balance
+
+
+@router.get("/cards/alerts/all")
+async def get_all_card_alerts(days: int = 30, threshold_percent: int = 20, current_user: dict = Depends(get_current_user)):
+    """Get all card alerts (expiring + low balance) in one call"""
+    expiring = await get_expiring_cards(days, current_user)
+    low_balance = await get_low_balance_cards(threshold_percent, current_user)
+    
+    # Count unique alerts (cards can be both expiring and low balance)
+    low_balance_ids = {c["id"] for c in low_balance}
+    duplicates = len([c for c in expiring if c["id"] in low_balance_ids])
+    
+    return {
+        "expiring_cards": expiring,
+        "low_balance_cards": low_balance,
+        "total_alerts": len(expiring) + len(low_balance) - duplicates
+    }
+
+
+@router.post("/cards/alerts/mark-notified/{card_id}")
+async def mark_card_notified(card_id: str, notification_type: str = "whatsapp", current_user: dict = Depends(get_current_user)):
+    """Mark a card as notified (to avoid sending duplicate notifications)"""
+    notification = {
+        "type": notification_type,
+        "sent_at": datetime.now(timezone.utc).isoformat(),
+        "sent_by": current_user["id"]
+    }
+    
+    result = await db.cards.update_one(
+        {"id": card_id, "user_id": current_user["id"]},
+        {"$push": {"notifications": notification}}
+    )
+    
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Card non trovata")
+    
+    return {"success": True, "notification": notification}
+

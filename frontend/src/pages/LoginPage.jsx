@@ -57,13 +57,14 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left - Logo */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#0EA5E9] to-[#0284C7] relative items-center justify-center">
-        <div className="text-center">
-          <img src="/logo.png?v=2" alt="MBHS Salon" className="w-48 h-48 mx-auto mb-8 rounded-2xl shadow-2xl" />
-          <h2 className="font-playfair text-4xl font-bold text-white mb-2">MBHS SALON</h2>
-          <p className="font-manrope text-xl text-blue-100">Gestisci il tuo salone</p>
-          <p className="font-manrope text-lg text-blue-200 mt-1">Con eleganza e semplicità</p>
+      {/* Left - Logo a tutta pagina */}
+      <div className="hidden lg:flex lg:w-1/2 relative items-center justify-center overflow-hidden">
+        <img src="/logo.png?v=4" alt="Bruno Melito Hair" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+        <div className="relative text-center z-10 mt-auto pb-16">
+          <h2 className="font-playfair text-4xl font-bold text-white mb-2 drop-shadow-lg">BRUNO MELITO HAIR</h2>
+          <p className="font-manrope text-xl text-white/90 drop-shadow">Gestisci il tuo salone</p>
+          <p className="font-manrope text-lg text-white/70 mt-1 drop-shadow">Con eleganza e semplicità</p>
         </div>
       </div>
 
@@ -72,8 +73,8 @@ export default function LoginPage() {
         <div className="w-full max-w-md">
           {/* Logo Mobile */}
           <div className="text-center mb-8">
-            <img src="/logo.png?v=2" alt="MBHS Salon" className="w-20 h-20 mx-auto mb-4 rounded-xl shadow-lg lg:hidden" />
-            <h1 className="font-playfair text-3xl font-bold text-[#0F172A]">MBHS SALON</h1>
+            <img src="/logo.png?v=4" alt="Bruno Melito Hair" className="w-32 h-32 mx-auto mb-4 rounded-2xl shadow-lg object-cover lg:hidden" />
+            <h1 className="font-playfair text-3xl font-bold text-[#0F172A]">BRUNO MELITO HAIR</h1>
             <p className="text-[#334155] mt-2 font-manrope">Il gestionale per il tuo salone</p>
           </div>
 

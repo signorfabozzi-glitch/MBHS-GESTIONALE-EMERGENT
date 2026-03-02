@@ -18,10 +18,8 @@ const SOCIAL_LINKS = [
   { url: 'https://style-maestro-5.preview.emergentagent.com', icon: Globe, label: 'Sito Web', color: 'hover:text-teal-400' },
 ];
 
-// Artwork hero image uploaded by the user
-const HERO_ARTWORK = "https://customer-assets.emergentagent.com/job_a05a9fc6-c017-4f4a-aee2-38e140acfa26/artifacts/u8hlm0ah_img0012.jpg";
-// Real salon photo for background
-const HERO_BG = "https://customer-assets.emergentagent.com/job_ac0aaacf-8266-485a-8bab-9e57ed904c7a/artifacts/0inxpacz_517029262_10231563813060391_9151321643853820111_n.jpg";
+// Logo as hero image
+const HERO_LOGO = "/logo.png?v=4";
 // Salon gallery photos (user approved)
 const SALON_EXTERIOR = "https://customer-assets.emergentagent.com/job_a05a9fc6-c017-4f4a-aee2-38e140acfa26/artifacts/dadmar03_image.png";
 const SALON_RECEPTION = "https://customer-assets.emergentagent.com/job_a05a9fc6-c017-4f4a-aee2-38e140acfa26/artifacts/snwuwd2g_image.png";
@@ -301,7 +299,7 @@ export default function BookingPage() {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div className="flex items-center gap-3">
-              <img src="/logo.png?v=3" alt="MBHS Salon" className="w-9 h-9 rounded-lg" />
+              <img src="/logo.png?v=4" alt="MBHS Salon" className="w-9 h-9 rounded-lg" />
               <div>
                 <h1 className="text-[#1e293b] text-sm font-black leading-tight">BRUNO MELITO HAIR</h1>
                 <p className="text-[#94A3B8] text-xs">Prenota il tuo appuntamento</p>
@@ -408,7 +406,7 @@ export default function BookingPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/logo.png?v=3" alt="MBHS Salon" className="w-10 h-10 rounded-lg" />
+            <img src="/logo.png?v=4" alt="MBHS Salon" className="w-10 h-10 rounded-lg" />
             <span className="font-black text-sm sm:text-base tracking-tight">BRUNO MELITO HAIR</span>
           </div>
           <div className="hidden sm:flex items-center gap-6 text-sm text-[#64748B]">
@@ -431,14 +429,14 @@ export default function BookingPage() {
       {/* HERO SECTION */}
       <section className="relative min-h-screen flex items-center pt-16">
         <div className="absolute inset-0">
-          <img src={HERO_BG} alt="Bruno Melito Hair" className="w-full h-full object-cover opacity-30" />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-transparent to-[#FFF8F0]" />
+          <img src={HERO_LOGO} alt="Bruno Melito Hair" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-[#FFF8F0]" />
         </div>
         <div className="relative max-w-6xl mx-auto px-4 py-20 sm:py-32 w-full">
           <div className="text-center max-w-3xl mx-auto">
-            {/* Artwork centered */}
+            {/* Logo hero */}
             <div className="flex justify-center mb-8">
-              <img src={HERO_ARTWORK} alt="Metti la testa a posto!!" className="w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 object-contain drop-shadow-2xl" />
+              <img src={HERO_LOGO} alt="Bruno Melito Hair" className="w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80 object-contain drop-shadow-2xl rounded-3xl border-2 border-white/30 shadow-2xl" />
             </div>
             <div className="inline-block bg-white/10 backdrop-blur-sm text-[#1e293b] text-xs font-bold px-4 py-2 rounded-full border border-amber-400/20 mb-6">
               SOLO PER APPUNTAMENTO
@@ -760,7 +758,7 @@ export default function BookingPage() {
       <footer className="py-12 border-t border-amber-200/30">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex flex-col items-center gap-6">
-            <img src="/logo.png?v=3" alt="MBHS Salon" className="w-14 h-14 rounded-2xl border border-amber-400/20" />
+            <img src="/logo.png?v=4" alt="MBHS Salon" className="w-14 h-14 rounded-2xl border border-amber-400/20" />
             <p className="text-[#64748B] text-sm font-bold">BRUNO MELITO HAIR</p>
             
             {/* Social Links */}

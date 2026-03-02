@@ -43,15 +43,18 @@ import {
   ChevronDown,
   ChevronUp,
   Package,
-  Pencil
+  Pencil,
+  ArrowRight
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 export default function PrepaidCardsPage() {
+  const navigate = useNavigate();
   const [cards, setCards] = useState([]);
   const [clients, setClients] = useState([]);
   const [cardTemplates, setCardTemplates] = useState([]);
@@ -67,6 +70,10 @@ export default function PrepaidCardsPage() {
 
   const [cardClientSearch, setCardClientSearch] = useState('');
   const [showCardClientDropdown, setShowCardClientDropdown] = useState(false);
+
+  // "Go to checkout" dialog after creating card
+  const [goToCheckoutDialog, setGoToCheckoutDialog] = useState(false);
+  const [newlyCreatedCard, setNewlyCreatedCard] = useState(null);
 
   // Template management
   const [templateDialogOpen, setTemplateDialogOpen] = useState(false);
@@ -118,7 +125,7 @@ export default function PrepaidCardsPage() {
 
     setSaving(true);
     try {
-      await axios.post(`${API}/cards`, {
+      const response = await axios.post(`${API}/cards`, {
         ...formData,
         total_value: parseFloat(formData.total_value),
         total_services: formData.total_services ? parseInt(formData.total_services) : null,
@@ -126,6 +133,10 @@ export default function PrepaidCardsPage() {
       });
       toast.success('Card creata con successo!');
       setDialogOpen(false);
+      // Save card info to show "Go to checkout" dialog
+      const clientName = clients.find(c => c.id === formData.client_id)?.name || 'Cliente';
+      setNewlyCreatedCard({ ...response.data, client_name: clientName });
+      setGoToCheckoutDialog(true);
       resetForm();
       fetchData();
     } catch (err) {
@@ -895,6 +906,53 @@ export default function PrepaidCardsPage() {
                 data-testid="save-package-btn"
               >
                 {savingTemplate ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Salva'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Go to Checkout Dialog - After creating a new card */}
+        <Dialog open={goToCheckoutDialog} onOpenChange={setGoToCheckoutDialog}>
+          <DialogContent className="sm:max-w-[420px]">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold text-green-700 flex items-center gap-2">
+                <CreditCard className="w-6 h-6" />
+                Card Creata!
+              </DialogTitle>
+              <DialogDescription>
+                La card è stata creata con successo per {newlyCreatedCard?.client_name}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="mt-4">
+              {newlyCreatedCard && (
+                <div className="p-4 bg-green-50 border-2 border-green-200 rounded-xl mb-4">
+                  <p className="font-bold text-lg text-[#0F172A]">{newlyCreatedCard.name}</p>
+                  <p className="text-sm text-[#334155]">{newlyCreatedCard.card_type === 'subscription' ? 'Abbonamento' : 'Card Prepagata'}</p>
+                  <p className="text-2xl font-black text-green-600 mt-2">€{newlyCreatedCard.total_value?.toFixed(2)}</p>
+                  {newlyCreatedCard.total_services && (
+                    <p className="text-sm text-[#64748B]">{newlyCreatedCard.total_services} servizi inclusi</p>
+                  )}
+                </div>
+              )}
+              <p className="text-sm text-[#334155] mb-4">
+                Vuoi andare in cassa per registrare l'acquisto di questa card?
+              </p>
+            </div>
+            <DialogFooter className="gap-2">
+              <Button variant="outline" onClick={() => setGoToCheckoutDialog(false)}>
+                Resta qui
+              </Button>
+              <Button
+                onClick={() => {
+                  setGoToCheckoutDialog(false);
+                  navigate('/planning');
+                  toast.info(`Vai in Planning e crea un appuntamento per ${newlyCreatedCard?.client_name} per usare la card in cassa`);
+                }}
+                className="bg-green-600 hover:bg-green-700 text-white"
+                data-testid="go-to-checkout-btn"
+              >
+                <ArrowRight className="w-4 h-4 mr-2" />
+                Vai al Planning
               </Button>
             </DialogFooter>
           </DialogContent>

@@ -23,7 +23,8 @@ import {
   FileBarChart,
   Globe,
   ArrowDownCircle,
-  Gift
+  Gift,
+  AlertTriangle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -36,6 +37,7 @@ const navItems = [
   { path: '/month', label: 'Mese', icon: CalendarRange },
   { path: '/clients', label: 'Clienti', icon: Users },
   { path: '/cards', label: 'Card / Abbonamenti', icon: CreditCard },
+  { path: '/card-alerts', label: 'Avvisi Card', icon: AlertTriangle },
   { path: '/loyalty', label: 'Programma Fedeltà', icon: Star },
   { path: '/reminders', label: 'Promemoria', icon: Bell },
   { path: '/promozioni', label: 'Promozioni', icon: Gift },
@@ -88,9 +90,9 @@ export default function Layout({ children }) {
       {/* Logo */}
       <div className="p-4 border-b border-[#E2E8F0]">
         <div className="flex items-center gap-3">
-          <img src="/logo.png?v=2" alt="MBHS Salon" className="w-12 h-12 rounded-lg object-cover" />
+          <img src="/logo.png?v=4" alt="MBHS Salon" className="w-12 h-12 rounded-lg object-cover" />
           <div>
-            <h1 className="font-bold text-xl text-[#0F172A]">MBHS SALON</h1>
+            <h1 className="font-bold text-xl text-[#0F172A]">BRUNO MELITO</h1>
             <p className="text-xs text-[#334155] font-semibold">{user?.name}</p>
           </div>
         </div>

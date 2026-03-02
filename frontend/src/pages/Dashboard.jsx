@@ -5,13 +5,16 @@ import Layout from '../components/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
 import {
   Users, Euro, Calendar, Clock, TrendingUp, Plus, ChevronRight,
   Scissors, UserCheck, CalendarDays, CalendarRange, BarChart3,
-  CreditCard, Gift, Bell, Download, Globe, Settings
+  CreditCard, Gift, Bell, Download, Globe, Settings, AlertTriangle,
+  MessageCircle, X
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
+import { toast } from 'sonner';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -27,6 +30,7 @@ const MODULES = [
   { path: '/incassi', label: 'Incassi', desc: 'Report pagamenti', icon: Euro, color: '#10B981' },
   { path: '/daily-summary', label: 'Riepilogo', desc: 'Riepilogo giornaliero', icon: BarChart3, color: '#F43F5E' },
   { path: '/cards', label: 'Card Prepagate', desc: 'Abbonamenti', icon: CreditCard, color: '#6366F1' },
+  { path: '/card-alerts', label: 'Avvisi Card', desc: 'Scadenze e notifiche', icon: AlertTriangle, color: '#F97316' },
   { path: '/loyalty', label: 'Fedeltà', desc: 'Programma punti', icon: Gift, color: '#EC4899' },
   { path: '/reminders', label: 'Promemoria', desc: 'Notifiche clienti', icon: Bell, color: '#F97316' },
   { path: '/uscite', label: 'Uscite', desc: 'Registro spese', icon: TrendingUp, color: '#DC2626' },
@@ -39,9 +43,14 @@ const MODULES = [
 export default function Dashboard() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [cardAlerts, setCardAlerts] = useState({ expiring: [], low_balance: [], total: 0 });
+  const [showAlerts, setShowAlerts] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => { fetchDashboardStats(); }, []);
+  useEffect(() => { 
+    fetchDashboardStats(); 
+    fetchCardAlerts();
+  }, []);
 
   const fetchDashboardStats = async () => {
     try {
@@ -49,6 +58,33 @@ export default function Dashboard() {
       setStats(res.data);
     } catch (err) { console.error('Error fetching stats:', err); }
     finally { setLoading(false); }
+  };
+
+  const fetchCardAlerts = async () => {
+    try {
+      const res = await axios.get(`${API}/cards/alerts/all?days=7&threshold_percent=20`);
+      setCardAlerts({
+        expiring: res.data.expiring_cards || [],
+        low_balance: res.data.low_balance_cards || [],
+        total: res.data.total_alerts || 0
+      });
+    } catch (err) { console.error('Error fetching card alerts:', err); }
+  };
+
+  const sendQuickWhatsApp = (card, type) => {
+    if (!card.client_phone) {
+      toast.error('Numero di telefono non disponibile');
+      return;
+    }
+    let phone = card.client_phone.replace(/[\s\-\+]/g, '');
+    if (!phone.startsWith('39')) phone = '39' + phone;
+    
+    let message = type === 'expiring' 
+      ? `Ciao ${card.client_name}! 👋 La tua card "${card.name}" scade tra ${card.days_until_expiry} giorni. Affrettati a usare il credito di €${card.remaining_value?.toFixed(2)}!`
+      : `Ciao ${card.client_name}! 👋 Il credito della tua card "${card.name}" è quasi esaurito (€${card.remaining_value?.toFixed(2)}). Vieni a ricaricarla!`;
+    
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+    toast.success('WhatsApp aperto!');
   };
 
   if (loading) {
@@ -79,6 +115,77 @@ export default function Dashboard() {
             </Button>
           </Link>
         </div>
+
+        {/* Daily Card Alerts Banner */}
+        {showAlerts && cardAlerts.total > 0 && (
+          <Card className="bg-gradient-to-r from-amber-50 via-orange-50 to-red-50 border-2 border-amber-300 shadow-lg animate-pulse-slow" data-testid="daily-alerts-banner">
+            <CardContent className="p-4">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+                    <Bell className="w-5 h-5 text-amber-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-amber-800 flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4" />
+                      Promemoria Giornaliero - {cardAlerts.total} Avvisi Card
+                    </h3>
+                    <p className="text-sm text-amber-700 mt-1">
+                      {cardAlerts.expiring.length > 0 && `${cardAlerts.expiring.length} card in scadenza nei prossimi 7 giorni`}
+                      {cardAlerts.expiring.length > 0 && cardAlerts.low_balance.length > 0 && ' • '}
+                      {cardAlerts.low_balance.length > 0 && `${cardAlerts.low_balance.length} card con credito basso`}
+                    </p>
+                    
+                    {/* Quick action cards */}
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {cardAlerts.expiring.slice(0, 3).map(card => (
+                        <div key={card.id} className="flex items-center gap-2 bg-white/80 rounded-lg px-3 py-1.5 border border-amber-200">
+                          <span className="text-sm font-medium text-[#0F172A]">{card.client_name}</span>
+                          <Badge className="bg-amber-500 text-white text-xs">{card.days_until_expiry}g</Badge>
+                          {card.client_phone && (
+                            <button
+                              onClick={() => sendQuickWhatsApp(card, 'expiring')}
+                              className="w-6 h-6 rounded-full bg-green-500 hover:bg-green-600 flex items-center justify-center transition-colors"
+                            >
+                              <MessageCircle className="w-3.5 h-3.5 text-white" />
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                      {cardAlerts.low_balance.slice(0, 2).map(card => (
+                        <div key={card.id} className="flex items-center gap-2 bg-white/80 rounded-lg px-3 py-1.5 border border-red-200">
+                          <span className="text-sm font-medium text-[#0F172A]">{card.client_name}</span>
+                          <Badge className="bg-red-500 text-white text-xs">{card.percent_remaining}%</Badge>
+                          {card.client_phone && (
+                            <button
+                              onClick={() => sendQuickWhatsApp(card, 'low_balance')}
+                              className="w-6 h-6 rounded-full bg-green-500 hover:bg-green-600 flex items-center justify-center transition-colors"
+                            >
+                              <MessageCircle className="w-3.5 h-3.5 text-white" />
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <Link to="/card-alerts">
+                    <Button size="sm" className="bg-amber-500 hover:bg-amber-600 text-white">
+                      Vedi Tutti
+                    </Button>
+                  </Link>
+                  <button
+                    onClick={() => setShowAlerts(false)}
+                    className="w-8 h-8 rounded-full hover:bg-amber-100 flex items-center justify-center transition-colors"
+                  >
+                    <X className="w-4 h-4 text-amber-600" />
+                  </button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Stats Row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

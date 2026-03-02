@@ -8,16 +8,17 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription,
 } from '@/components/ui/dialog';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import {
   Gift, Plus, Trash2, Pencil, Loader2, Copy, Eye, EyeOff,
-  Users, Star, Heart, UserPlus, Award, Cake, Hash, TrendingUp
+  Users, Star, Heart, UserPlus, Award, Cake, Hash, TrendingUp, ArrowRight
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -32,11 +33,16 @@ const RULE_TYPES = [
 ];
 
 export default function PromotionsPage() {
+  const navigate = useNavigate();
   const [promotions, setPromotions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [saving, setSaving] = useState(false);
+
+  // "Go to checkout" dialog after creating promo
+  const [goToCheckoutDialog, setGoToCheckoutDialog] = useState(false);
+  const [newlyCreatedPromo, setNewlyCreatedPromo] = useState(null);
 
   const [formData, setFormData] = useState({
     name: '', description: '', rule_type: 'under_30',
@@ -68,8 +74,11 @@ export default function PromotionsPage() {
         await axios.put(`${API}/promotions/${editing.id}`, formData);
         toast.success('Promozione aggiornata');
       } else {
-        await axios.post(`${API}/promotions`, formData);
+        const response = await axios.post(`${API}/promotions`, formData);
         toast.success('Promozione creata');
+        // Show "Go to checkout" dialog for new promos
+        setNewlyCreatedPromo(response.data);
+        setGoToCheckoutDialog(true);
       }
       setDialogOpen(false);
       resetForm();
@@ -315,6 +324,55 @@ export default function PromotionsPage() {
                 </Button>
               </DialogFooter>
             </form>
+          </DialogContent>
+        </Dialog>
+
+        {/* Go to Checkout Dialog - After creating a new promo */}
+        <Dialog open={goToCheckoutDialog} onOpenChange={setGoToCheckoutDialog}>
+          <DialogContent className="sm:max-w-[420px]">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold text-pink-700 flex items-center gap-2">
+                <Gift className="w-6 h-6" />
+                Promozione Creata!
+              </DialogTitle>
+              <DialogDescription>
+                La promozione è ora attiva e disponibile
+              </DialogDescription>
+            </DialogHeader>
+            <div className="mt-4">
+              {newlyCreatedPromo && (
+                <div className="p-4 bg-pink-50 border-2 border-pink-200 rounded-xl mb-4">
+                  <p className="font-bold text-lg text-[#0F172A]">{newlyCreatedPromo.name}</p>
+                  <p className="text-sm text-[#334155] mt-1">{newlyCreatedPromo.description}</p>
+                  <div className="mt-3 p-2 bg-white rounded-lg border border-pink-300">
+                    <p className="text-sm font-bold text-pink-700 flex items-center gap-1.5">
+                      <Gift className="w-4 h-4" /> OMAGGIO: {newlyCreatedPromo.free_service_name}
+                    </p>
+                  </div>
+                  <p className="text-xs text-[#64748B] mt-2 font-mono">Codice: {newlyCreatedPromo.promo_code}</p>
+                </div>
+              )}
+              <p className="text-sm text-[#334155] mb-4">
+                Vuoi applicare subito questa promozione a un cliente?
+              </p>
+            </div>
+            <DialogFooter className="gap-2">
+              <Button variant="outline" onClick={() => setGoToCheckoutDialog(false)}>
+                Resta qui
+              </Button>
+              <Button
+                onClick={() => {
+                  setGoToCheckoutDialog(false);
+                  navigate('/planning');
+                  toast.info('Vai in Planning, seleziona un cliente e la promo apparirà nella sezione Card & Promozioni');
+                }}
+                className="bg-pink-500 hover:bg-pink-600 text-white"
+                data-testid="go-to-planning-promo-btn"
+              >
+                <ArrowRight className="w-4 h-4 mr-2" />
+                Vai al Planning
+              </Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>

@@ -19,6 +19,7 @@ import AppointmentsPage from "./pages/AppointmentsPage";
 import OperatorsPage from "./pages/OperatorsPage";
 import PlanningPage from "./pages/PlanningPage";
 import PrepaidCardsPage from "./pages/PrepaidCardsPage";
+import CardAlertsPage from "./pages/CardAlertsPage";
 import ReportIncassiPage from "./pages/ReportIncassiPage";
 import BackupPage from "./pages/BackupPage";
 import BookingPage from "./pages/BookingPage";
@@ -180,6 +181,16 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <PrepaidCardsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* AVVISI CARD (Scadenza / Credito Basso) */}
+          <Route
+            path="/card-alerts"
+            element={
+              <ProtectedRoute>
+                <CardAlertsPage />
               </ProtectedRoute>
             }
           />
