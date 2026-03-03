@@ -63,14 +63,14 @@ export default function CardAlertsPage() {
     let message = '';
     if (alertType === 'expiring') {
       if (card.days_until_expiry < 0) {
-        message = `Ciao ${card.client_name}! 👋\n\nLa tua card "${card.name}" presso MBHS SALON è SCADUTA.\n\nVieni a trovarci per rinnovarla e continuare a usufruire dei tuoi servizi preferiti!\n\n📞 Prenota ora il tuo appuntamento.`;
+        message = `Ciao ${card.client_name}! 👋\n\nLa tua card "${card.name}" presso Bruno Melito Hair è SCADUTA.\n\nVieni a trovarci per rinnovarla e continuare a usufruire dei tuoi servizi preferiti!\n\n📞 Prenota ora il tuo appuntamento.`;
       } else if (card.days_until_expiry <= 7) {
-        message = `Ciao ${card.client_name}! 👋\n\nLa tua card "${card.name}" presso MBHS SALON scadrà tra ${card.days_until_expiry} giorni (${card.valid_until}).\n\n⚠️ Affrettati a utilizzare il credito rimanente di €${card.remaining_value?.toFixed(2)}!\n\n📞 Prenota il tuo prossimo appuntamento.`;
+        message = `Ciao ${card.client_name}! 👋\n\nLa tua card "${card.name}" presso Bruno Melito Hair scadrà tra ${card.days_until_expiry} giorni (${card.valid_until}).\n\n⚠️ Affrettati a utilizzare il credito rimanente di €${card.remaining_value?.toFixed(2)}!\n\n📞 Prenota il tuo prossimo appuntamento.`;
       } else {
-        message = `Ciao ${card.client_name}! 👋\n\nTi ricordiamo che la tua card "${card.name}" presso MBHS SALON scadrà il ${card.valid_until}.\n\nHai ancora €${card.remaining_value?.toFixed(2)} di credito da utilizzare.\n\n📞 Prenota il tuo prossimo appuntamento!`;
+        message = `Ciao ${card.client_name}! 👋\n\nTi ricordiamo che la tua card "${card.name}" presso Bruno Melito Hair scadrà il ${card.valid_until}.\n\nHai ancora €${card.remaining_value?.toFixed(2)} di credito da utilizzare.\n\n📞 Prenota il tuo prossimo appuntamento!`;
       }
     } else {
-      message = `Ciao ${card.client_name}! 👋\n\nIl credito della tua card "${card.name}" presso MBHS SALON sta per esaurirsi!\n\n💳 Credito rimanente: €${card.remaining_value?.toFixed(2)} (${card.percent_remaining}%)\n\nVieni a ricaricarla per continuare a goderti i nostri servizi a prezzo scontato!\n\n📞 Ti aspettiamo!`;
+      message = `Ciao ${card.client_name}! 👋\n\nIl credito della tua card "${card.name}" presso Bruno Melito Hair sta per esaurirsi!\n\n💳 Credito rimanente: €${card.remaining_value?.toFixed(2)} (${card.percent_remaining}%)\n\nVieni a ricaricarla per continuare a goderti i nostri servizi a prezzo scontato!\n\n📞 Ti aspettiamo!`;
     }
     
     setMessageTemplate(message);

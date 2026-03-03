@@ -1,8 +1,8 @@
 {
-  "name": "MBHS SALON",
-  "short_name": "MBHS",
-  "description": "Gestionale per il tuo salone",
-  "start_url": "/planning",
+  "name": "Bruno Melito Hair Stylist",
+  "short_name": "Bruno Melito",
+  "description": "Parrucchiere a Santa Maria Capua Vetere dal 1983. Prenota il tuo appuntamento online.",
+  "start_url": "/sito",
   "display": "standalone",
   "background_color": "#0EA5E9",
   "theme_color": "#0EA5E9",

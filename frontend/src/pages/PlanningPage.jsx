@@ -616,7 +616,7 @@ export default function PlanningPage() {
     let phone = loyaltyAlertData.clientPhone.replace(/[\s\-\+]/g, '');
     if (!phone.startsWith('39')) phone = '39' + phone;
     const message = encodeURIComponent(
-      `Ciao, hai raggiunto ${loyaltyAlertData.totalPoints} punti fedeltà presso MBHS SALON! Hai diritto ad un taglio gratis o uno sconto di 10,00 euro sui servizi di colpi di sole e schiariture. Prenota il tuo prossimo appuntamento!`
+      `Ciao, hai raggiunto ${loyaltyAlertData.totalPoints} punti fedeltà presso Bruno Melito Hair! Hai diritto ad un taglio gratis o uno sconto di 10,00 euro sui servizi di colpi di sole e schiariture. Prenota il tuo prossimo appuntamento!`
     );
     window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
     setLoyaltyAlertOpen(false);

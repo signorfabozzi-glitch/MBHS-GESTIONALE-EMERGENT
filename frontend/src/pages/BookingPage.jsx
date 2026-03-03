@@ -273,7 +273,7 @@ export default function BookingPage() {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div className="flex items-center gap-3">
-              <img src="/logo.png?v=4" alt="MBHS Salon" className="w-9 h-9 rounded-lg" />
+              <img src="/logo.png?v=4" alt="Bruno Melito Hair" className="w-9 h-9 rounded-lg" />
               <div>
                 <h1 className="text-[#1e293b] text-sm font-black leading-tight">BRUNO MELITO HAIR</h1>
                 <p className="text-[#94A3B8] text-xs">Prenota il tuo appuntamento</p>
@@ -415,7 +415,7 @@ export default function BookingPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/logo.png?v=4" alt="MBHS Salon" className="w-10 h-10 rounded-lg" />
+            <img src="/logo.png?v=4" alt="Bruno Melito Hair" className="w-10 h-10 rounded-lg" />
             <span className="font-black text-sm sm:text-base tracking-tight">BRUNO MELITO HAIR</span>
           </div>
           <div className="hidden sm:flex items-center gap-6 text-sm text-[#64748B]">
@@ -833,7 +833,7 @@ export default function BookingPage() {
       <footer className="py-12 border-t border-amber-200/30">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex flex-col items-center gap-6">
-            <img src="/logo.png?v=4" alt="MBHS Salon" className="w-14 h-14 rounded-2xl border border-amber-400/20" />
+            <img src="/logo.png?v=4" alt="Bruno Melito Hair" className="w-14 h-14 rounded-2xl border border-amber-400/20" />
             <p className="text-[#64748B] text-sm font-bold">BRUNO MELITO HAIR</p>
             
             {/* Social Links */}

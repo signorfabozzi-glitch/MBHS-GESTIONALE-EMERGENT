@@ -94,7 +94,7 @@ export default function RemindersPage() {
 
     // Find the appointment template
     const aptTemplate = templates.find(t => t.template_type === 'appointment');
-    const templateText = aptTemplate?.text || 'Ciao {nome}! Ti ricordiamo il tuo appuntamento domani alle {ora} presso MBHS SALON. Ti aspettiamo!';
+    const templateText = aptTemplate?.text || 'Ciao {nome}! Ti ricordiamo il tuo appuntamento domani alle {ora} presso Bruno Melito Hair. Ti aspettiamo!';
 
     const pendingApts = autoCheck.pending;
     const sentIds = [];
@@ -167,7 +167,7 @@ export default function RemindersPage() {
       setSelectedTemplateId('');
       if (type === 'appointment') {
         const apt = data;
-        setMsgText(`Ciao ${apt.client_name}! Ti ricordiamo il tuo appuntamento domani alle ${apt.time} presso MBHS SALON. Ti aspettiamo!`);
+        setMsgText(`Ciao ${apt.client_name}! Ti ricordiamo il tuo appuntamento domani alle ${apt.time} presso Bruno Melito Hair. Ti aspettiamo!`);
       } else {
         const client = data;
         setMsgText(`Ciao ${client.client_name}! Sono passati ${client.days_ago} giorni dalla tua ultima visita. Torna a trovarci!`);
@@ -755,7 +755,7 @@ export default function RemindersPage() {
                           onClick={() => {
                             if (!cr.phone) { toast.error('Numero mancante'); return; }
                             const phone = formatPhone(cr.phone);
-                            const msg = encodeURIComponent(`Ciao ${cr.client_name}! Sono passati ${cr.days_ago} giorni dal tuo ultimo colore. E' il momento di rinfrescare il look! Prenota su MBHS SALON.`);
+                            const msg = encodeURIComponent(`Ciao ${cr.client_name}! Sono passati ${cr.days_ago} giorni dal tuo ultimo colore. E' il momento di rinfrescare il look! Prenota su Bruno Melito Hair.`);
                             window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
                             axios.post(`${API}/reminders/color-expiry/${cr.client_id}/mark-sent`)
                               .then(() => {

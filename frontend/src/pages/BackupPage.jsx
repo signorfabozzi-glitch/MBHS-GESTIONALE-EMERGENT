@@ -92,7 +92,7 @@ export default function BackupPage() {
       }));
       XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(paymentsData), 'Pagamenti');
 
-      XLSX.writeFile(wb, `backup_MBHS_${format(new Date(), 'yyyy-MM-dd_HH-mm')}.xlsx`);
+      XLSX.writeFile(wb, `backup_BrunoMelito_${format(new Date(), 'yyyy-MM-dd_HH-mm')}.xlsx`);
       toast.success('Backup completato!');
     } catch (err) {
       toast.error('Errore durante il backup');

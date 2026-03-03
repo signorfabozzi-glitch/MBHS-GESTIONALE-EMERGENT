@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import { useEffect, useState } from "react";
 
@@ -70,7 +70,8 @@ function HomePage() {
   const { user, loading } = useAuth();
   if (loading) return <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center"><div className="w-8 h-8 border-4 border-[#0EA5E9] border-t-transparent rounded-full animate-spin" /></div>;
   if (user) return <PlanningPage />;
-  return <LoginPage />;
+  // Non-authenticated users see the public website
+  return <Navigate to="/sito" replace />;
 }
 
 export default function App() {
