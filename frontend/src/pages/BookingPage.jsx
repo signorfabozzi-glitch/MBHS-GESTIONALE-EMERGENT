@@ -309,6 +309,41 @@ export default function BookingPage() {
                   ))}
                 </div>
               )}
+              
+              {/* Promozioni e Card/Abbonamenti cliccabili */}
+              {publicPromos.length > 0 && (
+                <div className="mt-6">
+                  <h3 className="text-lg font-bold text-[#1e293b] mb-3 flex items-center gap-2">
+                    <Gift className="w-5 h-5 text-amber-500" /> Promozioni & Card
+                  </h3>
+                  <div className="space-y-2">
+                    {publicPromos.map((promo) => (
+                      <div key={promo.id} 
+                        onClick={() => {
+                          // Add the promo's free service to selected services
+                          if (promo.free_service_id && !formData.service_ids.includes(promo.free_service_id)) {
+                            setFormData(prev => ({ ...prev, service_ids: [...prev.service_ids, promo.free_service_id], notes: (prev.notes ? prev.notes + ' ' : '') + `[PROMO: ${promo.name}]` }));
+                          } else {
+                            // If no specific service, add as note
+                            setFormData(prev => ({ ...prev, notes: (prev.notes ? prev.notes + ' ' : '') + `[PROMO: ${promo.name}]` }));
+                          }
+                          toast.success(`Promo "${promo.name}" aggiunta!`);
+                        }}
+                        className="p-4 rounded-xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 cursor-pointer transition-all hover:border-amber-400 hover:shadow-md"
+                        data-testid={`promo-item-${promo.id}`}>
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <p className="font-bold text-[#1e293b]">{promo.name}</p>
+                            <p className="text-sm text-amber-600">{promo.free_service_name || promo.description || 'Clicca per applicare'}</p>
+                          </div>
+                          <div className="bg-amber-400 text-white text-xs font-bold px-3 py-1 rounded-full">PROMO</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {formData.service_ids.length > 0 && (
                 <div className="bg-white p-4 rounded-xl border border-gray-200">
                   <p className="font-bold text-[#1e293b]">Riepilogo: {totalDuration} min - {'\u20AC'}{totalPrice}</p>

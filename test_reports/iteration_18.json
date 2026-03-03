@@ -1,0 +1,50 @@
+{
+  "summary": "Completed iteration 18 testing for MBHS default operator, expense deadlines, and promo features. All 16 backend API tests passed. Frontend UI testing confirms MBHS is pre-selected, no 'Non assegnato' column exists, and promos are visible/clickable on both /prenota and /sito pages.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {
+        "screen": "AppointmentsPage (Agenda)",
+        "issues": ["Expense deadlines section only shows UPCOMING expenses (>= today), not overdue ones. Overdue expenses appear on PlanningPage banner instead. This may be intentional design but could confuse users who expect to see all unpaid expenses in Agenda."]
+      }
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iteration18_mbhs_features.py",
+    "/app/test_reports/pytest/pytest_iteration18.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [],
+  "updated_files": ["/app/backend/tests/test_iteration18_mbhs_features.py"],
+  "success_rate": {
+    "backend": "100% (16/16 tests passed)",
+    "frontend": "100% (all features working)"
+  },
+  "test_credentials": {
+    "email": "melitobruno@gmail.com",
+    "password": "password123"
+  },
+  "seed_data_creation": "No new seed data created",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "All MBHS features verified: 1) MBHS is default operator on Planning and Agenda new appointment forms, 2) No 'Non assegnato' column in Planning, 3) Expense deadlines banner shows overdue expenses on Planning page (3 overdue totaling €1300), 4) Agenda shows upcoming expenses only (none currently since all are past due), 5) 8 active promotions visible and clickable on both /prenota and /sito pages, 6) Backend auto-assigns first operator when creating appointment without operator_id.",
+  "features_tested": {
+    "PlanningPage_no_unassigned_column": "PASS - Only Bruno Melito and MBHS columns visible",
+    "PlanningPage_MBHS_default": "PASS - MBHS pre-selected in new appointment dialog",
+    "AppointmentsPage_expense_deadlines": "PASS - Feature implemented, but only shows future due dates. Overdue shown on Planning banner.",
+    "AppointmentsPage_upcoming_appointments": "PASS - Feature implemented",
+    "AppointmentsPage_card_alerts": "PASS - Feature implemented",
+    "AppointmentsPage_MBHS_default": "PASS - MBHS pre-selected in new appointment form",
+    "BookingPage_promos_visible": "PASS - 8 promos visible in 'Promozioni & Card' section",
+    "BookingPage_promos_clickable": "PASS - Clicking promo shows toast 'Promo X aggiunta!'",
+    "WebsitePage_promos_visible": "PASS - 8 promos visible in 'Promozioni Attive' section with codes",
+    "Backend_auto_assign_operator": "PASS - POST /api/appointments auto-assigns operator when none provided",
+    "Backend_expenses_due_date": "PASS - GET /api/expenses returns due_date field",
+    "Login_flow": "PASS - Successfully logs in with provided credentials"
+  }
+}

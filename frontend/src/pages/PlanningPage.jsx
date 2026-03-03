@@ -226,9 +226,15 @@ export default function PlanningPage() {
         axios.get(`${API}/services`)
       ]);
       setAppointments(appointmentsRes.data);
-      setOperators(operatorsRes.data.filter(op => op.active));
+      const activeOps = operatorsRes.data.filter(op => op.active);
+      setOperators(activeOps);
       setClients(clientsRes.data);
       setServices(servicesRes.data);
+      // Set MBHS as default operator if form is empty
+      if (!formData.operator_id) {
+        const mbhs = activeOps.find(op => op.name.toUpperCase().includes('MBHS')) || activeOps[0];
+        if (mbhs) setFormData(prev => ({ ...prev, operator_id: mbhs.id }));
+      }
     } catch (err) {
       console.error('Error fetching data:', err);
       toast.error('Errore nel caricamento dei dati');
@@ -307,7 +313,7 @@ export default function PlanningPage() {
       client_id: '',
       service_ids: [],
       time: time,
-      operator_id: operatorId || '',
+      operator_id: operatorId || mbhsOperator?.id || '',
       date: format(selectedDate, 'yyyy-MM-dd'),
       notes: ''
     });
@@ -323,7 +329,7 @@ export default function PlanningPage() {
     setPreSelectedPromoId('');
     setSelectedClientInfo(null);
     setFormData({
-      client_id: '', service_ids: [], operator_id: '', time: '09:00', notes: '',
+      client_id: '', service_ids: [], operator_id: mbhsOperator?.id || '', time: '09:00', notes: '',
       date: format(date, 'yyyy-MM-dd')
     });
     setDialogOpen(true);
@@ -370,7 +376,7 @@ export default function PlanningPage() {
       await axios.post(`${API}/appointments`, payload);
       toast.success('Appuntamento creato!' + (preSelectedCardId || preSelectedPromoId ? ' Card/Promo salvate nelle note.' : ''));
       setDialogOpen(false);
-      setFormData({ client_id: '', service_ids: [], operator_id: '', time: '09:00', notes: '', date: '' });
+      setFormData({ client_id: '', service_ids: [], operator_id: mbhsOperator?.id || '', time: '09:00', notes: '', date: '' });
       setNewClientMode(false);
       setNewClientName('');
       setNewClientPhone('');
@@ -746,12 +752,11 @@ export default function PlanningPage() {
     });
   };
 
-  // Create columns: one per operator + unassigned if any
-  const hasUnassigned = appointments.some(apt => !apt.operator_id || !operators.find(op => op.id === apt.operator_id));
-  const columns = [
-    ...operators.map(op => ({ id: op.id, name: op.name, color: op.color })),
-    ...(hasUnassigned ? [{ id: null, name: 'Non assegnato', color: '#94A3B8' }] : [])
-  ];
+  // Create columns: one per operator (no unassigned column)
+  const columns = operators.map(op => ({ id: op.id, name: op.name, color: op.color }));
+  
+  // Find MBHS operator for default assignment
+  const mbhsOperator = operators.find(op => op.name.toUpperCase().includes('MBHS')) || operators[0];
 
   return (
     <Layout>

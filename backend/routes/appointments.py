@@ -93,6 +93,13 @@ async def create_appointment(data: AppointmentCreate, current_user: dict = Depen
         if operator:
             operator_name = operator["name"]
             operator_color = operator.get("color", "#C58970")
+    else:
+        # Auto-assign to MBHS operator if no operator specified
+        mbhs = await db.operators.find_one({"user_id": current_user["id"], "active": True}, {"_id": 0}, sort=[("name", 1)])
+        if mbhs:
+            data.operator_id = mbhs["id"]
+            operator_name = mbhs["name"]
+            operator_color = mbhs.get("color", "#C58970")
 
     total_duration = sum(s["duration"] for s in services)
     total_price = sum(s["price"] for s in services)

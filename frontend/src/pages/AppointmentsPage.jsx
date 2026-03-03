@@ -68,11 +68,13 @@ export default function AppointmentsPage() {
   const [smsMessage, setSmsMessage] = useState('');
   const [cardAlerts, setCardAlerts] = useState({ expiring_cards: [], low_balance_cards: [], total_alerts: 0 });
   const [upcomingAppointments, setUpcomingAppointments] = useState([]);
+  const [upcomingExpenses, setUpcomingExpenses] = useState([]);
 
   useEffect(() => {
     fetchData();
     checkSmsStatus();
     fetchAlerts();
+    fetchExpenses();
   }, [selectedDate]);
 
   const fetchData = async () => {
@@ -88,7 +90,13 @@ export default function AppointmentsPage() {
       setAppointments(appointmentsRes.data);
       setClients(clientsRes.data);
       setServices(servicesRes.data);
-      setOperators(operatorsRes.data.filter(op => op.active));
+      const activeOps = operatorsRes.data.filter(op => op.active);
+      setOperators(activeOps);
+      // Set MBHS as default operator
+      if (!formData.operator_id) {
+        const mbhs = activeOps.find(op => op.name.toUpperCase().includes('MBHS')) || activeOps[0];
+        if (mbhs) setFormData(prev => ({ ...prev, operator_id: mbhs.id }));
+      }
       
       // Fetch upcoming 7 days of appointments
       const upcoming = [];
@@ -117,6 +125,21 @@ export default function AppointmentsPage() {
       const res = await axios.get(`${API}/cards/alerts/all?days=30&threshold_percent=20`);
       setCardAlerts(res.data);
     } catch (e) { /* alerts not critical */ }
+  };
+
+  const fetchExpenses = async () => {
+    try {
+      const res = await axios.get(`${API}/expenses?paid=false`);
+      const today = new Date();
+      const in30Days = new Date(today);
+      in30Days.setDate(in30Days.getDate() + 30);
+      const upcoming = (res.data || []).filter(e => {
+        if (!e.due_date) return false;
+        const d = new Date(e.due_date);
+        return d >= new Date(today.toISOString().split('T')[0]) && d <= in30Days;
+      }).sort((a, b) => new Date(a.due_date) - new Date(b.due_date));
+      setUpcomingExpenses(upcoming);
+    } catch (e) { /* not critical */ }
   };
 
   const checkSmsStatus = async () => {
@@ -427,6 +450,41 @@ export default function AppointmentsPage() {
                     </span>
                   </div>
                 ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Expense Deadlines / Scadenze Uscite */}
+        {upcomingExpenses.length > 0 && (
+          <Card className="bg-red-50/50 border-red-100 shadow-sm" data-testid="expense-alerts-section">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                  <Calendar className="w-4 h-4 text-red-600" />
+                </div>
+                <h3 className="font-semibold text-red-800">Scadenze Uscite ({upcomingExpenses.length})</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {upcomingExpenses.map((exp) => {
+                  const dueDate = new Date(exp.due_date);
+                  const today = new Date();
+                  today.setHours(0,0,0,0);
+                  const daysLeft = Math.ceil((dueDate - today) / (1000*60*60*24));
+                  const isOverdue = daysLeft < 0;
+                  const isUrgent = daysLeft <= 3;
+                  return (
+                    <div key={exp.id} className={`flex items-center justify-between p-2 bg-white rounded-lg border ${isOverdue ? 'border-red-300 bg-red-50' : isUrgent ? 'border-amber-200' : 'border-red-100'}`}>
+                      <div>
+                        <p className="font-medium text-sm text-[#0F172A]">{exp.description}</p>
+                        <p className="text-xs text-red-600">€{exp.amount?.toFixed(2)} — {dueDate.toLocaleDateString('it-IT')}</p>
+                      </div>
+                      <span className={`text-xs px-2 py-1 rounded-full font-semibold ${isOverdue ? 'bg-red-200 text-red-800' : isUrgent ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600'}`}>
+                        {isOverdue ? 'SCADUTA' : daysLeft === 0 ? 'OGGI' : `${daysLeft}g`}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </CardContent>
           </Card>

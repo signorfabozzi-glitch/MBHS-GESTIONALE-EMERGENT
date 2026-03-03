@@ -187,6 +187,39 @@ export default function WebsitePage() {
                   </div>
                 ))}
               </div>
+              
+              {/* Promozioni & Card cliccabili */}
+              {publicPromos.length > 0 && (
+                <div className="mt-4">
+                  <h3 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                    <Gift className="w-5 h-5 text-amber-400" /> Promozioni & Card
+                  </h3>
+                  <div className="space-y-2">
+                    {publicPromos.map((promo) => (
+                      <div key={promo.id}
+                        onClick={() => {
+                          if (promo.free_service_id && !formData.service_ids.includes(promo.free_service_id)) {
+                            setFormData(prev => ({ ...prev, service_ids: [...prev.service_ids, promo.free_service_id], notes: (prev.notes ? prev.notes + ' ' : '') + `[PROMO: ${promo.name}]` }));
+                          } else {
+                            setFormData(prev => ({ ...prev, notes: (prev.notes ? prev.notes + ' ' : '') + `[PROMO: ${promo.name}]` }));
+                          }
+                          toast.success(`Promo "${promo.name}" aggiunta!`);
+                        }}
+                        className="p-4 rounded-xl border-2 border-amber-500/30 bg-gradient-to-r from-amber-500/10 to-orange-500/10 cursor-pointer transition-all hover:border-amber-400 hover:shadow-md"
+                        data-testid={`website-promo-${promo.id}`}>
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <p className="font-bold text-white">{promo.name}</p>
+                            <p className="text-sm text-amber-300">{promo.free_service_name || promo.description || 'Clicca per applicare'}</p>
+                          </div>
+                          <div className="bg-amber-400 text-[#1a1a2e] text-xs font-bold px-3 py-1 rounded-full">PROMO</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {formData.service_ids.length > 0 && (
                 <div className="bg-[#242445] p-4 rounded-xl border border-gray-800">
                   <p className="font-bold text-white">Riepilogo: {totalDuration} min - {'\u20AC'}{totalPrice}</p>
